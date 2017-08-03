@@ -1,1 +1,6 @@
 Codefarts.IoCNET20/obj/
+Codefarts.IoCNET35/obj/
+Codefarts.IoC.Tests/bin/
+Codefarts.IoC.Tests/obj/
+Codefarts.IoCNET35/bin/
+*.user
