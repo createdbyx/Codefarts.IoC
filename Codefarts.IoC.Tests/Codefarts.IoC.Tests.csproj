@@ -49,8 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UnitTests\Interfaces\IRepository.cs" />
+    <Compile Include="UnitTests\Mockups\MockApplication.cs" />
+    <Compile Include="UnitTests\Mockups\MockNonResolveableObject.cs" />
     <Compile Include="UnitTests\Mockups\MockRepository.cs" />
-    <Compile Include="UnitTests\UnitTests.cs" />
+    <Compile Include="UnitTests\ContainerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
