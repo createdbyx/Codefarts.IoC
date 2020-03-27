@@ -4,3 +4,6 @@ Codefarts.IoC.Tests/bin/
 Codefarts.IoC.Tests/obj/
 Codefarts.IoCNET35/bin/
 *.user
+Codefarts.IoCStandard20/obj/
+packages/
+Codefarts.IoCStandard20/bin/

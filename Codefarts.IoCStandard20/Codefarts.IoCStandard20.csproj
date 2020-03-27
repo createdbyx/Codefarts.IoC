@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Code\Container NET20.cs" Link="Container NET20.cs" />
+    <Compile Include="..\Code\Container NET35.cs" Link="Container NET35.cs" />
+    <Compile Include="..\Code\Container.cs" Link="Container.cs" />
+    <Compile Include="..\Code\ContainerExtensionMethods.cs" Link="ContainerExtensionMethods.cs" />
+    <Compile Include="..\Code\ContainerResolutionException.cs" Link="ContainerResolutionException.cs" />
+    <Compile Include="..\Code\RegistrationException.cs" Link="RegistrationException.cs" />
+    <Compile Include="..\Code\RegistrationTypeException.cs" Link="RegistrationTypeException.cs" />
+    <Compile Include="..\Code\SafeDictionary.cs" Link="SafeDictionary.cs" />
+    <Compile Include="..\Code\UnregisteredTypeException.cs" Link="UnregisteredTypeException.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
