@@ -200,6 +200,13 @@
             return this.typeCreators.TryGetValue(type, out value);
         }
 
+        /// <summary>
+        /// Attempts to retrieve Gets the property value.
+        /// </summary>
+        /// <param name="value">The object whose property value to retrieve.</param>
+        /// <param name="member">The property member information.</param>
+        /// <returns>The value of the property.</returns>
+        /// <exception cref="NullReferenceException">Property has no accessible get method.</exception>
         private object GetPropertyValue(object value, PropertyInfo member)
         {
             var getMethod = member.GetGetMethod();
@@ -212,11 +219,19 @@
             return propValue;
         }
 
+        /// <summary>
+        /// Private method that acts as a wrapper for the Resolve method.
+        /// </summary>
+        /// <typeparam name="T">The type to cast to before returning.</typeparam>
+        /// <remarks>This is called by the <seealso cref="CreateAction"/> method.</remarks>
         private Func<T> Perform<T>()
         {
             return () => this.Resolve<T>();
         }
 
+        /// <summary>
+        /// Called by the <seealso cref="ResolveGenericType"/> method.
+        /// </summary>
         private Delegate CreateAction(Type type)
         {
             var methodInfo = this.GetType().GetMethod("Perform", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(type);
@@ -268,7 +283,7 @@
                     var value = constructor.Invoke(arguments);
                     return value;
                 }
-                catch  
+                catch
                 {
                     // ignored
                 }
