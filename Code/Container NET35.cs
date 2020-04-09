@@ -85,5 +85,5 @@ namespace Codefarts.IoC
             }
         }
     }
-} 
+}
 #endif
