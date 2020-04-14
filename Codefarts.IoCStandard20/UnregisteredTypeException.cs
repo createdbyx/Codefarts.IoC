@@ -1,4 +1,8 @@
-﻿namespace Codefarts.IoC
+﻿// <copyright file="UnregisteredTypeException.cs" company="Codefarts">
+// Copyright (c) Codefarts
+// </copyright>
+
+namespace Codefarts.IoC
 {
     ///// <summary>
     ///// The unregistered type exception.

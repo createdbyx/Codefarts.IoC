@@ -1,4 +1,8 @@
-﻿#if !NET20
+﻿// <copyright file="Container NET35.cs" company="Codefarts">
+// Copyright (c) Codefarts
+// </copyright>
+
+#if !NET20
 namespace Codefarts.IoC
 {
     using System;

@@ -1,3 +1,7 @@
+// <copyright file="RegistrationTypeException.cs" company="Codefarts">
+// Copyright (c) Codefarts
+// </copyright>
+
 namespace Codefarts.IoC
 {
     using System;

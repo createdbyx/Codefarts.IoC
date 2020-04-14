@@ -1,4 +1,8 @@
-﻿namespace Codefarts.IoC
+﻿// <copyright file="ContainerExtensionMethods.cs" company="Codefarts">
+// Copyright (c) Codefarts
+// </copyright>
+
+namespace Codefarts.IoC
 {
     /// <summary>
     /// Provides extension methods for the <see cref="Container"/> class.
@@ -25,6 +29,17 @@
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Creates instance of a specified type.
+        /// </summary>
+        /// <typeparam name="T">Specifies the type to be instantiated.</typeparam>
+        /// <param name="container">The container that will be used to resolve the type.</param>
+        /// <returns>Returns a reference to a instance of <see cref="T"/>.</returns>
+        public static T Resolve<T>(this Container container)
+        {
+            return (T)container.Resolve(typeof(T));
         }
 
         /// <summary>

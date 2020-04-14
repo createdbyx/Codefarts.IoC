@@ -1,4 +1,8 @@
-﻿namespace Codefarts.IoC
+﻿// <copyright file="Container.cs" company="Codefarts">
+// Copyright (c) Codefarts
+// </copyright>
+
+namespace Codefarts.IoC
 {
     using System;
     using System.Collections.Generic;
@@ -53,16 +57,6 @@
         public Container()
         {
             this.typeCreators = new SafeDictionary<Type, Creator>();
-        }
-
-        /// <summary>
-        /// Creates instance of a specified type.
-        /// </summary>
-        /// <typeparam name="T">Specifies the type to be instantiated.</typeparam>
-        /// <returns>Returns a reference to a instance of <see cref="T"/>.</returns>
-        public T Resolve<T>()
-        {
-            return (T)this.Resolve(typeof(T));
         }
 
         /// <summary>

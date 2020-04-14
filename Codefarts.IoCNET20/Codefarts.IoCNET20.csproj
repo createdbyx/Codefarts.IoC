@@ -21,6 +21,7 @@
     <DefineConstants>TRACE;DEBUG;NET20</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Codefarts.IoCNET20.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Code\Key.snk</AssemblyOriginatorKeyFile>
@@ -44,39 +45,39 @@
     <Reference Include="System.Data.DataSetExtensions" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Code\Container NET20.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs">
       <Link>Container NET20.cs</Link>
     </Compile>
-    <Compile Include="..\Code\Container NET35.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\Container NET35.cs">
       <Link>Container NET35.cs</Link>
     </Compile>
-    <Compile Include="..\Code\Container.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\Container.cs">
       <Link>Container.cs</Link>
     </Compile>
-    <Compile Include="..\Code\ContainerExtensionMethods.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\ContainerExtensionMethods.cs">
       <Link>ContainerExtensionMethods.cs</Link>
     </Compile>
-    <Compile Include="..\Code\ContainerResolutionException.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs">
       <Link>ContainerResolutionException.cs</Link>
     </Compile>
-    <Compile Include="..\Code\RegistrationException.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
       <Link>RegistrationException.cs</Link>
     </Compile>
-    <Compile Include="..\Code\RegistrationTypeException.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\RegistrationTypeException.cs">
       <Link>RegistrationTypeException.cs</Link>
     </Compile>
-    <Compile Include="..\Code\SafeDictionary.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\SafeDictionary.cs">
       <Link>SafeDictionary.cs</Link>
     </Compile>
-    <Compile Include="..\Code\UnregisteredTypeException.cs">
+    <Compile Include="..\Codefarts.IoCStandard20\UnregisteredTypeException.cs">
       <Link>UnregisteredTypeException.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Code\Key.snk">
-      <Link>Key.snk</Link>
-    </None>
+    <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

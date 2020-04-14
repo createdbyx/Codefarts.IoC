@@ -6,18 +6,20 @@
     <RootNamespace>Codefarts.IoC</RootNamespace>
     <AssemblyVersion>2020.4.9.2</AssemblyVersion>
     <FileVersion>2020.4.9.2</FileVersion>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>P:\Code Projects\Codefarts.IoC\Codefarts.IoCStandard20\Codefarts.IoC.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\Code\Container NET20.cs" Link="Container NET20.cs" />
-    <Compile Include="..\Code\Container NET35.cs" Link="Container NET35.cs" />
-    <Compile Include="..\Code\Container.cs" Link="Container.cs" />
-    <Compile Include="..\Code\ContainerExtensionMethods.cs" Link="ContainerExtensionMethods.cs" />
-    <Compile Include="..\Code\ContainerResolutionException.cs" Link="ContainerResolutionException.cs" />
-    <Compile Include="..\Code\RegistrationException.cs" Link="RegistrationException.cs" />
-    <Compile Include="..\Code\RegistrationTypeException.cs" Link="RegistrationTypeException.cs" />
-    <Compile Include="..\Code\SafeDictionary.cs" Link="SafeDictionary.cs" />
-    <Compile Include="..\Code\UnregisteredTypeException.cs" Link="UnregisteredTypeException.cs" />
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>

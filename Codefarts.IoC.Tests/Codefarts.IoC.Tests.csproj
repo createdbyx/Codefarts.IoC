@@ -48,36 +48,21 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\UnitTests\ContainerTests.cs">
-      <Link>UnitTests\ContainerTests.cs</Link>
-    </Compile>
-    <Compile Include="..\UnitTests\Helpers\AssertHelper.cs">
-      <Link>UnitTests\Helpers\AssertHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\UnitTests\Interfaces\IRepository.cs">
-      <Link>UnitTests\Interfaces\IRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\UnitTests\Mockups\BasicClasses.cs">
-      <Link>UnitTests\Mockups\BasicClasses.cs</Link>
-    </Compile>
-    <Compile Include="..\UnitTests\Mockups\MockApplication.cs">
-      <Link>UnitTests\Mockups\MockApplication.cs</Link>
-    </Compile>
-    <Compile Include="..\UnitTests\Mockups\MockDisposableRepository.cs">
-      <Link>UnitTests\Mockups\MockDisposableRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\UnitTests\Mockups\MockNonResolveableObject.cs">
-      <Link>UnitTests\Mockups\MockNonResolveableObject.cs</Link>
-    </Compile>
-    <Compile Include="..\UnitTests\Mockups\MockRepository.cs">
-      <Link>UnitTests\Mockups\MockRepository.cs</Link>
-    </Compile>
-    <Compile Include="..\UnitTests\SafeDictionaryTests.cs">
-      <Link>UnitTests\SafeDictionaryTests.cs</Link>
-    </Compile>
+    <Compile Include="ContainerTests.cs" />
+    <Compile Include="Helpers\AssertHelper.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Mockups\BasicClasses.cs" />
+    <Compile Include="Mockups\MockApplication.cs" />
+    <Compile Include="Mockups\MockDisposableRepository.cs" />
+    <Compile Include="Mockups\MockNonResolveableObject.cs" />
+    <Compile Include="Mockups\MockRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SafeDictionaryTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

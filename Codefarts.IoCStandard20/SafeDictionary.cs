@@ -1,12 +1,22 @@
+// <copyright file="SafeDictionary.cs" company="Codefarts">
+// Copyright (c) Codefarts
+// </copyright>
+
 namespace Codefarts.IoC
 {
     using System;
     using System.Collections.Generic;
 
-    public class SafeDictionary<TKey, TValue> : IDisposable
+    /// <summary>
+    /// Provides thread safe dictionary container for fetching and retrieving values.
+    /// </summary>
+    /// <typeparam name="TKey">The type of the key.</typeparam>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
+    /// <seealso cref="System.IDisposable" />
+    internal class SafeDictionary<TKey, TValue> : IDisposable
     {
         private readonly object lockObject = new object();
-        private readonly Dictionary<TKey, TValue> internalDictionary = new Dictionary<TKey, TValue>();
+        private readonly IDictionary<TKey, TValue> internalDictionary = new Dictionary<TKey, TValue>();
 
         public TValue this[TKey key]
         {
@@ -58,18 +68,18 @@ namespace Codefarts.IoC
         {
             get
             {
-                return this.internalDictionary.Keys;
+                lock (this.lockObject)
+                {
+                    return this.internalDictionary.Keys;
+                }
             }
         }
 
-        #region IDisposable Members
-
+        /// <inheritdoc/>
         public void Dispose()
         {
             lock (this.lockObject)
             {
-                // var disposableItems = this.internalDictionary.Values.OfType<IDisposable>();
-
                 foreach (var item in this.internalDictionary.Values)
                 {
                     var disposable = item as IDisposable;
@@ -82,7 +92,5 @@ namespace Codefarts.IoC
 
             GC.SuppressFinalize(this);
         }
-
-        #endregion
     }
 }
