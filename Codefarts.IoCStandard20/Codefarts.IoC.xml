@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Codefarts.IoC</name>
+    </assembly>
+    <members>
+        <member name="T:Codefarts.IoC.Container">
+            <summary>
+            Provides a simple IoC container functions.
+            </summary>
+            <summary>
+            Provides a simple IoC container functions.
+            </summary>
+        </member>
+        <member name="F:Codefarts.IoC.Container.DefaultInstance">
+            <summary>
+            The backing field for the <see cref="F:Codefarts.IoC.Container.DefaultInstance"/> property.
+            </summary>
+        </member>
+        <member name="F:Codefarts.IoC.Container.typeCreators">
+            <summary>
+            The dictionary containing the registered types and there creation delegate reference.
+            </summary>
+        </member>
+        <member name="T:Codefarts.IoC.Container.Creator">
+            <summary>
+            Provides a delegate for constructing a type reference.
+            </summary>
+            <returns>A instance of a type.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.Container.#cctor">
+            <summary>
+            Initializes static members of the <see cref="T:Codefarts.IoC.Container"/> class.
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Container.Default">
+            <summary>
+            Lazy created Singleton instance of the container for simple scenarios.
+            </summary>
+        </member>
+        <member name="M:Codefarts.IoC.Container.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.Container"/> class.
+            </summary>
+        </member>
+        <member name="M:Codefarts.IoC.Container.Resolve(System.Type)">
+            <summary>
+            Creates instance of a specified type.
+            </summary>
+            <param name="type">Specifies the type to be instantiated.</param>
+            <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.Container.Register``1(Codefarts.IoC.Container.Creator)">
+            <summary>
+            Registers a <see cref="T:Codefarts.IoC.Container.Creator" /> delegate for a given type.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="creator">The creator delegate.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="creator"/> is null.</exception>
+        </member>
+        <member name="M:Codefarts.IoC.Container.Register(System.Type)">
+            <summary>
+            Registers a <see cref="T:Codefarts.IoC.Container.Creator" /> delegate for a given type.
+            </summary>
+            <param name="type">The type.</param>
+            <exception cref="T:Codefarts.IoC.RegistrationTypeException">Can not register interfaces, abstract classes or value types.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="creator" /> is null.</exception>
+        </member>
+        <member name="M:Codefarts.IoC.Container.Register(System.Type,System.Type)">
+            <summary>
+            Registers a type key with a concrete type.
+            </summary>
+            <param name="key">The type of the key.</param>
+            <param name="concrete">The type of the concrete class.</param>
+        </member>
+        <member name="M:Codefarts.IoC.Container.Unregister(System.Type)">
+            <summary>
+            Unregisters a type from the container.
+            </summary>
+            <param name="type">The type to be unregistered.</param>     
+            <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.Container.CanResolve``1">
+            <summary>
+            Determines whether the type can be resolved.
+            </summary>
+            <typeparam name="T">The type to check if it can be resolved.</typeparam>
+            <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.Container.CanResolve(System.Type)">
+            <summary>
+            Determines whether the type can be resolved.
+            </summary>
+            <param name="type">The type to check if it can be resolved.</param>
+            <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.Container.GetPropertyValue(System.Object,System.Reflection.PropertyInfo)">
+            <summary>
+            Attempts to retrieve Gets the property value.
+            </summary>
+            <param name="value">The object whose property value to retrieve.</param>
+            <param name="member">The property member information.</param>
+            <returns>The value of the property.</returns>
+            <exception cref="T:System.NullReferenceException">Property has no accessible get method.</exception>
+        </member>
+        <member name="M:Codefarts.IoC.Container.Perform``1">
+            <summary>
+            Private method that acts as a wrapper for the Resolve method.
+            </summary>
+            <typeparam name="T">The type to cast to before returning.</typeparam>
+            <remarks>This is called by the <seealso cref="M:Codefarts.IoC.Container.CreateAction(System.Type)"/> method.</remarks>
+        </member>
+        <member name="M:Codefarts.IoC.Container.CreateAction(System.Type)">
+            <summary>
+            Called by the <seealso cref="M:Codefarts.IoC.Container.ResolveGenericType(System.Type,System.Object@)"/> method.
+            </summary>
+        </member>
+        <member name="M:Codefarts.IoC.Container.ResolveByType(System.Type)">
+            <summary>
+            Creates a instance of a type.
+            </summary>
+            <param name="type">The type that is to be instantiated.</param>
+            <returns>The reference to the created instance.</returns>
+            <remarks>Attempts to create the specified <param name="type"/> starting with the most number 
+            of constructor arguments down to the constructor with the least arguments.</remarks>
+            <exception cref="T:System.TypeLoadException"> Thrown if the type could not be constructed because none 
+            of the available constructors could be satisfied.
+            </exception>
+        </member>
+        <member name="M:Codefarts.IoC.Container.ResolveGenericType(System.Type,System.Object@)">
+            <summary>
+            Tries to resolve a generic type definition.
+            </summary>
+            <param name="type">The type to be resolved.</param>
+            <param name="result">A reference to a new object.</param>
+            <returns>true if the generic type could be resolved.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.Container.PreviouslyRegisteredCheck(System.Type)">
+            <summary>
+            Checks for previously registered type and if found throws an exception.
+            </summary>
+            <param name="type">The type to check.</param>
+            <exception cref="T:Codefarts.IoC.RegistrationException">If type has been registered already.</exception>
+        </member>
+        <member name="T:Codefarts.IoC.ContainerExtensionMethods">
+            <summary>
+            Provides extension methods for the <see cref="T:Codefarts.IoC.Container"/> class.
+            </summary>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.TryResolve``1(Codefarts.IoC.Container,``0,``0@)">
+            <summary>
+            Tries the resolve the type.
+            </summary>
+            <typeparam name="T">The type to be resolved.</typeparam>
+            <param name="container">The container that will be used to resolve the type.</param>
+            <param name="defaultValue">The default value to return if the type can't be resolved.</param>
+            <param name="value">The value that will be returned.</param>
+            <returns>Returns true if the type was resolved; otherwise false;</returns>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Resolve``1(Codefarts.IoC.Container)">
+            <summary>
+            Creates instance of a specified type.
+            </summary>
+            <typeparam name="T">Specifies the type to be instantiated.</typeparam>
+            <param name="container">The container that will be used to resolve the type.</param>
+            <returns>Returns a reference to a instance of <see cref="!:T"/>.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Register``1(Codefarts.IoC.Container)">
+            <summary>
+            Registers a type within the container.
+            </summary>
+            <typeparam name="T">The type of the concrete class.</typeparam>
+            <param name="container">The container that will be used to resolve the type.</param>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Register``2(Codefarts.IoC.Container)">
+            <summary>
+            Registers a type key with a concrete type.
+            </summary>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TConcrete">The type of the concrete class.</typeparam>
+            <param name="container">The container that will be used to resolve the type.</param>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Unregister``1(Codefarts.IoC.Container)">
+            <summary>
+            Unregisters a type from the container.
+            </summary>
+            <typeparam name="T">The type to be unregistered.</typeparam>
+            <param name="container">The container that will be used to resolve the type.</param>
+            <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Resolve``1(Codefarts.IoC.Container,``0)">
+            <summary>
+            Tries the resolve the type.
+            </summary>
+            <typeparam name="T">The type to be resolved.</typeparam>
+            <param name="container">The container that will be used to resolve the type.</param>
+            <param name="defaultValue">The default value to return if the type can't be resolved.</param>
+            <returns>Returns true if the type was resolved; otherwise false;</returns>
+        </member>
+        <member name="T:Codefarts.IoC.ContainerResolutionException">
+            <summary>Provides an exception for type resolution failures.</summary>
+            <seealso cref="T:System.Exception" />
+        </member>
+        <member name="M:Codefarts.IoC.ContainerResolutionException.#ctor(System.Type)">
+            <summary>
+             Initializes a new instance of the <see cref="T:Codefarts.IoC.ContainerResolutionException"/> class.
+            </summary>
+            <param name="type">The type that could not be resolved.</param>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerResolutionException.#ctor(System.Type,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.ContainerResolutionException"/> class.
+            </summary>
+            <param name="type">The type that could not be resolved.</param>
+            <param name="innerException">Gets the Exception instance that caused the current exception.</param>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerResolutionException.#ctor(System.Type,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.ContainerResolutionException"/> class.
+            </summary>
+            <param name="type">The type that could not be resolved.</param>
+            <param name="message">The error message to report.</param>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerResolutionException.#ctor(System.Type,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.ContainerResolutionException"/> class.
+            </summary>
+            <param name="type">The type that could not be resolved.</param>
+            <param name="message">The error message to report.</param>
+            <param name="innerException">Gets the Exception instance that caused the current exception.</param>
+        </member>
+        <member name="T:Codefarts.IoC.RegistrationException">
+            <summary>
+            Provides an exception for registration errors.
+            </summary>
+            <seealso cref="T:System.Exception" />
+        </member>
+        <member name="M:Codefarts.IoC.RegistrationException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.RegistrationException"/> class.
+            </summary>
+        </member>
+        <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.RegistrationException"/> class.
+            </summary>
+            <param name="message">The error message.</param>
+        </member>
+        <member name="T:Codefarts.IoC.SafeDictionary`2">
+            <summary>
+            Provides thread safe dictionary container for fetching and retrieving values.
+            </summary>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <typeparam name="TValue">The type of the value.</typeparam>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="M:Codefarts.IoC.SafeDictionary`2.Dispose">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

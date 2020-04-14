@@ -14,7 +14,7 @@ namespace Codefarts.IoC
     public partial class Container
     {
         /// <summary>
-        /// THe backing field for the <see cref="DefaultInstance"/> property.
+        /// The backing field for the <see cref="DefaultInstance"/> property.
         /// </summary>
         private static readonly Container DefaultInstance = new Container();
 
@@ -120,16 +120,6 @@ namespace Codefarts.IoC
         /// <summary>
         /// Registers a type key with a concrete type.
         /// </summary>
-        /// <typeparam name="TKey">The type of the key.</typeparam>
-        /// <typeparam name="TConcrete">The type of the concrete class.</typeparam>
-        public void Register<TKey, TConcrete>() where TConcrete : TKey
-        {
-            this.Register(typeof(TKey), typeof(TConcrete));
-        }
-
-        /// <summary>
-        /// Registers a type key with a concrete type.
-        /// </summary>
         /// <param name="key">The type of the key.</param>
         /// <param name="concrete">The type of the concrete class.</param>
         public void Register(Type key, Type concrete)
@@ -139,30 +129,9 @@ namespace Codefarts.IoC
         }
 
         /// <summary>
-        /// Registers a type within the container.
-        /// </summary>
-        /// <typeparam name="T">The type of the concrete class.</typeparam>
-        public void Register<T>() where T : class
-        {
-            this.Register(typeof(T));
-        }
-
-        /// <summary>
         /// Unregisters a type from the container.
         /// </summary>
-        /// <typeparam name="T">The type to be unregistered.</typeparam>
-        /// <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
-        public bool Unregister<T>()
-        {
-            return this.Unregister(typeof(T));
-        }
-
-        /// <summary>
-        /// Unregisters a type from the container.
-        /// </summary>
-        /// <param name="type">
-        /// The type to be unregistered.
-        /// </param>     
+        /// <param name="type">The type to be unregistered.</param>     
         /// <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
         public bool Unregister(Type type)
         {
@@ -173,9 +142,7 @@ namespace Codefarts.IoC
         /// Determines whether the type can be resolved.
         /// </summary>
         /// <typeparam name="T">The type to check if it can be resolved.</typeparam>
-        /// <returns>
-        ///   <c>true</c> if the type can be resolved; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
         public bool CanResolve<T>()
         {
             return this.CanResolve(typeof(T));
@@ -185,9 +152,7 @@ namespace Codefarts.IoC
         /// Determines whether the type can be resolved.
         /// </summary>
         /// <param name="type">The type to check if it can be resolved.</param>
-        /// <returns>
-        ///   <c>true</c> if the type can be resolved; otherwise, <c>false</c>.
-        /// </returns>
+        /// <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
         public bool CanResolve(Type type)
         {
             Creator value;
@@ -236,12 +201,8 @@ namespace Codefarts.IoC
         /// <summary>
         /// Creates a instance of a type.
         /// </summary>
-        /// <param name="type">
-        /// The type that is to be instantiated.
-        /// </param>
-        /// <returns>
-        /// The reference to the created instance.
-        /// </returns>
+        /// <param name="type">The type that is to be instantiated.</param>
+        /// <returns>The reference to the created instance.</returns>
         /// <remarks>Attempts to create the specified <param name="type"/> starting with the most number 
         /// of constructor arguments down to the constructor with the least arguments.</remarks>
         /// <exception cref="TypeLoadException"> Thrown if the type could not be constructed because none 
