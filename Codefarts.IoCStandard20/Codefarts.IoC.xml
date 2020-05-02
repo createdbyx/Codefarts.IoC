@@ -33,14 +33,19 @@
             Initializes static members of the <see cref="T:Codefarts.IoC.Container"/> class.
             </summary>
         </member>
-        <member name="P:Codefarts.IoC.Container.Default">
-            <summary>
-            Lazy created Singleton instance of the container for simple scenarios.
-            </summary>
-        </member>
         <member name="M:Codefarts.IoC.Container.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Codefarts.IoC.Container"/> class.
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Container.RegisteredTypes">
+            <summary>
+            Gets the types that have been registered with the container.
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Container.Default">
+            <summary>
+            Lazy created Singleton instance of the container for simple scenarios.
             </summary>
         </member>
         <member name="M:Codefarts.IoC.Container.Resolve(System.Type)">
@@ -49,13 +54,14 @@
             </summary>
             <param name="type">Specifies the type to be instantiated.</param>
             <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
+            <remarks>Will attempt to resolve the type even if there was no previous type <see cref="T:Codefarts.IoC.Container.Creator"/> delegate specified for the type.</remarks>
         </member>
-        <member name="M:Codefarts.IoC.Container.Register``1(Codefarts.IoC.Container.Creator)">
+        <member name="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)">
             <summary>
             Registers a <see cref="T:Codefarts.IoC.Container.Creator" /> delegate for a given type.
             </summary>
-            <typeparam name="T"></typeparam>
-            <param name="creator">The creator delegate.</param>
+            <param name="type">The type to be registered.</param>
+            <param name="creator">The creator delegate used to create the type.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="creator"/> is null.</exception>
         </member>
         <member name="M:Codefarts.IoC.Container.Register(System.Type)">
@@ -75,9 +81,9 @@
         </member>
         <member name="M:Codefarts.IoC.Container.Unregister(System.Type)">
             <summary>
-            Unregisters a type from the container.
+            Unregister a type from the container.
             </summary>
-            <param name="type">The type to be unregistered.</param>     
+            <param name="type">The type to be unregistered.</param>
             <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
         </member>
         <member name="M:Codefarts.IoC.Container.CanResolve``1">
@@ -164,6 +170,14 @@
             <typeparam name="T">Specifies the type to be instantiated.</typeparam>
             <param name="container">The container that will be used to resolve the type.</param>
             <returns>Returns a reference to a instance of <see cref="!:T"/>.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Register``1(Codefarts.IoC.Container,Codefarts.IoC.Container.Creator)">
+            <summary>
+            Registers a <see cref="T:Codefarts.IoC.Container.Creator" /> delegate for a given type.
+            </summary>
+            <typeparam name="T">The type that is to be registered.</typeparam>
+            <param name="container">The container that will be used to resolve the type.</param>
+            <param name="creator">The creator delegate.</param>
         </member>
         <member name="M:Codefarts.IoC.ContainerExtensionMethods.Register``1(Codefarts.IoC.Container)">
             <summary>

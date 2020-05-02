@@ -2,6 +2,8 @@
 // Copyright (c) Codefarts
 // </copyright>
 
+using System;
+
 namespace Codefarts.IoC
 {
     /// <summary>
@@ -43,11 +45,22 @@ namespace Codefarts.IoC
         }
 
         /// <summary>
+        /// Registers a <see cref="Container.Creator" /> delegate for a given type.
+        /// </summary>
+        /// <typeparam name="T">The type that is to be registered.</typeparam>
+        /// <param name="container">The container that will be used to resolve the type.</param>
+        /// <param name="creator">The creator delegate.</param>
+        public static void Register<T>(this Container container, Container.Creator creator)
+        {
+            container.Register(typeof(T), creator);
+        }
+
+        /// <summary>
         /// Registers a type within the container.
         /// </summary>
         /// <typeparam name="T">The type of the concrete class.</typeparam>
         /// <param name="container">The container that will be used to resolve the type.</param>
-        public static void Register<T>(this Container container) 
+        public static void Register<T>(this Container container)
             where T : class
         {
             container.Register(typeof(T));
@@ -59,7 +72,7 @@ namespace Codefarts.IoC
         /// <typeparam name="TKey">The type of the key.</typeparam>
         /// <typeparam name="TConcrete">The type of the concrete class.</typeparam>
         /// <param name="container">The container that will be used to resolve the type.</param>
-        public static void Register<TKey, TConcrete>(this Container container) 
+        public static void Register<TKey, TConcrete>(this Container container)
             where TConcrete : TKey
         {
             container.Register(typeof(TKey), typeof(TConcrete));

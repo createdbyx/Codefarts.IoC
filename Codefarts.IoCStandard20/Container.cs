@@ -2,6 +2,9 @@
 // Copyright (c) Codefarts
 // </copyright>
 
+using System.Collections.ObjectModel;
+using System.Linq;
+
 namespace Codefarts.IoC
 {
     using System;
@@ -29,13 +32,30 @@ namespace Codefarts.IoC
         /// <returns>A instance of a type.</returns>
         public delegate object Creator();
 
-        #region Singleton Container
-
         /// <summary>
         /// Initializes static members of the <see cref="Container"/> class.
         /// </summary>
         static Container()
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Container"/> class.
+        /// </summary>
+        public Container()
+        {
+            this.typeCreators = new SafeDictionary<Type, Creator>();
+        }
+
+        /// <summary>
+        /// Gets the types that have been registered with the container.
+        /// </summary>
+        public IReadOnlyCollection<Type> RegisteredTypes
+        {
+            get
+            {
+                return new ReadOnlyCollection<Type>(this.typeCreators.Keys.ToArray());
+            }
         }
 
         /// <summary>
@@ -49,21 +69,12 @@ namespace Codefarts.IoC
             }
         }
 
-        #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Container"/> class.
-        /// </summary>
-        public Container()
-        {
-            this.typeCreators = new SafeDictionary<Type, Creator>();
-        }
-
         /// <summary>
         /// Creates instance of a specified type.
         /// </summary>
         /// <param name="type">Specifies the type to be instantiated.</param>
         /// <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
+        /// <remarks>Will attempt to resolve the type even if there was no previous type <see cref="Creator"/> delegate specified for the type.</remarks>
         public object Resolve(Type type)
         {
             Creator provider;
@@ -85,17 +96,21 @@ namespace Codefarts.IoC
         /// <summary>
         /// Registers a <see cref="Creator" /> delegate for a given type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="creator">The creator delegate.</param>
+        /// <param name="type">The type to be registered.</param>
+        /// <param name="creator">The creator delegate used to create the type.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="creator"/> is null.</exception>
-        public void Register<T>(Creator creator)
+        public void Register(Type type, Creator creator)
         {
-            if (creator == null)
+            if (type == null)
             {
-                throw new ArgumentNullException("creator");
+                throw new ArgumentNullException(nameof(type));
             }
 
-            var type = typeof(T);
+            if (creator == null)
+            {
+                throw new ArgumentNullException(nameof(creator));
+            }
+
             this.PreviouslyRegisteredCheck(type);
             this.typeCreators[type] = creator;
         }
@@ -129,9 +144,9 @@ namespace Codefarts.IoC
         }
 
         /// <summary>
-        /// Unregisters a type from the container.
+        /// Unregister a type from the container.
         /// </summary>
-        /// <param name="type">The type to be unregistered.</param>     
+        /// <param name="type">The type to be unregistered.</param>
         /// <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
         public bool Unregister(Type type)
         {
@@ -210,7 +225,6 @@ namespace Codefarts.IoC
         /// </exception>
         private object ResolveByType(Type type)
         {
-
             // check if the type if a generic type
             object genericResultValue;
             if (this.ResolveGenericType(type, out genericResultValue))
