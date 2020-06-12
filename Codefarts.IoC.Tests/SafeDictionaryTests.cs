@@ -5,7 +5,7 @@ namespace Codefarts.IoC.Tests
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
+    [TestClass, Obsolete("SafeDictionary Marked internal")]
     public class SafeDictionaryTests
     {
         [TestMethod]
