@@ -1798,11 +1798,11 @@
             container.Register<ITestInterface2, TestClass2>();
             var input = new TestClassPropertyDependencies();
 
-            container.ResolveMembers(input);
+            container.ResolveMembers(input, true);
 
             Assert.IsNotNull(input.Property1);
             Assert.IsNotNull(input.Property2);
-            Assert.IsNull(input.ConcreteProperty);
+            Assert.IsNotNull(input.ConcreteProperty);
         }
 
         // [TestMethod]
@@ -1841,7 +1841,7 @@
             container.Register<ITestInterface, TestClassDefaultCtor>();
             var input = new TestClassPropertyDependencies();
 
-            container.ResolveMembers(input);
+            container.ResolveMembers(input, true);
 
             Assert.IsNotNull(input.Property1);
             Assert.IsNull(input.Property2);

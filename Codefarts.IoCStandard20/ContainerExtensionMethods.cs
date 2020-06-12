@@ -3,6 +3,8 @@
 // </copyright>
 
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Codefarts.IoC
 {
@@ -100,6 +102,94 @@ namespace Codefarts.IoC
         {
             T value;
             return TryResolve(container, defaultValue, out value) ? value : defaultValue;
+        }
+
+        public static void ResolveMembers(this Container container, object value)
+        {
+            ResolveMembers(container, value, false);
+        }
+
+        public static void ResolveMembers(this Container container, object value, bool suppressExceptions)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            var type = value.GetType();
+            var memberInfos = type.GetMembers();
+            var propertyMembers = from member in memberInfos
+                                  where member.MemberType == MemberTypes.Property
+                                  let info = (PropertyInfo)member
+                                  where info.GetGetMethod() != null && info.GetSetMethod() != null && !info.PropertyType.IsValueType && info.PropertyType != typeof(string)
+                                  let getMeth = info.GetGetMethod()
+                                  let setMeth = info.GetSetMethod()
+                                  where getMeth.IsPublic && setMeth.IsPublic
+                                  select info;
+
+            var fieldMembers = from member in memberInfos
+                               where member.MemberType == MemberTypes.Field
+                               let info = (FieldInfo)member
+                               where info.IsPublic && !info.IsInitOnly && !info.FieldType.IsValueType && info.FieldType != typeof(string)
+                               select info;
+
+            foreach (var member in fieldMembers)
+            {
+                var fieldValue = member.GetValue(value);
+
+                // don't set a field if it already has a value
+                if (fieldValue != null)
+                {
+                    continue;
+                }
+
+                if (suppressExceptions)
+                {
+                    try
+                    {
+                        var resolvedValue = container.Resolve(member.FieldType);
+                        member.SetValue(value, resolvedValue);
+                    }
+                    catch
+                    {
+                    }
+                }
+                else
+                {
+                    var resolvedValue = container.Resolve(member.FieldType);
+                    member.SetValue(value, resolvedValue);
+                }
+            }
+
+            foreach (var member in propertyMembers)
+            {
+                var getMethod = member.GetGetMethod();
+
+                var propValue = getMethod.Invoke(value, null);
+
+                // don't set a property if it already has a value
+                if (propValue != null)
+                {
+                    continue;
+                }
+
+                if (suppressExceptions)
+                {
+                    try
+                    {
+                        var resolvedValue = container.Resolve(member.PropertyType);
+                        member.GetSetMethod().Invoke(value, new[] { resolvedValue });
+                    }
+                    catch
+                    {
+                    }
+                }
+                else
+                {
+                    var resolvedValue = container.Resolve(member.PropertyType);
+                    member.GetSetMethod().Invoke(value, new[] { resolvedValue });
+                }
+            }
         }
     }
 }

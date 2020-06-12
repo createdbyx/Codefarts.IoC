@@ -50,11 +50,11 @@ namespace Codefarts.IoC
         /// <summary>
         /// Gets the types that have been registered with the container.
         /// </summary>
-        public IReadOnlyCollection<Type> RegisteredTypes
+        public IEnumerable<Type> RegisteredTypes
         {
             get
             {
-                return new ReadOnlyCollection<Type>(this.typeCreators.Keys.ToArray());
+                return this.typeCreators.Keys;
             }
         }
 
@@ -73,9 +73,13 @@ namespace Codefarts.IoC
         /// Creates instance of a specified type.
         /// </summary>
         /// <param name="type">Specifies the type to be instantiated.</param>
+        /// <param name="args">Arguments to be passed to the type constructor.</param>
         /// <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
-        /// <remarks>Will attempt to resolve the type even if there was no previous type <see cref="Creator"/> delegate specified for the type.</remarks>
-        public object Resolve(Type type)
+        /// <remarks>
+        /// <p>Will attempt to resolve the type even if there was no previous type <see cref="Creator"/> delegate specified for the type.</p>
+        /// <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
+        /// </remarks>
+        public object Resolve(Type type, params object[] args)
         {
             Creator provider;
             if (this.typeCreators.TryGetValue(type, out provider))
@@ -90,7 +94,7 @@ namespace Codefarts.IoC
                 }
             }
 
-            return this.ResolveByType(type);
+            return this.ResolveByType(type, args);
         }
 
         /// <summary>
@@ -123,7 +127,7 @@ namespace Codefarts.IoC
         /// <exception cref="System.ArgumentNullException"><paramref name="creator" /> is null.</exception>
         public void Register(Type type)
         {
-            if (type.IsAbstract || type.IsInterface || type.IsValueType)
+            if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type))
             {
                 throw new RegistrationTypeException(type);
             }
@@ -175,25 +179,6 @@ namespace Codefarts.IoC
         }
 
         /// <summary>
-        /// Attempts to retrieve Gets the property value.
-        /// </summary>
-        /// <param name="value">The object whose property value to retrieve.</param>
-        /// <param name="member">The property member information.</param>
-        /// <returns>The value of the property.</returns>
-        /// <exception cref="NullReferenceException">Property has no accessible get method.</exception>
-        private object GetPropertyValue(object value, PropertyInfo member)
-        {
-            var getMethod = member.GetGetMethod();
-            if (getMethod == null)
-            {
-                throw new NullReferenceException("Property has no accessible get method.");
-            }
-
-            var propValue = getMethod.Invoke(value, null);
-            return propValue;
-        }
-
-        /// <summary>
         /// Private method that acts as a wrapper for the Resolve method.
         /// </summary>
         /// <typeparam name="T">The type to cast to before returning.</typeparam>
@@ -217,13 +202,14 @@ namespace Codefarts.IoC
         /// Creates a instance of a type.
         /// </summary>
         /// <param name="type">The type that is to be instantiated.</param>
+        /// <param name="args">Arguments to be passed to the type constructor.</param>
         /// <returns>The reference to the created instance.</returns>
         /// <remarks>Attempts to create the specified <param name="type"/> starting with the most number 
         /// of constructor arguments down to the constructor with the least arguments.</remarks>
         /// <exception cref="TypeLoadException"> Thrown if the type could not be constructed because none 
         /// of the available constructors could be satisfied.
         /// </exception>
-        private object ResolveByType(Type type)
+        private object ResolveByType(Type type, params object[] args)
         {
             // check if the type if a generic type
             object genericResultValue;
@@ -232,7 +218,8 @@ namespace Codefarts.IoC
                 return genericResultValue;
             }
 
-            if (type.IsAbstract || type.IsInterface || type.IsValueType)
+            // can't resolve abstract classes, interfaces, value types, or delegates
+            if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type))
             {
                 throw new ContainerResolutionException(
                     type,
@@ -242,11 +229,12 @@ namespace Codefarts.IoC
             }
 
             var constructors = this.GetPublicConstructorWithValidParameters(type);
+            var hasSpecifiedArgs = args != null && args.Length > 0;
 
             // work through each constructor and attempt to instantiate it
             foreach (var constructor in constructors)
             {
-                var arguments = this.ResolveParametersFromConstructorInfo(constructor);
+                var arguments = hasSpecifiedArgs ? args : this.ResolveParametersFromConstructorInfo(constructor);
                 try
                 {
                     var value = constructor.Invoke(arguments);

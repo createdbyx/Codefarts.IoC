@@ -48,13 +48,17 @@
             Lazy created Singleton instance of the container for simple scenarios.
             </summary>
         </member>
-        <member name="M:Codefarts.IoC.Container.Resolve(System.Type)">
+        <member name="M:Codefarts.IoC.Container.Resolve(System.Type,System.Object[])">
             <summary>
             Creates instance of a specified type.
             </summary>
             <param name="type">Specifies the type to be instantiated.</param>
+            <param name="args">Arguments to be passed to the type constructor.</param>
             <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
-            <remarks>Will attempt to resolve the type even if there was no previous type <see cref="T:Codefarts.IoC.Container.Creator"/> delegate specified for the type.</remarks>
+            <remarks>
+            <p>Will attempt to resolve the type even if there was no previous type <see cref="T:Codefarts.IoC.Container.Creator"/> delegate specified for the type.</p>
+            <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
+            </remarks>
         </member>
         <member name="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)">
             <summary>
@@ -100,15 +104,6 @@
             <param name="type">The type to check if it can be resolved.</param>
             <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
         </member>
-        <member name="M:Codefarts.IoC.Container.GetPropertyValue(System.Object,System.Reflection.PropertyInfo)">
-            <summary>
-            Attempts to retrieve Gets the property value.
-            </summary>
-            <param name="value">The object whose property value to retrieve.</param>
-            <param name="member">The property member information.</param>
-            <returns>The value of the property.</returns>
-            <exception cref="T:System.NullReferenceException">Property has no accessible get method.</exception>
-        </member>
         <member name="M:Codefarts.IoC.Container.Perform``1">
             <summary>
             Private method that acts as a wrapper for the Resolve method.
@@ -121,11 +116,12 @@
             Called by the <seealso cref="M:Codefarts.IoC.Container.ResolveGenericType(System.Type,System.Object@)"/> method.
             </summary>
         </member>
-        <member name="M:Codefarts.IoC.Container.ResolveByType(System.Type)">
+        <member name="M:Codefarts.IoC.Container.ResolveByType(System.Type,System.Object[])">
             <summary>
             Creates a instance of a type.
             </summary>
             <param name="type">The type that is to be instantiated.</param>
+            <param name="args">Arguments to be passed to the type constructor.</param>
             <returns>The reference to the created instance.</returns>
             <remarks>Attempts to create the specified <param name="type"/> starting with the most number 
             of constructor arguments down to the constructor with the least arguments.</remarks>
