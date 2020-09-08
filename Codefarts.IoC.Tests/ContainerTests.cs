@@ -1,4 +1,6 @@
-﻿namespace Codefarts.IoC.Tests
+﻿using System.Runtime.InteropServices;
+
+namespace Codefarts.IoC.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -3720,6 +3722,46 @@ TinyIoCContainer.RegisterOptions.ToCustomLifetimeManager(registration, providerM
             {
                 Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
+        }
+
+        [TestMethod, TestCategory("Custom Args")]
+        public void ProperCustomArgsProvided()
+        {
+            var container = new Container();
+            var result = container.Resolve<TestClassWithParameters>(new object[] { "string", 4 });
+            Assert.IsNotNull(result, "Result is null!");
+            Assert.AreEqual(4, result.IntProperty);
+            Assert.AreEqual("string", result.StringProperty);
+        }
+
+        [TestMethod, TestCategory("Custom Args")]
+        public void WronglyOrderedCustomArgProvided()
+        {
+            var container = new Container();
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                container.Resolve<TestClassWithParameters>(new object[] { 4, "string" });
+            });
+        }
+
+        [TestMethod, TestCategory("Custom Args")]
+        public void DifferentNumberOfArgsProvided()
+        {
+            var container = new Container();
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                container.Resolve<TestClassWithParameters>(new object[] { false, "string", "bad-arg" });
+            });
+        }
+
+        [TestMethod, TestCategory("Custom Args")]
+        public void CustomArgsProvided_WithNullString()
+        {
+            var container = new Container();
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                container.Resolve<TestClassWithParameters>(new object[] { null, 4 });
+            });
         }
     }
 }
