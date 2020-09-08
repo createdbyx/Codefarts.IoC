@@ -228,15 +228,15 @@ namespace Codefarts.IoC
                         type.FullName));
             }
 
-            var constructors = this.GetPublicConstructorWithValidParameters(type);
             var hasSpecifiedArgs = args != null && args.Length > 0;
+            var constructors = hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type);
 
             // work through each constructor and attempt to instantiate it
             foreach (var constructor in constructors)
             {
-                var arguments = hasSpecifiedArgs ? args : this.ResolveParametersFromConstructorInfo(constructor);
                 try
                 {
+                    var arguments = hasSpecifiedArgs ? args : this.ResolveParametersFromConstructorInfo(constructor);
                     var value = constructor.Invoke(arguments);
                     return value;
                 }
@@ -251,6 +251,31 @@ namespace Codefarts.IoC
                 string.Format(
                     "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
                     type.FullName));
+        }
+
+        private IEnumerable<ConstructorInfo> GetPublicConstructorWithMatchingParameters(Type type, object[] args)
+        {
+            var constructorCandidates = new List<ConstructorInfo>();
+
+            // can't resolve argument types
+            if (args.Any(x => x == null))
+            {
+                return constructorCandidates;
+            }
+
+            var constructors = type.GetConstructors();
+            foreach (var info in constructors.Where(x => x.IsPublic))
+            {
+                var constructorParamTypes = info.GetParameters().Select(x => x.ParameterType);
+                var argTypes = args.Select(x => x.GetType());
+
+                if (constructorParamTypes.SequenceEqual(argTypes))
+                {
+                    constructorCandidates.Add(info);
+                }
+            }
+
+            return constructorCandidates;
         }
 
         /// <summary>
