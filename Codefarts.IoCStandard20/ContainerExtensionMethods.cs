@@ -47,6 +47,18 @@ namespace Codefarts.IoC
         }
 
         /// <summary>
+        /// Creates instance of a specified type.
+        /// </summary>
+        /// <typeparam name="T">Specifies the type to be instantiated.</typeparam>
+        /// <param name="container">The container that will be used to resolve the type.</param>
+        /// <param name="args">Arguments array to be passed to the constructor of the resolved type.</param>
+        /// <returns>Returns a reference to a instance of <see cref="T"/>.</returns>
+        public static T Resolve<T>(this Container container, object[] args)
+        {
+            return (T)container.Resolve(typeof(T), args);
+        }
+
+        /// <summary>
         /// Registers a <see cref="Container.Creator" /> delegate for a given type.
         /// </summary>
         /// <typeparam name="T">The type that is to be registered.</typeparam>
