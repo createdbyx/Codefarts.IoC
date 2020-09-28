@@ -1,14 +1,14 @@
 ﻿// <copyright file="Container.cs" company="Codefarts">
 // Copyright (c) Codefarts
+// contact@codefarts.com
+// http://www.codefarts.com
 // </copyright>
-
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Codefarts.IoC
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -118,23 +118,6 @@ namespace Codefarts.IoC
             this.PreviouslyRegisteredCheck(type);
             this.typeCreators[type] = creator;
         }
-
-        ///// <summary>
-        ///// Registers a <see cref="Creator" /> delegate for a given type.
-        ///// </summary>
-        ///// <param name="type">The type.</param>
-        ///// <exception cref="RegistrationTypeException">Can not register interfaces, abstract classes or value types.</exception>
-        ///// <exception cref="System.ArgumentNullException"><paramref name="creator" /> is null.</exception>
-        //public void Register(Type type)
-        //{
-        //    if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type))
-        //    {
-        //        throw new RegistrationTypeException(type);
-        //    }
-
-        //    this.PreviouslyRegisteredCheck(type);
-        //    this.typeCreators[type] = () => this.ResolveByType(type);
-        //}
 
         /// <summary>
         /// Registers a type key with a concrete type.
