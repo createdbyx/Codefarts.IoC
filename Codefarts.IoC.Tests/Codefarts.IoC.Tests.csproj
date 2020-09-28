@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerTests Unused.cs" />
     <Compile Include="ContainerTests.cs" />
     <Compile Include="Helpers\AssertHelper.cs" />
     <Compile Include="Interfaces\IRepository.cs" />

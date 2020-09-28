@@ -68,14 +68,6 @@
             <param name="creator">The creator delegate used to create the type.</param>
             <exception cref="T:System.ArgumentNullException"><paramref name="creator"/> is null.</exception>
         </member>
-        <member name="M:Codefarts.IoC.Container.Register(System.Type)">
-            <summary>
-            Registers a <see cref="T:Codefarts.IoC.Container.Creator" /> delegate for a given type.
-            </summary>
-            <param name="type">The type.</param>
-            <exception cref="T:Codefarts.IoC.RegistrationTypeException">Can not register interfaces, abstract classes or value types.</exception>
-            <exception cref="T:System.ArgumentNullException"><paramref name="creator" /> is null.</exception>
-        </member>
         <member name="M:Codefarts.IoC.Container.Register(System.Type,System.Type)">
             <summary>
             Registers a type key with a concrete type.
@@ -90,19 +82,13 @@
             <param name="type">The type to be unregistered.</param>
             <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
         </member>
-        <member name="M:Codefarts.IoC.Container.CanResolve``1">
-            <summary>
-            Determines whether the type can be resolved.
-            </summary>
-            <typeparam name="T">The type to check if it can be resolved.</typeparam>
-            <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
-        </member>
         <member name="M:Codefarts.IoC.Container.CanResolve(System.Type)">
             <summary>
             Determines whether the type can be resolved.
             </summary>
             <param name="type">The type to check if it can be resolved.</param>
             <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
+            <remarks><see cref="M:Codefarts.IoC.Container.CanResolve(System.Type)"/> checks <see cref="P:Codefarts.IoC.Container.RegisteredTypes"/> property to see if a type has previously been registered with a <see cref="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
         </member>
         <member name="M:Codefarts.IoC.Container.Perform``1">
             <summary>
@@ -184,13 +170,6 @@
             <param name="container">The container that will be used to resolve the type.</param>
             <param name="creator">The creator delegate.</param>
         </member>
-        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Register``1(Codefarts.IoC.Container)">
-            <summary>
-            Registers a type within the container.
-            </summary>
-            <typeparam name="T">The type of the concrete class.</typeparam>
-            <param name="container">The container that will be used to resolve the type.</param>
-        </member>
         <member name="M:Codefarts.IoC.ContainerExtensionMethods.Register``2(Codefarts.IoC.Container)">
             <summary>
             Registers a type key with a concrete type.
@@ -206,6 +185,14 @@
             <typeparam name="T">The type to be unregistered.</typeparam>
             <param name="container">The container that will be used to resolve the type.</param>
             <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.CanResolve``1(Codefarts.IoC.Container)">
+            <summary>
+            Determines whether the type can be resolved.
+            </summary>
+            <typeparam name="T">The type to check if it can be resolved.</typeparam>
+            <param name="container">The container that will be used to resolve the type.</param>
+            <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
         </member>
         <member name="M:Codefarts.IoC.ContainerExtensionMethods.Resolve``1(Codefarts.IoC.Container,``0)">
             <summary>

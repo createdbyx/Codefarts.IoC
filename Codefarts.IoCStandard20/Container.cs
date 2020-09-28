@@ -119,22 +119,22 @@ namespace Codefarts.IoC
             this.typeCreators[type] = creator;
         }
 
-        /// <summary>
-        /// Registers a <see cref="Creator" /> delegate for a given type.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <exception cref="RegistrationTypeException">Can not register interfaces, abstract classes or value types.</exception>
-        /// <exception cref="System.ArgumentNullException"><paramref name="creator" /> is null.</exception>
-        public void Register(Type type)
-        {
-            if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type))
-            {
-                throw new RegistrationTypeException(type);
-            }
+        ///// <summary>
+        ///// Registers a <see cref="Creator" /> delegate for a given type.
+        ///// </summary>
+        ///// <param name="type">The type.</param>
+        ///// <exception cref="RegistrationTypeException">Can not register interfaces, abstract classes or value types.</exception>
+        ///// <exception cref="System.ArgumentNullException"><paramref name="creator" /> is null.</exception>
+        //public void Register(Type type)
+        //{
+        //    if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type))
+        //    {
+        //        throw new RegistrationTypeException(type);
+        //    }
 
-            this.PreviouslyRegisteredCheck(type);
-            this.typeCreators[type] = () => this.ResolveByType(type);
-        }
+        //    this.PreviouslyRegisteredCheck(type);
+        //    this.typeCreators[type] = () => this.ResolveByType(type);
+        //}
 
         /// <summary>
         /// Registers a type key with a concrete type.
@@ -160,18 +160,9 @@ namespace Codefarts.IoC
         /// <summary>
         /// Determines whether the type can be resolved.
         /// </summary>
-        /// <typeparam name="T">The type to check if it can be resolved.</typeparam>
-        /// <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
-        public bool CanResolve<T>()
-        {
-            return this.CanResolve(typeof(T));
-        }
-
-        /// <summary>
-        /// Determines whether the type can be resolved.
-        /// </summary>
         /// <param name="type">The type to check if it can be resolved.</param>
         /// <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
+        /// <remarks><see cref="CanResolve"/> checks <see cref="RegisteredTypes"/> property to see if a type has previously been registered with a <see cref="Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
         public bool CanResolve(Type type)
         {
             Creator value;
@@ -231,26 +222,42 @@ namespace Codefarts.IoC
             var hasSpecifiedArgs = args != null && args.Length > 0;
             var constructors = hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type);
 
-            // work through each constructor and attempt to instantiate it
-            foreach (var constructor in constructors)
+            if (!constructors.Any())
             {
-                try
-                {
-                    var arguments = hasSpecifiedArgs ? args : this.ResolveParametersFromConstructorInfo(constructor);
-                    var value = constructor.Invoke(arguments);
-                    return value;
-                }
-                catch
-                {
-                    // ignored
-                }
+                throw new ContainerResolutionException(
+                    type,
+                    string.Format(
+                        "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
+                        type.FullName));
             }
 
-            throw new ContainerResolutionException(
-                type,
-                string.Format(
-                    "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
-                    type.FullName));
+            // work through each constructor and attempt to instantiate it
+            // foreach (var constructor in constructors)
+            //{
+            var constructor = constructors.OrderByDescending(x => x.GetParameters().Length).First();
+
+            try
+            {
+                var arguments = hasSpecifiedArgs ? args : this.ResolveParametersFromConstructorInfo(constructor);
+                var value = constructor.Invoke(arguments);
+                return value;
+            }
+            catch (Exception ex)
+            {
+                // ignored
+                throw new ContainerResolutionException(
+                    type,
+                    string.Format(
+                        "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
+                        type.FullName), ex);
+            }
+            //}
+
+            //throw new ContainerResolutionException(
+            //    type,
+            //    string.Format(
+            //        "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
+            //        type.FullName));
         }
 
         private IEnumerable<ConstructorInfo> GetPublicConstructorWithMatchingParameters(Type type, object[] args)
@@ -329,7 +336,7 @@ namespace Codefarts.IoC
             Creator creator;
             if (this.typeCreators.TryGetValue(type, out creator) || creator != null)
             {
-                throw new RegistrationException();
+                throw new RegistrationException($"Type '{type.FullName}' already registered.");
             }
         }
     }

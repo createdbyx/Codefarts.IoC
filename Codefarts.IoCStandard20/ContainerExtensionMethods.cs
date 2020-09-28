@@ -69,16 +69,16 @@ namespace Codefarts.IoC
             container.Register(typeof(T), creator);
         }
 
-        /// <summary>
-        /// Registers a type within the container.
-        /// </summary>
-        /// <typeparam name="T">The type of the concrete class.</typeparam>
-        /// <param name="container">The container that will be used to resolve the type.</param>
-        public static void Register<T>(this Container container)
-            where T : class
-        {
-            container.Register(typeof(T));
-        }
+        ///// <summary>
+        ///// Registers a type within the container.
+        ///// </summary>
+        ///// <typeparam name="T">The type of the concrete class.</typeparam>
+        ///// <param name="container">The container that will be used to resolve the type.</param>
+        //public static void Register<T>(this Container container)
+        //    where T : class
+        //{
+        //    container.Register(typeof(T));
+        //}
 
         /// <summary>
         /// Registers a type key with a concrete type.
@@ -101,6 +101,17 @@ namespace Codefarts.IoC
         public static bool Unregister<T>(this Container container)
         {
             return container.Unregister(typeof(T));
+        }
+
+        /// <summary>
+        /// Determines whether the type can be resolved.
+        /// </summary>
+        /// <typeparam name="T">The type to check if it can be resolved.</typeparam>
+        /// <param name="container">The container that will be used to resolve the type.</param>
+        /// <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
+        public static bool CanResolve<T>(this Container container)
+        {
+            return container.CanResolve(typeof(T));
         }
 
         /// <summary>
