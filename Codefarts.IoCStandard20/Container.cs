@@ -203,7 +203,7 @@ namespace Codefarts.IoC
             }
 
             var hasSpecifiedArgs = args != null && args.Length > 0;
-            var constructors = hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type);
+            var constructors = (hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type)).ToArray();
 
             if (!constructors.Any())
             {
