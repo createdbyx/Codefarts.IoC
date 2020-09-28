@@ -178,9 +178,10 @@ namespace Codefarts.IoC
         /// <param name="type">The type that is to be instantiated.</param>
         /// <param name="args">Arguments to be passed to the type constructor.</param>
         /// <returns>The reference to the created instance.</returns>
-        /// <remarks>Attempts to create the specified <param name="type"/> starting with the most number 
-        /// of constructor arguments down to the constructor with the least arguments.</remarks>
-        /// <exception cref="TypeLoadException"> Thrown if the type could not be constructed because none 
+        /// <remarks><p>Attempts to create the specified <param name="type"/> with the most number
+        /// of constructor arguments that can be satisfied.</p>
+        /// <p>Constructors with value types are ignored and only public constructors are considered.</p></remarks>
+        /// <exception cref="TypeLoadException"> Thrown if the type could not be constructed because none
         /// of the available constructors could be satisfied.
         /// </exception>
         private object ResolveByType(Type type, params object[] args)
@@ -205,6 +206,7 @@ namespace Codefarts.IoC
             var hasSpecifiedArgs = args != null && args.Length > 0;
             var constructors = (hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type)).ToArray();
 
+            // if no constructors could be found throw exception
             if (!constructors.Any())
             {
                 throw new ContainerResolutionException(
@@ -215,8 +217,6 @@ namespace Codefarts.IoC
             }
 
             // work through each constructor and attempt to instantiate it
-            // foreach (var constructor in constructors)
-            //{
             var constructor = constructors.OrderByDescending(x => x.GetParameters().Length).First();
 
             try
@@ -234,13 +234,6 @@ namespace Codefarts.IoC
                         "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
                         type.FullName), ex);
             }
-            //}
-
-            //throw new ContainerResolutionException(
-            //    type,
-            //    string.Format(
-            //        "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
-            //        type.FullName));
         }
 
         private IEnumerable<ConstructorInfo> GetPublicConstructorWithMatchingParameters(Type type, object[] args)
