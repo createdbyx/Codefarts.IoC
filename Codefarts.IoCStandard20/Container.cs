@@ -262,7 +262,7 @@ namespace Codefarts.IoC
                         type.FullName));
             }
 
-            // work through each constructor and attempt to instantiate it
+            // get constructor with the most parameters and attempt to instantiate it
             var constructor = constructors.OrderByDescending(x => x.GetParameters().Length).FirstOrDefault();
 
             try
