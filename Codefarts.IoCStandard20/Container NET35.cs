@@ -2,9 +2,6 @@
 // Copyright (c) Codefarts
 // </copyright>
 
-using System.CodeDom;
-using System.Diagnostics;
-
 #if !NET20
 namespace Codefarts.IoC
 {
@@ -22,13 +19,6 @@ namespace Codefarts.IoC
         {
             var funcGenericType = typeof(List<>).MakeGenericType(returnType);
             return funcGenericType.GetConstructors().FirstOrDefault(x => !x.GetParameters().Any());
-        }
-
-        private object[] ResolveParametersFromConstructorInfo(ConstructorInfo constructor)
-        {
-            var arguments = from p in constructor.GetParameters()
-                            select this.Resolve(p.ParameterType);
-            return arguments.ToArray();
         }
 
         private IEnumerable<ConstructorInfo> GetPublicConstructorWithValidParameters(Type type)

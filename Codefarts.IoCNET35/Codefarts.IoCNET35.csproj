@@ -57,6 +57,9 @@
     <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs">
       <Link>ContainerResolutionException.cs</Link>
     </Compile>
+    <Compile Include="..\Codefarts.IoCStandard20\ExceededMaxInstantiationDepthException.cs">
+      <Link>ExceededMaxInstantiationDepthException.cs</Link>
+    </Compile>
     <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
       <Link>RegistrationException.cs</Link>
     </Compile>

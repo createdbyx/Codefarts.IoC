@@ -57,7 +57,7 @@ namespace Codefarts.IoC.Tests
 
             Assert.AreNotSame(output, output2);
         }
-           
+
         [TestMethod]
         public void Register_WithDelegateFactoryStaticMethod_CanRegister()
         {
@@ -144,7 +144,7 @@ namespace Codefarts.IoC.Tests
         public void CanResolveType_WithNoRegistration_Returnsfalse()
         {
             var container = new Container();
-            
+
             var result = container.CanResolve<ITestInterface>();
 
             Assert.IsFalse(result);
@@ -178,7 +178,7 @@ namespace Codefarts.IoC.Tests
 
             Assert.IsTrue(result);
         }
-             
+
         [TestMethod]
         public void CanResolveType_FactoryRegisteredType_ReturnsTrue()
         {
@@ -209,7 +209,7 @@ namespace Codefarts.IoC.Tests
             container.Register<ITestInterface>(() => { throw new NotImplementedException(); });
 
             AssertHelper.ThrowsException<ContainerResolutionException>(() => container.Resolve<ITestInterface>());
-            
+
             // Should have thrown by now
             // Assert.IsTrue(false);
         }
@@ -271,7 +271,7 @@ namespace Codefarts.IoC.Tests
 
             Assert.AreSame(item, result);
         }
-         
+
         [TestMethod]
         public void Register_GenericTypeWithInterface_CanRegister()
         {
@@ -284,7 +284,7 @@ namespace Codefarts.IoC.Tests
         public void Resolve_RegisteredGenericTypeImplementationOnlyCorrectGenericTypes_Resolves()
         {
             var container = new Container();
-           // container.Register<GenericClassWithInterface<int, string>>();
+            // container.Register<GenericClassWithInterface<int, string>>();
 
             var result = container.Resolve<GenericClassWithInterface<int, string>>();
 
@@ -301,7 +301,7 @@ namespace Codefarts.IoC.Tests
 
             Assert.IsInstanceOfType(result, typeof(GenericClassWithInterface<int, string>));
         }
-        
+
         [TestMethod]
         public void Resolve_BoundGenericTypeWithoutRegistered_ResolvesWithDefaultOptions()
         {
@@ -311,7 +311,7 @@ namespace Codefarts.IoC.Tests
 
             Assert.IsInstanceOfType(testing, typeof(GenericClassWithInterface<int, string>));
         }
-             
+
         [TestMethod]
         public void CanResolve_BoundGenericTypeWithoutRegistered_ReturnsFalse()
         {
@@ -321,7 +321,7 @@ namespace Codefarts.IoC.Tests
 
             Assert.IsFalse(testing);
         }
-         
+
         [TestMethod]
         public void Resolve_BoundGenericTypeWithFailedDependenciesWithoutRegistered_ThrowsException()
         {
@@ -374,7 +374,7 @@ namespace Codefarts.IoC.Tests
 
             Assert.IsInstanceOfType(item.Prop1, typeof(TestClassDefaultCtor));
         }
-       
+
         [TestMethod]
         public void Resolve_MultiInstanceFactoryNoConstructorSpecified_UsesCorrectCtor()
         {
@@ -404,11 +404,11 @@ namespace Codefarts.IoC.Tests
         public void Resolve_ConstructorThrowsException()
         {
             var container = new Container();
-          //  container.Register<TestClassConstructorFailure>();
+            //  container.Register<TestClassConstructorFailure>();
 
             AssertHelper.ThrowsException<ContainerResolutionException>(
                 () => container.Resolve<TestClassConstructorFailure>());
-         
+
             // Should have thrown by now
             // Assert.IsTrue(false);
         }
@@ -469,12 +469,12 @@ namespace Codefarts.IoC.Tests
 
             Assert.IsNull(input.WriteOnlyProperty);
         }
-        
+
         [TestMethod]
         public void Resolve_TypeWithIEnumerableOfNonRegisteredTypeDependency_ResolvesWithIEnumerablewithNoItems()
         {
             var container = new Container();
-          //  container.Register<TestClassEnumerableDependency>();
+            //  container.Register<TestClassEnumerableDependency>();
 
             var result = container.Resolve<TestClassEnumerableDependency>();
 
@@ -557,7 +557,7 @@ namespace Codefarts.IoC.Tests
 
             Assert.IsFalse(unregistered);
         }
-       
+
         #endregion
 
         #region Unregister<T> With Implementation
@@ -810,6 +810,26 @@ namespace Codefarts.IoC.Tests
             {
                 object[] args = null;
                 container.Resolve<TestClassWithParameters>(args);
+            });
+        }
+
+        [TestMethod]
+        public void SelfReferentialConstructor()
+        {
+            var container = new Container();
+            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
+            {
+                container.Resolve<TestClassConstructorSelfReferential>();
+            });
+        }
+
+        [TestMethod]
+        public void CircularReferenceConstructor()
+        {
+            var container = new Container();
+            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
+            {
+                container.Resolve<TestClassCircularReferenceA>();
             });
         }
     }

@@ -4,6 +4,8 @@
 // http://www.codefarts.com
 // </copyright>
 
+using System.Diagnostics;
+
 namespace Codefarts.IoC
 {
     using System;
@@ -27,6 +29,11 @@ namespace Codefarts.IoC
         private readonly SafeDictionary<Type, Creator> typeCreators;
 
         /// <summary>
+        /// Backing field for the <see cref="MaxInstantiationDepth"/> property.
+        /// </summary>
+        private uint maxInstantiationDepth = 10;
+
+        /// <summary>
         /// Provides a delegate for constructing a type reference.
         /// </summary>
         /// <returns>A instance of a type.</returns>
@@ -45,6 +52,23 @@ namespace Codefarts.IoC
         public Container()
         {
             this.typeCreators = new SafeDictionary<Type, Creator>();
+        }
+
+        /// <summary>
+        /// Gets or sets the max instantiation depth.
+        /// </summary>
+        /// <remarks>Max instantiation depth prevents the <see cref="Resolve"/> method from making circular instantiation references. Default value is 10.</remarks>
+        public uint MaxInstantiationDepth
+        {
+            get
+            {
+                return this.maxInstantiationDepth;
+            }
+
+            set
+            {
+                this.maxInstantiationDepth = value;
+            }
         }
 
         /// <summary>
@@ -81,6 +105,22 @@ namespace Codefarts.IoC
         /// </remarks>
         public object Resolve(Type type, params object[] args)
         {
+            return this.DoResolve(0, type, args);
+        }
+
+        /// <summary>
+        /// Creates instance of a specified type.
+        /// </summary>
+        /// <param name="depth">Specified the instantiation depth.</param>
+        /// <param name="type">Specifies the type to be instantiated.</param>
+        /// <param name="args">Arguments to be passed to the type constructor.</param>
+        /// <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
+        /// <remarks>
+        /// <p>Will attempt to resolve the type even if there was no previous type <see cref="Creator"/> delegate specified for the type.</p>
+        /// <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
+        /// </remarks>
+        private object DoResolve(int depth, Type type, params object[] args)
+        {
             Creator provider;
             if (this.typeCreators.TryGetValue(type, out provider))
             {
@@ -94,7 +134,7 @@ namespace Codefarts.IoC
                 }
             }
 
-            return this.ResolveByType(type, args);
+            return this.ResolveByType(depth, type, args);
         }
 
         /// <summary>
@@ -127,7 +167,7 @@ namespace Codefarts.IoC
         public void Register(Type key, Type concrete)
         {
             this.PreviouslyRegisteredCheck(key);
-            this.typeCreators[key] = () => this.ResolveByType(concrete);
+            this.typeCreators[key] = () => this.ResolveByType(0, concrete);
         }
 
         /// <summary>
@@ -175,6 +215,7 @@ namespace Codefarts.IoC
         /// <summary>
         /// Creates a instance of a type.
         /// </summary>
+        /// <param name="depth">Specified the instantiation depth.</param>
         /// <param name="type">The type that is to be instantiated.</param>
         /// <param name="args">Arguments to be passed to the type constructor.</param>
         /// <returns>The reference to the created instance.</returns>
@@ -184,8 +225,13 @@ namespace Codefarts.IoC
         /// <exception cref="TypeLoadException"> Thrown if the type could not be constructed because none
         /// of the available constructors could be satisfied.
         /// </exception>
-        private object ResolveByType(Type type, params object[] args)
+        private object ResolveByType(int depth, Type type, params object[] args)
         {
+            if (depth > this.MaxInstantiationDepth)
+            {
+                throw new ExceededMaxInstantiationDepthException("Exceeded max instantiation depth.");
+            }
+
             // check if the type if a generic type
             object genericResultValue;
             if (this.ResolveGenericType(type, out genericResultValue))
@@ -217,17 +263,20 @@ namespace Codefarts.IoC
             }
 
             // work through each constructor and attempt to instantiate it
-            var constructor = constructors.OrderByDescending(x => x.GetParameters().Length).First();
+            var constructor = constructors.OrderByDescending(x => x.GetParameters().Length).FirstOrDefault();
 
             try
             {
-                var arguments = hasSpecifiedArgs ? args : this.ResolveParametersFromConstructorInfo(constructor);
+                var arguments = hasSpecifiedArgs ? args : constructor.GetParameters().Select(p => this.DoResolve(++depth, p.ParameterType)).ToArray();
                 var value = constructor.Invoke(arguments);
                 return value;
             }
+            catch (ExceededMaxInstantiationDepthException mde)
+            {
+                throw mde;
+            }
             catch (Exception ex)
             {
-                // ignored
                 throw new ContainerResolutionException(
                     type,
                     string.Format(
