@@ -19,6 +19,11 @@ namespace Codefarts.IoC
     public partial class Container
     {
         /// <summary>
+        /// The default value for <see cref="MaxInstantiationDepth"/>.
+        /// </summary>
+        public const uint DefaultMaxInstantiationDepth = 25;
+
+        /// <summary>
         /// The backing field for the <see cref="DefaultInstance"/> property.
         /// </summary>
         private static readonly Container DefaultInstance = new Container();
@@ -31,7 +36,7 @@ namespace Codefarts.IoC
         /// <summary>
         /// Backing field for the <see cref="MaxInstantiationDepth"/> property.
         /// </summary>
-        private uint maxInstantiationDepth = 10;
+        private uint maxInstantiationDepth = DefaultMaxInstantiationDepth;
 
         /// <summary>
         /// Provides a delegate for constructing a type reference.
@@ -57,7 +62,7 @@ namespace Codefarts.IoC
         /// <summary>
         /// Gets or sets the max instantiation depth.
         /// </summary>
-        /// <remarks>Max instantiation depth prevents the <see cref="Resolve"/> method from making circular instantiation references. Default value is 10.</remarks>
+        /// <remarks>Max instantiation depth prevents the <see cref="Resolve"/> method from making circular instantiation references.</remarks>
         public uint MaxInstantiationDepth
         {
             get
