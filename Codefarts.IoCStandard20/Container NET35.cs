@@ -26,7 +26,7 @@ namespace Codefarts.IoC
             // get public constructors ordered by most arguments first
             var constructors = from c in type.GetConstructors()
                                let parameters = c.GetParameters()
-                               where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType)
+                               where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType || typeof(Delegate).IsAssignableFrom(x.ParameterType))
                                orderby parameters.Length descending
                                select c;
             return constructors;
