@@ -12,6 +12,11 @@
             Provides a simple IoC container functions.
             </summary>
         </member>
+        <member name="F:Codefarts.IoC.Container.DefaultMaxInstantiationDepth">
+            <summary>
+            The default value for <see cref="P:Codefarts.IoC.Container.MaxInstantiationDepth"/>.
+            </summary>
+        </member>
         <member name="F:Codefarts.IoC.Container.DefaultInstance">
             <summary>
             The backing field for the <see cref="F:Codefarts.IoC.Container.DefaultInstance"/> property.
@@ -47,7 +52,7 @@
             <summary>
             Gets or sets the max instantiation depth.
             </summary>
-            <remarks>Max instantiation depth prevents the <see cref="M:Codefarts.IoC.Container.Resolve(System.Type,System.Object[])"/> method from making circular instantiation references. Default value is 10.</remarks>
+            <remarks>Max instantiation depth prevents the <see cref="M:Codefarts.IoC.Container.Resolve(System.Type,System.Object[])"/> method from making circular instantiation references.</remarks>
         </member>
         <member name="P:Codefarts.IoC.Container.RegisteredTypes">
             <summary>
