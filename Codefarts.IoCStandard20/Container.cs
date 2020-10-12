@@ -301,10 +301,10 @@ namespace Codefarts.IoC
             }
 
             var constructors = type.GetConstructors();
+            var argTypes = args.Select(x => x.GetType()).ToArray();
             foreach (var info in constructors.Where(x => x.IsPublic))
             {
                 var constructorParamTypes = info.GetParameters().Select(x => x.ParameterType);
-                var argTypes = args.Select(x => x.GetType());
 
                 if (constructorParamTypes.SequenceEqual(argTypes))
                 {
