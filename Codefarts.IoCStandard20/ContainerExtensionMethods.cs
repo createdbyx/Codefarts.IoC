@@ -2,12 +2,12 @@
 // Copyright (c) Codefarts
 // </copyright>
 
-using System;
-using System.Linq;
-using System.Reflection;
-
 namespace Codefarts.IoC
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+
     /// <summary>
     /// Provides extension methods for the <see cref="Container"/> class.
     /// </summary>

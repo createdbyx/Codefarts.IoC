@@ -17,6 +17,14 @@ namespace Codefarts.IoC
         /// <summary>
         ///  Initializes a new instance of the <see cref="ContainerResolutionException"/> class.
         /// </summary>
+        public ContainerResolutionException()
+        : base()
+        {
+        }
+
+        /// <summary>
+        ///  Initializes a new instance of the <see cref="ContainerResolutionException"/> class.
+        /// </summary>
         /// <param name="type">The type that could not be resolved.</param>
         public ContainerResolutionException(Type type)
             : base(string.Format(ErrorText, type.FullName))

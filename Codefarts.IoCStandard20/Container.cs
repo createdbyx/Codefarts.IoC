@@ -4,8 +4,6 @@
 // http://www.codefarts.com
 // </copyright>
 
-using System.Diagnostics;
-
 namespace Codefarts.IoC
 {
     using System;

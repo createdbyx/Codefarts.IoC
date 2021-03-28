@@ -24,16 +24,6 @@ namespace Codefarts.IoC
         /// <summary>
         /// Initializes a new instance of the <see cref="ExceededMaxInstantiationDepthException"/> class.
         /// </summary>
-        /// <param name="info">The info.</param>
-        /// <param name="context">The context.</param>
-        protected ExceededMaxInstantiationDepthException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExceededMaxInstantiationDepthException"/> class.
-        /// </summary>
         /// <param name="message">The message.</param>
         public ExceededMaxInstantiationDepthException(string message)
             : base(message)
@@ -47,6 +37,16 @@ namespace Codefarts.IoC
         /// <param name="innerException">The inner exception.</param>
         public ExceededMaxInstantiationDepthException(string message, Exception innerException)
             : base(message, innerException)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExceededMaxInstantiationDepthException"/> class.
+        /// </summary>
+        /// <param name="info">The info.</param>
+        /// <param name="context">The context.</param>
+        protected ExceededMaxInstantiationDepthException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

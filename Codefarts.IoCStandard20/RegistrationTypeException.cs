@@ -8,20 +8,25 @@ namespace Codefarts.IoC
 
     public class RegistrationTypeException : Exception
     {
-        private const string REGISTER_ERROR_TEXT = "Cannot register type {0} - abstract classes or interfaces are not valid implementation.";
+        private const string RegisterErrorText = "Cannot register type {0} - abstract classes or interfaces are not valid implementation.";
+
+        public RegistrationTypeException()
+            : base()
+        {
+        }
 
         public RegistrationTypeException(Type type)
-            : base(string.Format(REGISTER_ERROR_TEXT, type.FullName))
+            : base(string.Format(RegisterErrorText, type.FullName))
         {
         }
 
         public RegistrationTypeException(Type type, string message)
-            : base(string.Format(REGISTER_ERROR_TEXT, type.FullName) + (string.IsNullOrEmpty(message) ? string.Empty : "\r\n" + message))
+            : base(string.Format(RegisterErrorText, type.FullName) + (string.IsNullOrEmpty(message) ? string.Empty : "\r\n" + message))
         {
         }
 
         public RegistrationTypeException(Type type, string message, Exception innerException)
-            : base(string.Format(REGISTER_ERROR_TEXT, type.FullName) + (string.IsNullOrEmpty(message) ? string.Empty : "\r\n" + message), innerException)
+            : base(string.Format(RegisterErrorText, type.FullName) + (string.IsNullOrEmpty(message) ? string.Empty : "\r\n" + message), innerException)
         {
         }
 

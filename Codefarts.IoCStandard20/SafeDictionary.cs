@@ -40,6 +40,17 @@ namespace Codefarts.IoC
             }
         }
 
+        public IEnumerable<TKey> Keys
+        {
+            get
+            {
+                lock (this.lockObject)
+                {
+                    return this.internalDictionary.Keys;
+                }
+            }
+        }
+
         public bool TryGetValue(TKey key, out TValue value)
         {
             lock (this.lockObject)
@@ -61,17 +72,6 @@ namespace Codefarts.IoC
             lock (this.lockObject)
             {
                 this.internalDictionary.Clear();
-            }
-        }
-
-        public IEnumerable<TKey> Keys
-        {
-            get
-            {
-                lock (this.lockObject)
-                {
-                    return this.internalDictionary.Keys;
-                }
             }
         }
 
