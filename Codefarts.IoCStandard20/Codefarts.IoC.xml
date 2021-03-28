@@ -238,6 +238,11 @@
             <summary>Provides an exception for type resolution failures.</summary>
             <seealso cref="T:System.Exception" />
         </member>
+        <member name="M:Codefarts.IoC.ContainerResolutionException.#ctor">
+            <summary>
+             Initializes a new instance of the <see cref="T:Codefarts.IoC.ContainerResolutionException"/> class.
+            </summary>
+        </member>
         <member name="M:Codefarts.IoC.ContainerResolutionException.#ctor(System.Type)">
             <summary>
              Initializes a new instance of the <see cref="T:Codefarts.IoC.ContainerResolutionException"/> class.
@@ -276,13 +281,6 @@
             Initializes a new instance of the <see cref="T:Codefarts.IoC.ExceededMaxInstantiationDepthException"/> class.
             </summary>
         </member>
-        <member name="M:Codefarts.IoC.ExceededMaxInstantiationDepthException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Codefarts.IoC.ExceededMaxInstantiationDepthException"/> class.
-            </summary>
-            <param name="info">The info.</param>
-            <param name="context">The context.</param>
-        </member>
         <member name="M:Codefarts.IoC.ExceededMaxInstantiationDepthException.#ctor(System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:Codefarts.IoC.ExceededMaxInstantiationDepthException"/> class.
@@ -295,6 +293,13 @@
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Codefarts.IoC.ExceededMaxInstantiationDepthException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.ExceededMaxInstantiationDepthException"/> class.
+            </summary>
+            <param name="info">The info.</param>
+            <param name="context">The context.</param>
         </member>
         <member name="T:Codefarts.IoC.RegistrationException">
             <summary>
