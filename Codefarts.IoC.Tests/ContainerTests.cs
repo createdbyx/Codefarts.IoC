@@ -345,13 +345,17 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
-        public void Resolve_ClassWithLazyFactoryDependency_Resolves()
+        public void Resolve_ClassWithGenericFuncParameterInConstructor()
         {
             var container = new Container();
 
-            var result = container.Resolve<TestClassWithLazyFactory>();
+            var exceptionThrown = Assert.ThrowsException<ContainerResolutionException>(() =>
+              {
+                  var result = container.Resolve<TestClassWithLazyFactory>();
+                  Assert.IsInstanceOfType(result, typeof(TestClassWithLazyFactory));
+              });
 
-            Assert.IsInstanceOfType(result, typeof(TestClassWithLazyFactory));
+            Assert.IsInstanceOfType(exceptionThrown, typeof(ContainerResolutionException));
         }
 
         [TestMethod]
@@ -364,16 +368,21 @@ namespace Codefarts.IoC.Tests
             Assert.IsFalse(result);
         }
 
-        [TestMethod]
-        public void LazyFactory_CalledByDependantClass_ReturnsInstanceOfType()
-        {
-            var container = new Container();
-            var item = container.Resolve<TestClassWithLazyFactory>();
+        //[TestMethod]
+        //public void LazyFactory_CalledByDependantClass_ReturnsInstanceOfType()
+        //{
+        //    var container = new Container();
+        //    var exceptionThrown = Assert.ThrowsException<ContainerResolutionException>(() =>
+        //        {
+        //            var item = container.Resolve<TestClassWithLazyFactory>();
 
-            item.Method1();
+        //            item.Method1();
 
-            Assert.IsInstanceOfType(item.Prop1, typeof(TestClassDefaultCtor));
-        }
+        //            Assert.IsInstanceOfType(item.Prop1, typeof(TestClassDefaultCtor));
+        //        });
+
+        //    Assert.IsInstanceOfType(exceptionThrown, typeof(ContainerResolutionException));
+        //}
 
         [TestMethod]
         public void Resolve_MultiInstanceFactoryNoConstructorSpecified_UsesCorrectCtor()
