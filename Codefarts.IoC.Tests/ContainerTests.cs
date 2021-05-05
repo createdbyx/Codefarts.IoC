@@ -51,6 +51,65 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
+        public void Resolve_Delegate()
+        {
+            var container = Container.Default;
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<Container.Creator>();
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
+        public void Resolve_ActionDelegate()
+        {
+            var container = Container.Default;
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<Action>();
+                Assert.IsNull(value);
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
+        public void Resolve_GenericActionDelegate()
+        {
+            var container = Container.Default;
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<Action<string>>();
+                Assert.IsNull(value);
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
+        public void Resolve_GenericFuncDelegate()
+        {
+            var container = Container.Default;
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<Func<bool>>();
+                Assert.IsNull(value);
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
+        public void Resolve_AbstractClass()
+        {
+            var container = Container.Default;
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<TestClassBase>();
+                Assert.IsNull(value);
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
         public void Default_GetTwice_ReturnsSameInstance()
         {
             var container1 = Container.Default;
@@ -481,14 +540,51 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
-        public void Resolve_TypeWithIEnumerableOfNonRegisteredTypeDependency_ResolvesWithIEnumerablewithNoItems()
+        public void Resolve_TypeWithIEnumerableOfNonRegisteredTypeDependency()
         {
             var container = new Container();
             //  container.Register<TestClassEnumerableDependency>();
 
-            var result = container.Resolve<TestClassEnumerableDependency>();
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var result = container.Resolve<TestClassEnumerableDependency>();
+                Assert.Fail("Should have thrown an ContainerResolutionException exception.");
+            });
+        }
 
-            Assert.AreEqual(0, result.EnumerableCount);
+        [TestMethod]
+        public void Resolve_UnregisteredType_ResolvesWithIEnumerableParamWithNoItems()
+        {
+            var container = new Container();
+            container.Register<IEnumerable<ITestInterface>>(() => Enumerable.Empty<ITestInterface>());
+
+            var result = container.Resolve<TestClassEnumerableDependency>();
+            Assert.IsNotNull(result, "Should have returned a reference to a TestClassEnumerableDependency class.");
+        }
+
+        [TestMethod]
+        public void Resolve_UnregisteredType_FailsToResolveWithUnregisteredAbstractClassArgs()
+        {
+            var container = new Container();
+
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+                {
+                    var result = container.Resolve<TestClassWithAbstractDependency>();
+                    Assert.Fail("Should have thrown an ContainerResolutionException exception.");
+                });
+        }
+
+        [TestMethod]
+        public void Resolve_UnregisteredType_ResolvesWithRegisteredAbstractClassArgs()
+        {
+            var container = new Container();
+            container.Register<TestClassBase, TestClassWithBaseClass>();
+
+            var result = container.Resolve<TestClassWithAbstractDependency>();
+            Assert.IsNotNull(result, "Should have returned a reference to a TestClassEnumerableDependency class.");
+            Assert.IsNotNull(result.Prop1, "Unit test failure! Property should have been set in constructor.");
+            Assert.IsInstanceOfType(result.Prop1, typeof(TestClassBase));
+            Assert.IsInstanceOfType(result.Prop1, typeof(TestClassWithBaseClass));
         }
 
         #region Unregister
@@ -687,7 +783,7 @@ namespace Codefarts.IoC.Tests
         public void ProperCustomArgsProvided()
         {
             var container = new Container();
-            var result = container.Resolve<TestClassWithParameters>(new object[] { "string", 4 });
+            var result = container.Resolve<TestClassWithStringAndIntParameters>(new object[] { "string", 4 });
             Assert.IsNotNull(result, "Result is null!");
             Assert.AreEqual(4, result.IntProperty);
             Assert.AreEqual("string", result.StringProperty);
@@ -699,7 +795,7 @@ namespace Codefarts.IoC.Tests
             var container = new Container();
             Assert.ThrowsException<ContainerResolutionException>(() =>
             {
-                container.Resolve<TestClassWithParameters>(new object[] { 4, "string" });
+                container.Resolve<TestClassWithStringAndIntParameters>(new object[] { 4, "string" });
             });
         }
 
@@ -709,7 +805,7 @@ namespace Codefarts.IoC.Tests
             var container = new Container();
             Assert.ThrowsException<ContainerResolutionException>(() =>
             {
-                container.Resolve<TestClassWithParameters>(new object[] { false, "string", "bad-arg" });
+                container.Resolve<TestClassWithStringAndIntParameters>(new object[] { false, "string", "bad-arg" });
             });
         }
 
@@ -719,7 +815,7 @@ namespace Codefarts.IoC.Tests
             var container = new Container();
             Assert.ThrowsException<ContainerResolutionException>(() =>
             {
-                container.Resolve<TestClassWithParameters>(new object[] { null, 4 });
+                container.Resolve<TestClassWithStringAndIntParameters>(new object[] { null, 4 });
             });
         }
 
@@ -730,7 +826,7 @@ namespace Codefarts.IoC.Tests
             Assert.ThrowsException<ContainerResolutionException>(() =>
             {
                 object[] args = null;
-                container.Resolve<TestClassWithParameters>(args);
+                container.Resolve<TestClassWithStringAndIntParameters>(args);
             });
         }
 

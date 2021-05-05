@@ -87,6 +87,19 @@
         }
     }
 
+    internal class TestClassWithAbstractDependency
+    {
+        public TestClassBase Prop1
+        {
+            get; set;
+        }
+
+        public TestClassWithAbstractDependency(TestClassBase arg)
+        {
+            this.Prop1 = arg;
+        }
+    }
+
     internal class TestClassWithDependency
     {
         TestClassDefaultCtor Dependency
@@ -126,7 +139,7 @@
         }
     }
 
-    internal class TestClassWithParameters
+    internal class TestClassWithStringAndIntParameters
     {
         public string StringProperty
         {
@@ -137,10 +150,23 @@
             get; set;
         }
 
-        public TestClassWithParameters(string stringProperty, int intProperty)
+        public TestClassWithStringAndIntParameters(string stringProperty, int intProperty)
         {
             this.StringProperty = stringProperty;
             this.IntProperty = intProperty;
+        }
+    }
+
+    internal class TestClassWithStringParameter
+    {
+        public string StringProperty
+        {
+            get; set;
+        }
+
+        public TestClassWithStringParameter(string stringProperty)
+        {
+            this.StringProperty = stringProperty;
         }
     }
 
@@ -321,19 +347,19 @@
 
     }
 
-    internal class TestclassWithNameAndParamsLazyFactory
+    internal class TestClassWithNameAndParamsLazyFactory
     {
-        private Func<string, IDictionary<string, object>, TestClassWithParameters> _Factory;
-        public TestClassWithParameters Prop1
+        private Func<string, IDictionary<string, object>, TestClassWithStringAndIntParameters> _Factory;
+        public TestClassWithStringAndIntParameters Prop1
         {
             get; private set;
         }
 
         /// <summary>
-        /// Initializes a new instance of the TestclassWithNameAndParamsLazyFactory class.
+        /// Initializes a new instance of the TestClassWithNameAndParamsLazyFactory class.
         /// </summary>
         /// <param name="factory"></param>
-        public TestclassWithNameAndParamsLazyFactory(Func<string, IDictionary<string, object>, TestClassWithParameters> factory)
+        public TestClassWithNameAndParamsLazyFactory(Func<string, IDictionary<string, object>, TestClassWithStringAndIntParameters> factory)
         {
             this._Factory = factory;
             this.Prop1 = this._Factory.Invoke(string.Empty, new Dictionary<string, object> { { "stringProperty", "Testing" }, { "intProperty", 22 } });

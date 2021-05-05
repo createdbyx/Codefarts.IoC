@@ -456,40 +456,40 @@ namespace Codefarts.IoC.Tests
         // public void Resolve_CorrectlyRegisteredSpecifyingMistypedParameters_ThrowsCorrectException()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
         // AssertHelper.ThrowsException<ContainerResolutionException>(
-        // () => container.Resolve<TestClassWithParameters>(
+        // () => container.Resolve<TestClassWithStringAndIntParameters>(
         // new NamedParameterOverloads { { "StringProperty", "Testing" }, { "IntProperty", 12 } }));
 
-        // // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
         // public void Resolve_CorrectlyRegisteredSpecifyingParameters_Resolves()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
-        // var output = container.Resolve<TestClassWithParameters>(
+        // var output = container.Resolve<TestClassWithStringAndIntParameters>(
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } }
         // );
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
         // public void Resolve_CorrectlyRegisteredSpecifyingParametersAndOptions_Resolves()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
-        // var output = container.Resolve<TestClassWithParameters>(
+        // var output = container.Resolve<TestClassWithStringAndIntParameters>(
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } },
         // ResolveOptions.Default
         // );
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -517,7 +517,7 @@ namespace Codefarts.IoC.Tests
         // {
         // var container = new Container();
 
-        // var result = container.CanResolve<TestClassWithParameters>(
+        // var result = container.CanResolve<TestClassWithStringAndIntParameters>(
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } },
         // new ResolveOptions() { UnregisteredResolutionAction = UnregisteredResolutionActions.AttemptResolve }
         // );
@@ -530,7 +530,7 @@ namespace Codefarts.IoC.Tests
         // {
         // var container = new Container();
 
-        // var result = container.CanResolve<TestClassWithParameters>(
+        // var result = container.CanResolve<TestClassWithStringAndIntParameters>(
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } },
         // new ResolveOptions() { UnregisteredResolutionAction = UnregisteredResolutionActions.Fail }
         // );
@@ -575,9 +575,9 @@ namespace Codefarts.IoC.Tests
         // public void CanResolve_NamedTypeWithParametersAndNamedRegistered_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("TestName");
+        // container.Register<TestClassWithStringAndIntParameters>("TestName");
 
-        // var result = container.CanResolve<TestClassWithParameters>("TestName",
+        // var result = container.CanResolve<TestClassWithStringAndIntParameters>("TestName",
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } }
         // );
 
@@ -588,9 +588,9 @@ namespace Codefarts.IoC.Tests
         // public void CanResolve_NamedTypeWithParametersAndUnnamedRegistered_ReturnsTrueWithFallback()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
-        // var result = container.CanResolve<TestClassWithParameters>("TestName",
+        // var result = container.CanResolve<TestClassWithStringAndIntParameters>("TestName",
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } },
         // new ResolveOptions() { NamedResolutionFailureAction = NamedResolutionFailureActions.AttemptUnnamedResolution }
         // );
@@ -602,9 +602,9 @@ namespace Codefarts.IoC.Tests
         // public void CanResolve_NamedTypeWithParametersAndUnnamedRegistered_ReturnsFalseWithFallbackOff()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
-        // var result = container.CanResolve<TestClassWithParameters>("TestName",
+        // var result = container.CanResolve<TestClassWithStringAndIntParameters>("TestName",
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } },
         // new ResolveOptions() { NamedResolutionFailureAction = NamedResolutionFailureActions.Fail }
         // );
@@ -616,27 +616,27 @@ namespace Codefarts.IoC.Tests
         // public void Resolve_RegisteredTypeWithNameParametersAndOptions_Resolves()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("TestName");
+        // container.Register<TestClassWithStringAndIntParameters>("TestName");
 
-        // var result = container.Resolve<TestClassWithParameters>("TestName",
+        // var result = container.Resolve<TestClassWithStringAndIntParameters>("TestName",
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } },
         // new ResolveOptions() { NamedResolutionFailureAction = NamedResolutionFailureActions.Fail }
         // );
 
-        // Assert.IsInstanceOfType(result, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(result, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
         // public void Resolve_RegisteredTypeWithNameAndParameters_Resolves()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("TestName");
+        // container.Register<TestClassWithStringAndIntParameters>("TestName");
 
-        // var result = container.Resolve<TestClassWithParameters>("TestName",
+        // var result = container.Resolve<TestClassWithStringAndIntParameters>("TestName",
         // new NamedParameterOverloads { { "stringProperty", "Testing" }, { "intProperty", 12 } }
         // );
 
-        // Assert.IsInstanceOfType(result, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(result, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -1439,9 +1439,9 @@ namespace Codefarts.IoC.Tests
         //{
         //    var container = new Container();
 
-        //    var result = container.Resolve<TestclassWithNameAndParamsLazyFactory>();
+        //    var result = container.Resolve<TestClassWithNameAndParamsLazyFactory>();
 
-        //    Assert.IsInstanceOfType(result, typeof(TestclassWithNameAndParamsLazyFactory));
+        //    Assert.IsInstanceOfType(result, typeof(TestClassWithNameAndParamsLazyFactory));
         //}
 
         //[TestMethod]
@@ -1449,7 +1449,7 @@ namespace Codefarts.IoC.Tests
         //{
         //    var container = new Container();
 
-        //    var result = container.CanResolve<TestclassWithNameAndParamsLazyFactory>();
+        //    var result = container.CanResolve<TestClassWithNameAndParamsLazyFactory>();
 
         //    Assert.IsTrue(result);
         //}
@@ -1459,9 +1459,9 @@ namespace Codefarts.IoC.Tests
         //{
         //    var container = new Container();
 
-        //    var result = container.Resolve<TestclassWithNameAndParamsLazyFactory>();
+        //    var result = container.Resolve<TestClassWithNameAndParamsLazyFactory>();
 
-        //    // Values should be set by the ctor of TestclassWithNameAndParamsLazyFactory
+        //    // Values should be set by the ctor of TestClassWithNameAndParamsLazyFactory
         //    Assert.AreEqual(result.Prop1.StringProperty, "Testing");
         //    Assert.AreEqual(result.Prop1.IntProperty, 22);
         //}
@@ -1803,10 +1803,10 @@ namespace Codefarts.IoC.Tests
         // public void TryResolve_ValidResolveWithParameters_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>(new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>(new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
 
         // Assert.IsTrue(result);
         // }
@@ -1815,12 +1815,12 @@ namespace Codefarts.IoC.Tests
         // public void TryResolve_ValidResolveWithParameters_ReturnsType()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>(new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>(new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -1828,8 +1828,8 @@ namespace Codefarts.IoC.Tests
         // {
         // var container = new Container();
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>(new NamedParameterOverloads() { { "intProperty", 2 } }, out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>(new NamedParameterOverloads() { { "intProperty", 2 } }, out output);
 
         // Assert.IsFalse(result);
         // }
@@ -1838,10 +1838,10 @@ namespace Codefarts.IoC.Tests
         // public void TryResolve_ValidResolveWithNameAndParameters_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("Testing");
+        // container.Register<TestClassWithStringAndIntParameters>("Testing");
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>("Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>("Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
 
         // Assert.IsTrue(result);
         // }
@@ -1850,12 +1850,12 @@ namespace Codefarts.IoC.Tests
         // public void TryResolve_ValidResolveWithNameAndParameters_ReturnsType()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("Testing");
+        // container.Register<TestClassWithStringAndIntParameters>("Testing");
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>("Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>("Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -1863,8 +1863,8 @@ namespace Codefarts.IoC.Tests
         // {
         // var container = new Container();
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>("Testing", new NamedParameterOverloads() { { "intProperty", 2 } }, out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>("Testing", new NamedParameterOverloads() { { "intProperty", 2 } }, out output);
 
         // Assert.IsFalse(result);
         // }
@@ -1873,10 +1873,10 @@ namespace Codefarts.IoC.Tests
         // public void TryResolve_ValidResolveWithParametersAndOptions_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>(new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>(new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
 
         // Assert.IsTrue(result);
         // }
@@ -1885,12 +1885,12 @@ namespace Codefarts.IoC.Tests
         // public void TryResolve_ValidResolveWithParametersAndOptions_ReturnsType()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>(new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>(new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -1898,8 +1898,8 @@ namespace Codefarts.IoC.Tests
         // {
         // var container = new Container();
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>(new NamedParameterOverloads() { { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>(new NamedParameterOverloads() { { "intProperty", 2 } }, new ResolveOptions(), out output);
 
         // Assert.IsFalse(result);
         // }
@@ -1908,10 +1908,10 @@ namespace Codefarts.IoC.Tests
         // public void TryResolve_ValidResolveWithNameParametersAndOptions_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("Testing");
+        // container.Register<TestClassWithStringAndIntParameters>("Testing");
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>("Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>("Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
 
         // Assert.IsTrue(result);
         // }
@@ -1920,12 +1920,12 @@ namespace Codefarts.IoC.Tests
         // public void TryResolve_ValidResolveWithNameParametersAndOptions_ReturnsType()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("Testing");
+        // container.Register<TestClassWithStringAndIntParameters>("Testing");
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>("Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>("Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -1933,8 +1933,8 @@ namespace Codefarts.IoC.Tests
         // {
         // var container = new Container();
 
-        // TestClassWithParameters output;
-        // var result = container.TryResolve<TestClassWithParameters>("Testing", new NamedParameterOverloads() { { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // TestClassWithStringAndIntParameters output;
+        // var result = container.TryResolve<TestClassWithStringAndIntParameters>("Testing", new NamedParameterOverloads() { { "intProperty", 2 } }, new ResolveOptions(), out output);
 
         // Assert.IsFalse(result);
         // }
@@ -2146,10 +2146,10 @@ namespace Codefarts.IoC.Tests
         // public void TryResolveNonGeneric_ValidResolveWithParameters_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
 
         // Assert.IsTrue(result);
         // }
@@ -2158,12 +2158,12 @@ namespace Codefarts.IoC.Tests
         // public void TryResolveNonGeneric_ValidResolveWithParameters_ReturnsType()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -2172,7 +2172,7 @@ namespace Codefarts.IoC.Tests
         // var container = new Container();
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), new NamedParameterOverloads() { { "intProperty", 2 } }, out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), new NamedParameterOverloads() { { "intProperty", 2 } }, out output);
 
         // Assert.IsFalse(result);
         // }
@@ -2181,10 +2181,10 @@ namespace Codefarts.IoC.Tests
         // public void TryResolveNonGeneric_ValidResolveWithNameAndParameters_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("Testing");
+        // container.Register<TestClassWithStringAndIntParameters>("Testing");
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), "Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), "Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
 
         // Assert.IsTrue(result);
         // }
@@ -2193,12 +2193,12 @@ namespace Codefarts.IoC.Tests
         // public void TryResolveNonGeneric_ValidResolveWithNameAndParameters_ReturnsType()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("Testing");
+        // container.Register<TestClassWithStringAndIntParameters>("Testing");
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), "Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), "Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, out output);
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -2207,7 +2207,7 @@ namespace Codefarts.IoC.Tests
         // var container = new Container();
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), "Testing", new NamedParameterOverloads() { { "intProperty", 2 } }, out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), "Testing", new NamedParameterOverloads() { { "intProperty", 2 } }, out output);
 
         // Assert.IsFalse(result);
         // }
@@ -2216,10 +2216,10 @@ namespace Codefarts.IoC.Tests
         // public void TryResolveNonGeneric_ValidResolveWithParametersAndOptions_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
 
         // Assert.IsTrue(result);
         // }
@@ -2228,12 +2228,12 @@ namespace Codefarts.IoC.Tests
         // public void TryResolveNonGeneric_ValidResolveWithParametersAndOptions_ReturnsType()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>();
+        // container.Register<TestClassWithStringAndIntParameters>();
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -2242,7 +2242,7 @@ namespace Codefarts.IoC.Tests
         // var container = new Container();
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), new NamedParameterOverloads() { { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), new NamedParameterOverloads() { { "intProperty", 2 } }, new ResolveOptions(), out output);
 
         // Assert.IsFalse(result);
         // }
@@ -2251,10 +2251,10 @@ namespace Codefarts.IoC.Tests
         // public void TryResolveNonGeneric_ValidResolveWithNameParametersAndOptions_ReturnsTrue()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("Testing");
+        // container.Register<TestClassWithStringAndIntParameters>("Testing");
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), "Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), "Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
 
         // Assert.IsTrue(result);
         // }
@@ -2263,12 +2263,12 @@ namespace Codefarts.IoC.Tests
         // public void TryResolveNonGeneric_ValidResolveWithNameParametersAndOptions_ReturnsType()
         // {
         // var container = new Container();
-        // container.Register<TestClassWithParameters>("Testing");
+        // container.Register<TestClassWithStringAndIntParameters>("Testing");
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), "Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), "Testing", new NamedParameterOverloads() { { "stringProperty", "test" }, { "intProperty", 2 } }, new ResolveOptions(), out output);
 
-        // Assert.IsInstanceOfType(output, typeof(TestClassWithParameters));
+        // Assert.IsInstanceOfType(output, typeof(TestClassWithStringAndIntParameters));
         // }
 
         // [TestMethod]
@@ -2277,7 +2277,7 @@ namespace Codefarts.IoC.Tests
         // var container = new Container();
 
         // object output;
-        // var result = container.TryResolve(typeof(TestClassWithParameters), "Testing", new NamedParameterOverloads() { { "intProperty", 2 } }, new ResolveOptions(), out output);
+        // var result = container.TryResolve(typeof(TestClassWithStringAndIntParameters), "Testing", new NamedParameterOverloads() { { "intProperty", 2 } }, new ResolveOptions(), out output);
 
         // Assert.IsFalse(result);
         // }
