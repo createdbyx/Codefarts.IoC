@@ -10,6 +10,7 @@ namespace Codefarts.IoC
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Codefarts.IoC.Properties;
 
     /// <summary>
     /// Provides a simple IoC container functions.
@@ -232,17 +233,13 @@ namespace Codefarts.IoC
         {
             if (depth > this.MaxInstantiationDepth)
             {
-                throw new ExceededMaxInstantiationDepthException("Exceeded max instantiation depth.");
+                throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
             }
 
             // can't resolve abstract classes, interfaces, value types, delegates, or strings
             if (this.IsInvalidInstantiationType(type))
             {
-                throw new ContainerResolutionException(
-                    type,
-                    string.Format(
-                        "The type '{0}' could not be resolved because it is either a interface, abstract class, value type, string, or delegate.",
-                        type.FullName));
+                throw new ContainerResolutionException(type, string.Format(Resources.ERR_IsInvalidInstantiationType, type.FullName));
             }
 
             // check if the type if a generic type
@@ -270,11 +267,7 @@ namespace Codefarts.IoC
             }
             catch (Exception ex)
             {
-                throw new ContainerResolutionException(
-                    type,
-                    string.Format(
-                        "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
-                        type.FullName), ex);
+                throw new ContainerResolutionException(type, string.Format(Resources.ERR_NoAvailableConstructors, type.FullName), ex);
             }
         }
 
@@ -326,7 +319,7 @@ namespace Codefarts.IoC
                     }
                 }
 
-                // Just a generic ienumerable
+                // Just a generic IEnumerable
                 if (genericType == typeof(IEnumerable<>))
                 {
                     var genericArguments = type.GetGenericArguments();
@@ -354,7 +347,7 @@ namespace Codefarts.IoC
             Creator creator;
             if (this.typeCreators.TryGetValue(type, out creator) || creator != null)
             {
-                throw new RegistrationException($"Type '{type.FullName}' already registered.");
+                throw new RegistrationException(string.Format(Resources.ERR_AlreadyRegistered, type.FullName));
             }
         }
     }

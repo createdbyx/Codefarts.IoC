@@ -301,6 +301,42 @@
             <param name="info">The info.</param>
             <param name="context">The context.</param>
         </member>
+        <member name="T:Codefarts.IoC.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Properties.Resources.ERR_AlreadyRegistered">
+            <summary>
+              Looks up a localized string similar to Type &apos;{0}&apos; already registered..
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Properties.Resources.ERR_ExceededMaxInstantiationDepth">
+            <summary>
+              Looks up a localized string similar to Exceeded max instantiation depth..
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Properties.Resources.ERR_IsInvalidInstantiationType">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; could not be resolved because it is either a interface, abstract class, value type, string, or delegate..
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Properties.Resources.ERR_NoAvailableConstructors">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; could not be instantiated because none of the available constructors could be satisfied..
+            </summary>
+        </member>
         <member name="T:Codefarts.IoC.RegistrationException">
             <summary>
             Provides an exception for registration errors.
