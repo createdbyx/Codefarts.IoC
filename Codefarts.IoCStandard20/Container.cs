@@ -255,18 +255,8 @@ namespace Codefarts.IoC
             var hasSpecifiedArgs = args != null && args.Length > 0;
             var constructors = (hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type)).ToArray();
 
-            // if no constructors could be found throw exception
-            if (!constructors.Any())
-            {
-                throw new ContainerResolutionException(
-                    type,
-                    string.Format(
-                        "The type '{0}' could not be instantiated because none of the available constructors could be satisfied.",
-                        type.FullName));
-            }
-
             // get constructor with the most parameters and attempt to instantiate it
-            var constructor = constructors.OrderByDescending(x => x.GetParameters().Length).FirstOrDefault();
+            var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();
 
             try
             {
