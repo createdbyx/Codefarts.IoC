@@ -242,8 +242,8 @@ namespace Codefarts.IoC
                 return genericResultValue;
             }
 
-            // can't resolve abstract classes, interfaces, value types, or delegates
-            if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type))
+            // can't resolve abstract classes, interfaces, value types, delegates, or strings
+            if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type) || type == typeof(string))
             {
                 throw new ContainerResolutionException(
                     type,

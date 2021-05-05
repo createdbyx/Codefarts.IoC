@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Codefarts.IoC.Tests
 {
@@ -20,6 +21,36 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
+        public void Default_Set_MaxInstantiationDepth()
+        {
+            var container = Container.Default;
+            container.MaxInstantiationDepth = 6;
+            Assert.AreEqual(6u, container.MaxInstantiationDepth);
+        }
+
+        [TestMethod]
+        public void Resolve_ValueType()
+        {
+            var container = Container.Default;
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<int>();
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
+        public void Resolve_String()
+        {
+            var container = Container.Default;
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<string>();
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
         public void Default_GetTwice_ReturnsSameInstance()
         {
             var container1 = Container.Default;
@@ -29,10 +60,16 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
-        public void Register_InterfaceAndImplementation_CanRegister()
+        public void Resolve_RegisteredTypesCount()
         {
             var container = new Container();
+
+            Assert.AreEqual(0, container.RegisteredTypes.Count());
+
             container.Register<ITestInterface, TestClassDefaultCtor>();
+
+            Assert.AreEqual(1, container.RegisteredTypes.Count());
+            Assert.AreSame(typeof(ITestInterface), container.RegisteredTypes.FirstOrDefault());
         }
 
         [TestMethod]
@@ -56,20 +93,6 @@ namespace Codefarts.IoC.Tests
             var output2 = container.Resolve<ITestInterface>();
 
             Assert.AreNotSame(output, output2);
-        }
-
-        [TestMethod]
-        public void Register_WithDelegateFactoryStaticMethod_CanRegister()
-        {
-            var container = new Container();
-            container.Register<ITestInterface>(() => TestClassDefaultCtor.CreateNew(container));
-        }
-
-        [TestMethod]
-        public void Register_WithDelegateFactoryLambda_CanRegister()
-        {
-            var container = new Container();
-            container.Register<ITestInterface>(() => new TestClassDefaultCtor() { Prop1 = "Testing" });
         }
 
         [TestMethod]
@@ -235,20 +258,6 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
-        public void Register_Instance_CanRegister()
-        {
-            var container = new Container();
-            container.Register<DisposableTestClassWithInterface>(() => new DisposableTestClassWithInterface());
-        }
-
-        [TestMethod]
-        public void Register_InstanceUsingInterface_CanRegister()
-        {
-            var container = new Container();
-            container.Register<ITestInterface>(() => new DisposableTestClassWithInterface());
-        }
-
-        [TestMethod]
         public void Resolve_RegisteredInstance_SameInstance()
         {
             var container = new Container();
@@ -270,14 +279,6 @@ namespace Codefarts.IoC.Tests
             var result = container.Resolve<ITestInterface>();
 
             Assert.AreSame(item, result);
-        }
-
-        [TestMethod]
-        public void Register_GenericTypeWithInterface_CanRegister()
-        {
-            var container = new Container();
-
-            container.Register<ITestInterface, GenericClassWithInterface<int, string>>();
         }
 
         [TestMethod]
@@ -490,28 +491,6 @@ namespace Codefarts.IoC.Tests
             Assert.AreEqual(0, result.EnumerableCount);
         }
 
-        [TestMethod]
-        public void RegisterNonGeneric_BasicType_RegistersAndCanResolve()
-        {
-            var container = new Container();
-
-            //container.Register(typeof(TestClassDefaultCtor));
-            var result = container.Resolve<TestClassDefaultCtor>();
-
-            Assert.IsInstanceOfType(result, typeof(TestClassDefaultCtor));
-        }
-
-        [TestMethod]
-        public void RegisterNonGeneric_TypeImplementingInterface_RegistersAndCanResolve()
-        {
-            var container = new Container();
-
-            container.Register(typeof(ITestInterface), typeof(TestClassDefaultCtor));
-            var result = container.Resolve<ITestInterface>();
-
-            Assert.IsInstanceOfType(result, typeof(ITestInterface));
-        }
-
         #region Unregister
 
         // private readonly ResolveOptions options = ResolveOptions.FailUnregisteredAndNameNotFound;
@@ -626,42 +605,6 @@ namespace Codefarts.IoC.Tests
         #endregion
 
         [TestMethod]
-        public void RegisterOnce()
-        {
-            var container = new Container();
-            container.Register<IRepository>(() => new MockRepository());
-            Assert.IsTrue(container.CanResolve<IRepository>());
-            var value = container.Resolve<IRepository>();
-            Assert.IsNotNull(value);
-            Assert.IsInstanceOfType(value, typeof(IRepository));
-            Assert.IsInstanceOfType(value, typeof(MockRepository));
-        }
-
-        [TestMethod]
-        public void RegisterSingleton()
-        {
-            var container = new Container();
-            container.Register<Container>(() => container);
-            Assert.IsTrue(container.CanResolve<Container>());
-            var value = container.Resolve<Container>();
-            Assert.IsNotNull(value);
-            Assert.IsInstanceOfType(value, typeof(Container));
-            Assert.AreSame(value, container);
-        }
-
-        [TestMethod]
-        public void RegisterOnceWithoutCallbackFunc()
-        {
-            var container = new Container();
-            container.Register<IRepository, MockRepository>();
-            Assert.IsTrue(container.CanResolve<IRepository>());
-            var value = container.Resolve<IRepository>();
-            Assert.IsNotNull(value);
-            Assert.IsInstanceOfType(value, typeof(IRepository));
-            Assert.IsInstanceOfType(value, typeof(MockRepository));
-        }
-
-        [TestMethod]
         public void CreateApplicationObject()
         {
             var container = new Container();
@@ -724,22 +667,6 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
-        public void RegisterTwice()
-        {
-            var container = new Container();
-            try
-            {
-                container.Register<IRepository>(() => new MockRepository());
-                Assert.IsTrue(container.CanResolve<IRepository>());
-                container.Register<IRepository>(() => new MockRepository());
-                Assert.Fail("Should have thrown an exception.");
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        [TestMethod]
         public void CreateUnregisteredType()
         {
             var container = new Container();
@@ -753,21 +680,6 @@ namespace Codefarts.IoC.Tests
             {
                 Assert.IsInstanceOfType(ex, typeof(ContainerResolutionException));
                 Assert.IsNull(value);
-            }
-        }
-
-        [TestMethod]
-        public void RegisterNullCreator()
-        {
-            var container = new Container();
-            try
-            {
-                container.Register<IRepository>(null);
-                Assert.Fail("Should have thrown a 'ArgumentNullException' exception.");
-            }
-            catch (Exception ex)
-            {
-                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
             }
         }
 
