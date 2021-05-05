@@ -236,7 +236,7 @@ namespace Codefarts.IoC
             }
 
             // can't resolve abstract classes, interfaces, value types, delegates, or strings
-            if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type) || type == typeof(string))
+            if (this.IsInvalidInstantiationType(type))
             {
                 throw new ContainerResolutionException(
                     type,

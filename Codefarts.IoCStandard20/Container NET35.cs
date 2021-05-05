@@ -28,10 +28,21 @@ namespace Codefarts.IoC
             // get public constructors ordered by most arguments first
             var constructors = from c in type.GetConstructors()
                                let parameters = c.GetParameters()
-                               where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType || typeof(Delegate).IsAssignableFrom(x.ParameterType))
+                               where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
+                                                                        typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
+                                                                        type == typeof(string))
                                orderby parameters.Length descending
                                select c;
             return constructors;
+        }
+
+        private bool IsInvalidInstantiationType(Type type)
+        {
+            return type.IsAbstract ||
+                   type.IsInterface ||
+                   type.IsValueType ||
+                   typeof(Delegate).IsAssignableFrom(type) ||
+                   type == typeof(string);
         }
     }
 }
