@@ -235,21 +235,21 @@ namespace Codefarts.IoC
                 throw new ExceededMaxInstantiationDepthException("Exceeded max instantiation depth.");
             }
 
-            // check if the type if a generic type
-            object genericResultValue;
-            if (this.ResolveGenericType(type, out genericResultValue))
-            {
-                return genericResultValue;
-            }
-
             // can't resolve abstract classes, interfaces, value types, delegates, or strings
             if (type.IsAbstract || type.IsInterface || type.IsValueType || typeof(Delegate).IsAssignableFrom(type) || type == typeof(string))
             {
                 throw new ContainerResolutionException(
                     type,
                     string.Format(
-                        "The type '{0}' could not be resolved because it is either a interface, abstract class or value type.",
+                        "The type '{0}' could not be resolved because it is either a interface, abstract class, value type, string, or delegate.",
                         type.FullName));
+            }
+
+            // check if the type if a generic type
+            object genericResultValue;
+            if (this.ResolveGenericType(type, out genericResultValue))
+            {
+                return genericResultValue;
             }
 
             var hasSpecifiedArgs = args != null && args.Length > 0;
