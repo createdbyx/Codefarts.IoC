@@ -210,7 +210,7 @@ namespace Codefarts.IoC
         /// </summary>
         private Delegate CreateAction(Type type)
         {
-            var methodInfo = this.GetType().GetMethod("Perform", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(type);
+            var methodInfo = this.GetType().GetMethod(nameof(Perform), BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(type);
             var funcGenericType = typeof(Func<>).MakeGenericType(type);
             return (Delegate)Convert.ChangeType(methodInfo.Invoke(this, null), funcGenericType);
         }
