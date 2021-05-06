@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Codefarts.IoC</RootNamespace>
+    <AssemblyVersion>2021.5.6.1</AssemblyVersion>
+    <FileVersion>2021.5.6.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,6 +14,11 @@
     <Compile Include="..\Codefarts.IoCStandard20\ContainerExtensionMethods.cs" Link="ContainerExtensionMethods.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs" Link="ContainerResolutionException.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\ExceededMaxInstantiationDepthException.cs" Link="ExceededMaxInstantiationDepthException.cs" />
+    <Compile Include="..\Codefarts.IoCStandard20\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs" Link="RegistrationException.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\RegistrationTypeException.cs" Link="RegistrationTypeException.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\SafeDictionary.cs" Link="SafeDictionary.cs" />
@@ -19,6 +27,13 @@
 
   <ItemGroup>
     <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json" Link="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="..\Codefarts.IoCStandard20\Resources.resx" Link="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

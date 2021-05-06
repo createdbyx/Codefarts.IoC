@@ -60,6 +60,12 @@
     <Compile Include="..\Codefarts.IoCStandard20\ExceededMaxInstantiationDepthException.cs">
       <Link>ExceededMaxInstantiationDepthException.cs</Link>
     </Compile>
+    <Compile Include="..\Codefarts.IoCStandard20\Resources.Designer.cs">
+      <Link>Resources.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
       <Link>RegistrationException.cs</Link>
     </Compile>
@@ -83,6 +89,13 @@
   <ItemGroup>
     <Analyzer Include="..\..\CombinedProjectsSolution\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\CombinedProjectsSolution\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Codefarts.IoCStandard20\Resources.resx">
+      <Link>Resources.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -6,7 +6,7 @@ namespace Codefarts.IoC.Tests
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-
+    using Codefarts.IoC;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
