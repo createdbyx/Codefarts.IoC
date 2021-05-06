@@ -102,7 +102,7 @@
 
     internal class TestClassWithDependency
     {
-        TestClassDefaultCtor Dependency
+        public TestClassDefaultCtor Dependency
         {
             get; set;
         }
@@ -145,6 +145,7 @@
         {
             get; set;
         }
+
         public int IntProperty
         {
             get; set;
@@ -236,6 +237,7 @@
         {
             get; set;
         }
+
         public S Prop2
         {
             get; set;
@@ -260,10 +262,12 @@
         {
             get; private set;
         }
+
         public I Prop1
         {
             get; set;
         }
+
         public S Prop2
         {
             get; set;
@@ -285,10 +289,12 @@
     internal class TestClassWithLazyFactory
     {
         private Func<TestClassDefaultCtor> _Factory;
+
         public TestClassDefaultCtor Prop1
         {
             get; private set;
         }
+
         public TestClassDefaultCtor Prop2
         {
             get; private set;
@@ -317,10 +323,12 @@
     internal class TestClassWithNamedLazyFactory
     {
         private Func<string, TestClassDefaultCtor> _Factory;
+
         public TestClassDefaultCtor Prop1
         {
             get; private set;
         }
+
         public TestClassDefaultCtor Prop2
         {
             get; private set;
@@ -350,6 +358,7 @@
     internal class TestClassWithNameAndParamsLazyFactory
     {
         private Func<string, IDictionary<string, object>, TestClassWithStringAndIntParameters> _Factory;
+
         public TestClassWithStringAndIntParameters Prop1
         {
             get; private set;
@@ -372,10 +381,12 @@
         {
             get; private set;
         }
+
         public TestClassDefaultCtor Prop2
         {
             get; private set;
         }
+
         public int NumberOfDepsResolved
         {
             get; private set;
@@ -462,14 +473,17 @@
         {
             get; set;
         }
+
         public ITestInterface2 Property2
         {
             get; set;
         }
+
         public int Property3
         {
             get; set;
         }
+
         public string Property4
         {
             get; set;
@@ -484,6 +498,7 @@
         {
             get; private set;
         }
+
         public ITestInterface2 WriteOnlyProperty
         {
             internal get; set;

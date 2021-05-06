@@ -8,7 +8,7 @@ namespace Codefarts.IoC.Tests
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    public partial class ContainerTests
+    public partial class GeneralTests
     {
         // [TestMethod]
         // public void RegisterDisposable()
