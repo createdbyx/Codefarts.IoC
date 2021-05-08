@@ -66,6 +66,8 @@
     <Compile Include="Mockups\MockRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResolveTests.cs" />
+    <Compile Include="TinyIoC.cs" />
+    <Compile Include="TinyIoCComparisonTests.cs" />
     <Compile Include="UnregisterTests.cs" />
     <None Include="SafeDictionaryTests.cs" />
   </ItemGroup>

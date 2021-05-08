@@ -8,7 +8,8 @@ namespace Codefarts.IoC.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass, TestCategory("Custom Arguments")]
+    [TestClass]
+    [TestCategory("Custom Arguments")]
     public class CustomArgumentTests
     {
         [TestMethod]

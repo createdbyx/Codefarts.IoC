@@ -8,7 +8,8 @@ namespace Codefarts.IoC.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass, TestCategory("BuildUp")]
+    [TestClass]
+    [TestCategory("BuildUp")]
     public class BuildUpTests
     {
         [TestMethod]

@@ -10,7 +10,8 @@ namespace Codefarts.IoC.Tests
     using Codefarts.IoC;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass, TestCategory("General")]
+    [TestClass]
+    [TestCategory("General")]
     public partial class GeneralTests
     {
         [TestMethod]

@@ -9,7 +9,8 @@ namespace Codefarts.IoC.Tests
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass, TestCategory("Unregister")]
+    [TestClass]
+    [TestCategory("Unregister")]
     public class UnregisterTests
     {
         [TestMethod]
