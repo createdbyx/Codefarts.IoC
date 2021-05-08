@@ -31,7 +31,6 @@ namespace Codefarts.IoC
                                where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
                                                                         typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
                                                                         type == typeof(string))
-                               orderby parameters.Length descending
                                select c;
             return constructors;
         }

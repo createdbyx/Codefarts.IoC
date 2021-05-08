@@ -203,7 +203,7 @@ namespace Codefarts.IoC
                     callCount[threadId] = count;
                 }
 
-              //  Trace.WriteLine($"interlocked ID: {threadId}  count: {count}");
+                //  Trace.WriteLine($"interlocked ID: {threadId}  count: {count}");
                 object result;
                 try
                 {
@@ -286,7 +286,7 @@ namespace Codefarts.IoC
         /// </exception>
         private object ResolveByType(int depth, Type type, params object[] args)
         {
-          //  Trace.WriteLine("Depth: " + depth);
+            //  Trace.WriteLine("Depth: " + depth);
             if (depth > this.MaxInstantiationDepth)
             {
                 throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
@@ -306,9 +306,9 @@ namespace Codefarts.IoC
             //}
 
             var hasSpecifiedArgs = args != null && args.Length > 0;
-            var constructors =
-                (hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type))
-                .ToArray();
+            var constructors = hasSpecifiedArgs ?
+                this.GetPublicConstructorWithMatchingParameters(type, args) :
+                this.GetPublicConstructorWithValidParameters(type);
 
             // get constructor with the most parameters and attempt to instantiate it
             var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();
