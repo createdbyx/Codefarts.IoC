@@ -32,12 +32,6 @@
             Backing field for the <see cref="P:Codefarts.IoC.Container.MaxInstantiationDepth"/> property.
             </summary>
         </member>
-        <member name="T:Codefarts.IoC.Container.Creator">
-            <summary>
-            Provides a delegate for constructing a type reference.
-            </summary>
-            <returns>A instance of a type.</returns>
-        </member>
         <member name="M:Codefarts.IoC.Container.#cctor">
             <summary>
             Initializes static members of the <see cref="T:Codefarts.IoC.Container"/> class.
@@ -46,6 +40,20 @@
         <member name="M:Codefarts.IoC.Container.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Codefarts.IoC.Container"/> class.
+            </summary>
+        </member>
+        <member name="T:Codefarts.IoC.Container.Creator">
+            <summary>
+            Provides a delegate for constructing a type reference.
+            </summary>
+            <returns>A instance of a type.</returns>
+        </member>
+        <member name="E:Codefarts.IoC.Container.PropertyChanged">
+            <inheritdoc/>
+        </member>
+        <member name="P:Codefarts.IoC.Container.Default">
+            <summary>
+            Gets a Lazy created Singleton instance of the container for simple scenarios.
             </summary>
         </member>
         <member name="P:Codefarts.IoC.Container.MaxInstantiationDepth">
@@ -57,11 +65,6 @@
         <member name="P:Codefarts.IoC.Container.RegisteredTypes">
             <summary>
             Gets the types that have been registered with the container.
-            </summary>
-        </member>
-        <member name="P:Codefarts.IoC.Container.Default">
-            <summary>
-            Lazy created Singleton instance of the container for simple scenarios.
             </summary>
         </member>
         <member name="M:Codefarts.IoC.Container.Resolve(System.Type,System.Object[])">
@@ -76,7 +79,7 @@
             <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
             </remarks>
         </member>
-        <member name="M:Codefarts.IoC.Container.DoResolve(System.Int32,System.Type,System.Object[])">
+        <member name="M:Codefarts.IoC.Container.DoResolve(System.Int32,System.Boolean,System.Type,System.Object[])">
             <summary>
             Creates instance of a specified type.
             </summary>
@@ -119,18 +122,6 @@
             <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
             <remarks><see cref="M:Codefarts.IoC.Container.CanResolve(System.Type)"/> checks <see cref="P:Codefarts.IoC.Container.RegisteredTypes"/> property to see if a type has previously been registered with a <see cref="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
         </member>
-        <member name="M:Codefarts.IoC.Container.Perform``1">
-            <summary>
-            Private method that acts as a wrapper for the Resolve method.
-            </summary>
-            <typeparam name="T">The type to cast to before returning.</typeparam>
-            <remarks>This is called by the <seealso cref="M:Codefarts.IoC.Container.CreateAction(System.Type)"/> method.</remarks>
-        </member>
-        <member name="M:Codefarts.IoC.Container.CreateAction(System.Type)">
-            <summary>
-            Called by the <seealso cref="M:Codefarts.IoC.Container.ResolveGenericType(System.Type,System.Object@)"/> method.
-            </summary>
-        </member>
         <member name="M:Codefarts.IoC.Container.ResolveByType(System.Int32,System.Type,System.Object[])">
             <summary>
             Creates a instance of a type.
@@ -146,20 +137,18 @@
             of the available constructors could be satisfied.
             </exception>
         </member>
-        <member name="M:Codefarts.IoC.Container.ResolveGenericType(System.Type,System.Object@)">
-            <summary>
-            Tries to resolve a generic type definition.
-            </summary>
-            <param name="type">The type to be resolved.</param>
-            <param name="result">A reference to a new object.</param>
-            <returns>true if the generic type could be resolved.</returns>
-        </member>
         <member name="M:Codefarts.IoC.Container.PreviouslyRegisteredCheck(System.Type)">
             <summary>
             Checks for previously registered type and if found throws an exception.
             </summary>
             <param name="type">The type to check.</param>
             <exception cref="T:Codefarts.IoC.RegistrationException">If type has been registered already.</exception>
+        </member>
+        <member name="M:Codefarts.IoC.Container.OnPropertyChanged(System.String)">
+            <summary>
+            Raises the property changed event.
+            </summary>
+            <param name="propertyName">The property name that changed.</param>
         </member>
         <member name="T:Codefarts.IoC.ContainerExtensionMethods">
             <summary>

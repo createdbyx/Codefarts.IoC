@@ -36,6 +36,31 @@ namespace Codefarts.IoC
             return constructors;
         }
 
+        private IEnumerable<ConstructorInfo> GetPublicConstructorWithMatchingParameters(Type type, object[] args)
+        {
+            var constructorCandidates = new List<ConstructorInfo>();
+
+            // can't resolve argument types
+            if (args.Any(x => x == null))
+            {
+                return constructorCandidates;
+            }
+
+            var constructors = type.GetConstructors();
+            var argTypes = args.Select(x => x.GetType()).ToArray();
+            foreach (var info in constructors.Where(x => x.IsPublic))
+            {
+                var constructorParamTypes = info.GetParameters().Select(x => x.ParameterType);
+
+                if (constructorParamTypes.SequenceEqual(argTypes))
+                {
+                    constructorCandidates.Add(info);
+                }
+            }
+
+            return constructorCandidates;
+        }
+
         private bool IsInvalidInstantiationType(Type type)
         {
             return type.IsAbstract ||
