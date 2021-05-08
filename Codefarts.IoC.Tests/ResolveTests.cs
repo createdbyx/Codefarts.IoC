@@ -51,7 +51,7 @@ namespace Codefarts.IoC.Tests
             container.Register<IEnumerable<ITestInterface>, List<ITestInterface>>();
           //  Trace.WriteLine("MAIN ID: " + Thread.CurrentThread.ManagedThreadId);
 
-            var tasks = Enumerable.Range(0, 1000).Select(x => new Task(() =>
+            var tasks = Enumerable.Range(0, 100).Select(x => new Task(() =>
             {
                 Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
                 {
