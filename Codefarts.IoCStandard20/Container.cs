@@ -323,7 +323,22 @@ namespace Codefarts.IoC
                 else
                 {
                     var parameters = constructor.GetParameters();
-                    arguments = parameters.Select(p => this.DoResolve(depth + 1, false, p.ParameterType)).ToArray();
+                    arguments = new object[parameters.Length];
+                    for (var i = 0; i < arguments.Length; i++)
+                    {
+                        var paramType = parameters[i].ParameterType;
+                        //arguments[i] = this.DoResolve(depth + 1, false, parameters[i].ParameterType);
+                        Creator provider;
+                        if (this.typeCreators.TryGetValue(paramType, out provider))
+                        {
+                            arguments[i] = provider();
+                        }
+                        else
+                        {
+                            arguments[i] = this.ResolveByType(depth + 1, paramType, null);
+                        }
+                    }
+                    //arguments = parameters.Select(p => this.DoResolve(depth + 1, false, p.ParameterType)).ToArray();
                 }
 
                 var value = constructor.Invoke(arguments);
