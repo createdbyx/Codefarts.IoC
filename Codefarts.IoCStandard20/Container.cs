@@ -4,8 +4,6 @@
 // http://www.codefarts.com
 // </copyright>
 
-using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Threading;
 
 namespace Codefarts.IoC
@@ -14,8 +12,6 @@ namespace Codefarts.IoC
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// Provides a simple IoC container functions.
@@ -192,7 +188,8 @@ namespace Codefarts.IoC
             var callCount = new Dictionary<int, int>();
             this.typeCreators[key] = () =>
             {
-                // NOTE: the fallowing code feels hacky and I should come back to it at some point
+                // NOTE: the fallowing code smells and I should come back to it at some point
+                // I feel like the overall architecture is not elegant enough.
                 var threadId = Thread.CurrentThread.ManagedThreadId;
                 int count;
                 lock (callCount)
@@ -203,7 +200,6 @@ namespace Codefarts.IoC
                     callCount[threadId] = count;
                 }
 
-                //  Trace.WriteLine($"interlocked ID: {threadId}  count: {count}");
                 object result;
                 try
                 {
@@ -251,26 +247,6 @@ namespace Codefarts.IoC
             return this.typeCreators.TryGetValue(type, out value);
         }
 
-        ///// <summary>
-        ///// Private method that acts as a wrapper for the Resolve method.
-        ///// </summary>
-        ///// <typeparam name="T">The type to cast to before returning.</typeparam>
-        ///// <remarks>This is called by the <seealso cref="CreateAction"/> method.</remarks>
-        //private Func<T> Perform<T>()
-        //{
-        //    return () => this.Resolve<T>();
-        //}
-
-        ///// <summary>
-        ///// Called by the <seealso cref="ResolveGenericType"/> method.
-        ///// </summary>
-        //private Delegate CreateAction(Type type)
-        //{
-        //    var methodInfo = this.GetType().GetMethod(nameof(Perform), BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(type);
-        //    var funcGenericType = typeof(Func<>).MakeGenericType(type);
-        //    return (Delegate)Convert.ChangeType(methodInfo.Invoke(this, null), funcGenericType);
-        //}
-
         /// <summary>
         /// Creates a instance of a type.
         /// </summary>
@@ -286,7 +262,6 @@ namespace Codefarts.IoC
         /// </exception>
         private object ResolveByType(int depth, Type type, params object[] args)
         {
-            //  Trace.WriteLine("Depth: " + depth);
             if (depth > this.MaxInstantiationDepth)
             {
                 throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
@@ -297,13 +272,6 @@ namespace Codefarts.IoC
             {
                 throw new ContainerResolutionException(type, string.Format(Resources.ERR_IsInvalidInstantiationType, type.FullName));
             }
-
-            //// check if the type if a generic type
-            //object genericResultValue;
-            //if (this.ResolveGenericType(type, out genericResultValue))
-            //{
-            //    return genericResultValue;
-            //}
 
             var hasSpecifiedArgs = args != null && args.Length > 0;
             var constructors = hasSpecifiedArgs ?
@@ -327,7 +295,6 @@ namespace Codefarts.IoC
                     for (var i = 0; i < arguments.Length; i++)
                     {
                         var paramType = parameters[i].ParameterType;
-                        //arguments[i] = this.DoResolve(depth + 1, false, parameters[i].ParameterType);
                         Creator provider;
                         if (this.typeCreators.TryGetValue(paramType, out provider))
                         {
@@ -338,7 +305,6 @@ namespace Codefarts.IoC
                             arguments[i] = this.ResolveByType(depth + 1, paramType, null);
                         }
                     }
-                    //arguments = parameters.Select(p => this.DoResolve(depth + 1, false, p.ParameterType)).ToArray();
                 }
 
                 var value = constructor.Invoke(arguments);
@@ -353,47 +319,6 @@ namespace Codefarts.IoC
                 throw new ContainerResolutionException(type, string.Format(Resources.ERR_NoAvailableConstructors, type.FullName), ex);
             }
         }
-
-        ///// <summary>
-        ///// Tries to resolve a generic type definition.
-        ///// </summary>
-        ///// <param name="type">The type to be resolved.</param>
-        ///// <param name="result">A reference to a new object.</param>
-        ///// <returns>true if the generic type could be resolved.</returns>
-        //private bool ResolveGenericType(Type type, out object result)
-        //{
-        //    if (type.IsGenericType)
-        //    {
-        //        var genericType = type.GetGenericTypeDefinition();
-
-        //        //// Just a generic func
-        //        //if (genericType == typeof(Func<>))
-        //        //{
-        //        //    var genericArguments = type.GetGenericArguments();
-        //        //    var returnType = genericArguments[0];
-        //        //    {
-        //        //        result = this.CreateAction(returnType);
-        //        //        return true;
-        //        //    }
-        //        //}
-
-        //        // Just a generic IEnumerable
-        //        if (genericType == typeof(IEnumerable<>))
-        //        {
-        //            var genericArguments = type.GetGenericArguments();
-        //            var returnType = genericArguments[0];
-        //            var defaultConstructor = this.GetDefaultListConstructor(returnType);
-        //            if (defaultConstructor != null)
-        //            {
-        //                result = defaultConstructor.Invoke(null);
-        //                return true;
-        //            }
-        //        }
-        //    }
-
-        //    result = null;
-        //    return false;
-        //}
 
         /// <summary>
         /// Checks for previously registered type and if found throws an exception.
