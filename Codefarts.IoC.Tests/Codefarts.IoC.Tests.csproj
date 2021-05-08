@@ -50,15 +50,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildUpTests.cs" />
-    <Compile Include="CanResolveTests.cs" />
-    <Compile Include="ContainerTests Unused.cs" />
-    <Compile Include="ContainerRegistrationTests.cs" />
-    <Compile Include="GeneralTests.cs" />
-    <Compile Include="CustomArgumentTests.cs" />
+    <Compile Include="UnitTests\BuildUpTests.cs" />
+    <Compile Include="UnitTests\CanResolveTests.cs" />
+    <Compile Include="UnitTests\ContainerTests Unused.cs" />
+    <Compile Include="UnitTests\ContainerRegistrationTests.cs" />
+    <Compile Include="UnitTests\GeneralTests.cs" />
+    <Compile Include="UnitTests\CustomArgumentTests.cs" />
     <Compile Include="Helpers\AssertHelper.cs" />
     <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="MaxInstantiationDepthTests.cs" />
+    <Compile Include="UnitTests\MaxInstantiationDepthTests.cs" />
     <Compile Include="Mockups\BasicClasses.cs" />
     <Compile Include="Mockups\MockApplication.cs" />
     <Compile Include="Mockups\MockDisposableRepository.cs" />
@@ -68,8 +68,8 @@
     <Compile Include="ResolveTests.cs" />
     <Compile Include="TinyIoC.cs" />
     <Compile Include="TinyIoCComparisonTests.cs" />
-    <Compile Include="UnregisterTests.cs" />
-    <None Include="SafeDictionaryTests.cs" />
+    <Compile Include="UnitTests\UnregisterTests.cs" />
+    <None Include="UnitTests\SafeDictionaryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
@@ -86,6 +86,9 @@
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="PerformanceTests\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

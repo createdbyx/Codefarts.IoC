@@ -4,6 +4,10 @@
 // http://www.codefarts.com
 // </copyright>
 
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+
 namespace Codefarts.IoC.Tests
 {
     using System;
@@ -38,6 +42,27 @@ namespace Codefarts.IoC.Tests
                     var value = container.Resolve<TestClassEnumerableDependency>();
                     Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
                 });
+        }
+
+        [TestMethod]
+        public void ResolveIEnumerableDependencyWithRegistration_MultiThreaded()
+        {
+            var container = new Container();
+            container.Register<IEnumerable<ITestInterface>, List<ITestInterface>>();
+          //  Trace.WriteLine("MAIN ID: " + Thread.CurrentThread.ManagedThreadId);
+
+            var tasks = Enumerable.Range(0, 1000).Select(x => new Task(() =>
+            {
+                Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
+                {
+                  //  Trace.WriteLine("BeforeCall ID: " + Thread.CurrentThread.ManagedThreadId);
+                    var value = container.Resolve<TestClassEnumerableDependency>();
+                    Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
+                });
+            })).ToArray();
+
+            Array.ForEach(tasks, t => t.Start());
+            Task.WaitAll(tasks);
         }
 
         [TestMethod]
