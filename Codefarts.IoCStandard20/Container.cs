@@ -118,41 +118,20 @@ namespace Codefarts.IoC
         /// </remarks>
         public object Resolve(Type type, params object[] args)
         {
-            return this.DoResolve(0, true, type, args);
-        }
-
-        /// <summary>
-        /// Creates instance of a specified type.
-        /// </summary>
-        /// <param name="depth">Specified the instantiation depth.</param>
-        /// <param name="type">Specifies the type to be instantiated.</param>
-        /// <param name="args">Arguments to be passed to the type constructor.</param>
-        /// <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
-        /// <remarks>
-        /// <p>Will attempt to resolve the type even if there was no previous type <see cref="Creator"/> delegate specified for the type.</p>
-        /// <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
-        /// </remarks>
-        private object DoResolve(int depth, bool captureExceptions, Type type, params object[] args)
-        {
             Creator provider;
             if (this.typeCreators.TryGetValue(type, out provider))
             {
-                if (captureExceptions)
+                try
                 {
-                    try
-                    {
-                        return provider();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new ContainerResolutionException(type, ex);
-                    }
+                    return provider();
                 }
-
-                return provider();
+                catch (Exception ex)
+                {
+                    throw new ContainerResolutionException(type, ex);
+                }
             }
 
-            return this.ResolveByType(depth, type, args);
+            return this.ResolveByType(0, type, args);
         }
 
         /// <summary>

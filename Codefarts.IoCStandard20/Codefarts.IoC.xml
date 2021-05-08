@@ -79,19 +79,6 @@
             <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
             </remarks>
         </member>
-        <member name="M:Codefarts.IoC.Container.DoResolve(System.Int32,System.Boolean,System.Type,System.Object[])">
-            <summary>
-            Creates instance of a specified type.
-            </summary>
-            <param name="depth">Specified the instantiation depth.</param>
-            <param name="type">Specifies the type to be instantiated.</param>
-            <param name="args">Arguments to be passed to the type constructor.</param>
-            <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
-            <remarks>
-            <p>Will attempt to resolve the type even if there was no previous type <see cref="T:Codefarts.IoC.Container.Creator"/> delegate specified for the type.</p>
-            <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
-            </remarks>
-        </member>
         <member name="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)">
             <summary>
             Registers a <see cref="T:Codefarts.IoC.Container.Creator" /> delegate for a given type.
