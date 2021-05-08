@@ -4,6 +4,7 @@
 // http://www.codefarts.com
 // </copyright>
 
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
 
@@ -188,13 +189,42 @@ namespace Codefarts.IoC
         public void Register(Type key, Type concrete)
         {
             this.PreviouslyRegisteredCheck(key);
-            var count = 0;
+            var callCount = new Dictionary<int, int>();
             this.typeCreators[key] = () =>
             {
-                Interlocked.Increment(ref count);
-                //  Debug.WriteLine("count: " + count);
-                var result = this.ResolveByType(count, concrete);
-                Interlocked.Decrement(ref count);
+                // NOTE: the fallowing code feels hacky and I should come back to it at some point
+                var threadId = Thread.CurrentThread.ManagedThreadId;
+                int count;
+                lock (callCount)
+                {
+                    callCount.TryGetValue(threadId, out count);
+
+                    count++;
+                    callCount[threadId] = count;
+                }
+
+              //  Trace.WriteLine($"interlocked ID: {threadId}  count: {count}");
+                object result;
+                try
+                {
+                    result = this.ResolveByType(count, concrete);
+                }
+                finally
+                {
+                    lock (callCount)
+                    {
+                        count--;
+                        if (count <= 0)
+                        {
+                            callCount.Remove(threadId);
+                        }
+                        else
+                        {
+                            callCount[threadId] = count;
+                        }
+                    }
+                }
+
                 return result;
             };
         }
@@ -256,7 +286,7 @@ namespace Codefarts.IoC
         /// </exception>
         private object ResolveByType(int depth, Type type, params object[] args)
         {
-            Debug.WriteLine("Depth: " + depth);
+          //  Trace.WriteLine("Depth: " + depth);
             if (depth > this.MaxInstantiationDepth)
             {
                 throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
@@ -276,14 +306,26 @@ namespace Codefarts.IoC
             //}
 
             var hasSpecifiedArgs = args != null && args.Length > 0;
-            var constructors = (hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type)).ToArray();
+            var constructors =
+                (hasSpecifiedArgs ? this.GetPublicConstructorWithMatchingParameters(type, args) : this.GetPublicConstructorWithValidParameters(type))
+                .ToArray();
 
             // get constructor with the most parameters and attempt to instantiate it
             var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();
 
             try
             {
-                var arguments = hasSpecifiedArgs ? args : constructor.GetParameters().Select(p => this.DoResolve(depth + 1, false, p.ParameterType)).ToArray();
+                object[] arguments;
+                if (hasSpecifiedArgs)
+                {
+                    arguments = args;
+                }
+                else
+                {
+                    var parameters = constructor.GetParameters();
+                    arguments = parameters.Select(p => this.DoResolve(depth + 1, false, p.ParameterType)).ToArray();
+                }
+
                 var value = constructor.Invoke(arguments);
                 return value;
             }
