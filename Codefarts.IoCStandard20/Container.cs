@@ -160,14 +160,45 @@ namespace Codefarts.IoC
         /// <param name="concrete">The type of the concrete class.</param>
         public void Register(Type key, Type concrete)
         {
-            this.PreviouslyRegisteredCheck(key);
-            var callCount = new Dictionary<int, int>();
-            if (key.Equals(concrete))
+            if (key == null)
             {
-                this.typeCreators[key] = () => this.ResolveByType(0, concrete);
-                return;
+                throw new ArgumentNullException(nameof(key));
             }
 
+            if (concrete == null)
+            {
+                throw new ArgumentNullException(nameof(concrete));
+            }
+
+            // make sure not already registered
+            this.PreviouslyRegisteredCheck(key);
+
+            // can't register same type for key and concrete.
+            if (key.Equals(concrete))
+            {
+                throw new RegistrationException(string.Format(Resources.ERR_KeyAndConcreteTypeCannotBeTheSame, key.FullName, concrete.FullName));
+            }
+
+            // validate the concrete type.
+            if (concrete.IsAbstract ||
+                concrete.IsInterface ||
+                concrete.IsValueType ||
+                typeof(Delegate).IsAssignableFrom(concrete) ||
+                !key.IsAssignableFrom(concrete) ||
+                concrete == typeof(string))
+            {
+                throw new RegistrationException(string.Format(Resources.ERR_InvalidConcreteType, concrete.FullName));
+            }
+
+            // validate the concrete type.
+            if (key.IsValueType ||
+                typeof(Delegate).IsAssignableFrom(concrete) ||
+                concrete == typeof(string))
+            {
+                throw new RegistrationException(string.Format(Resources.ERR_InvalidKeyType, key.FullName));
+            }
+
+            var callCount = new Dictionary<int, int>();
             this.typeCreators[key] = () =>
             {
                 // NOTE: the fallowing code smells and I should come back to it at some point

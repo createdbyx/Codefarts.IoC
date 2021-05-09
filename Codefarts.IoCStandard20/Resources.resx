@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ERR_AlreadyRegistered" xml:space="preserve">
     <value>Type '{0}' already registered.</value>
@@ -125,8 +125,20 @@
     <value>Exceeded max instantiation depth.</value>
     <comment>exception message</comment>
   </data>
+  <data name="ERR_InvalidConcreteType" xml:space="preserve">
+    <value>The concrete could not be registered because it is either a interface, abstract class, value type, string, or delegate. Specified concrete type was {0}</value>
+    <comment>exception message</comment>
+  </data>
+  <data name="ERR_InvalidKeyType" xml:space="preserve">
+    <value>The key could not be registered because it is either a value type, string, or delegate. Specified key type was {0}</value>
+    <comment>exception message</comment>
+  </data>
   <data name="ERR_IsInvalidInstantiationType" xml:space="preserve">
     <value>The type '{0}' could not be resolved because it is either a interface, abstract class, value type, string, or delegate.</value>
+    <comment>exception message</comment>
+  </data>
+  <data name="ERR_KeyAndConcreteTypeCannotBeTheSame" xml:space="preserve">
+    <value>The registered type can not be the same as the concrete type. Registered Type: {0} ConcreteType: {1}</value>
     <comment>exception message</comment>
   </data>
   <data name="ERR_NoAvailableConstructors" xml:space="preserve">

@@ -79,11 +79,38 @@ namespace Codefarts.IoC {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The concrete could not be registered because it is either a interface, abstract class, value type, string, or delegate. Specified concrete type was {0}.
+        /// </summary>
+        internal static string ERR_InvalidConcreteType {
+            get {
+                return ResourceManager.GetString("ERR_InvalidConcreteType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The key could not be registered because it is either a value type, string, or delegate. Specified key type was {0}.
+        /// </summary>
+        internal static string ERR_InvalidKeyType {
+            get {
+                return ResourceManager.GetString("ERR_InvalidKeyType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; could not be resolved because it is either a interface, abstract class, value type, string, or delegate..
         /// </summary>
         internal static string ERR_IsInvalidInstantiationType {
             get {
                 return ResourceManager.GetString("ERR_IsInvalidInstantiationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The registered type can not be the same as the concrete type. Registered Type: {0} ConcreteType: {1}.
+        /// </summary>
+        internal static string ERR_KeyAndConcreteTypeCannotBeTheSame {
+            get {
+                return ResourceManager.GetString("ERR_KeyAndConcreteTypeCannotBeTheSame", resourceCulture);
             }
         }
         

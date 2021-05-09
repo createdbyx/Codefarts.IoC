@@ -307,9 +307,24 @@
               Looks up a localized string similar to Exceeded max instantiation depth..
             </summary>
         </member>
+        <member name="P:Codefarts.IoC.Resources.ERR_InvalidConcreteType">
+            <summary>
+              Looks up a localized string similar to The concrete could not be registered because it is either a interface, abstract class, value type, string, or delegate. Specified concrete type was {0}.
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Resources.ERR_InvalidKeyType">
+            <summary>
+              Looks up a localized string similar to The key could not be registered because it is either a value type, string, or delegate. Specified key type was {0}.
+            </summary>
+        </member>
         <member name="P:Codefarts.IoC.Resources.ERR_IsInvalidInstantiationType">
             <summary>
               Looks up a localized string similar to The type &apos;{0}&apos; could not be resolved because it is either a interface, abstract class, value type, string, or delegate..
+            </summary>
+        </member>
+        <member name="P:Codefarts.IoC.Resources.ERR_KeyAndConcreteTypeCannotBeTheSame">
+            <summary>
+              Looks up a localized string similar to The registered type can not be the same as the concrete type. Registered Type: {0} ConcreteType: {1}.
             </summary>
         </member>
         <member name="P:Codefarts.IoC.Resources.ERR_NoAvailableConstructors">
