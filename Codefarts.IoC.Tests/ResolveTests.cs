@@ -49,13 +49,11 @@ namespace Codefarts.IoC.Tests
         {
             var container = new Container();
             container.Register<IEnumerable<ITestInterface>, List<ITestInterface>>();
-          //  Trace.WriteLine("MAIN ID: " + Thread.CurrentThread.ManagedThreadId);
 
             var tasks = Enumerable.Range(0, 100).Select(x => new Task(() =>
             {
                 Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
                 {
-                  //  Trace.WriteLine("BeforeCall ID: " + Thread.CurrentThread.ManagedThreadId);
                     var value = container.Resolve<TestClassEnumerableDependency>();
                     Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
                 });
