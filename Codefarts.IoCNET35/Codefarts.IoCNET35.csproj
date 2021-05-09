@@ -45,9 +45,6 @@
     <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs">
       <Link>Container NET20.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\Container NET35.cs">
-      <Link>Container NET35.cs</Link>
-    </Compile>
     <Compile Include="..\Codefarts.IoCStandard20\Container.cs">
       <Link>Container.cs</Link>
     </Compile>

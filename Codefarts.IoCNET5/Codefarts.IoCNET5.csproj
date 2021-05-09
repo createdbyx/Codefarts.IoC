@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs" Link="Container NET20.cs" />
-    <Compile Include="..\Codefarts.IoCStandard20\Container NET35.cs" Link="Container NET35.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\Container.cs" Link="Container.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\ContainerExtensionMethods.cs" Link="ContainerExtensionMethods.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs" Link="ContainerResolutionException.cs" />

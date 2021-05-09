@@ -8,9 +8,6 @@
             <summary>
             Provides a simple IoC container functions.
             </summary>
-            <summary>
-            Provides a simple IoC container functions.
-            </summary>
         </member>
         <member name="F:Codefarts.IoC.Container.DefaultMaxInstantiationDepth">
             <summary>
@@ -60,23 +57,21 @@
             <summary>
             Gets or sets the max instantiation depth.
             </summary>
-            <remarks>Max instantiation depth prevents the <see cref="M:Codefarts.IoC.Container.Resolve(System.Type,System.Object[])"/> method from making circular instantiation references.</remarks>
+            <remarks>Max instantiation depth prevents the <see cref="M:Codefarts.IoC.Container.Resolve(System.Type)"/> method from making circular instantiation references.</remarks>
         </member>
         <member name="P:Codefarts.IoC.Container.RegisteredTypes">
             <summary>
             Gets the types that have been registered with the container.
             </summary>
         </member>
-        <member name="M:Codefarts.IoC.Container.Resolve(System.Type,System.Object[])">
+        <member name="M:Codefarts.IoC.Container.Resolve(System.Type)">
             <summary>
             Creates instance of a specified type.
             </summary>
             <param name="type">Specifies the type to be instantiated.</param>
-            <param name="args">Arguments to be passed to the type constructor.</param>
             <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
             <remarks>
             <p>Will attempt to resolve the type even if there was no previous type <see cref="T:Codefarts.IoC.Container.Creator"/> delegate specified for the type.</p>
-            <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
             </remarks>
         </member>
         <member name="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)">
@@ -109,18 +104,19 @@
             <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
             <remarks><see cref="M:Codefarts.IoC.Container.CanResolve(System.Type)"/> checks <see cref="P:Codefarts.IoC.Container.RegisteredTypes"/> property to see if a type has previously been registered with a <see cref="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
         </member>
-        <member name="M:Codefarts.IoC.Container.ResolveByType(System.Int32,System.Type,System.Object[])">
+        <member name="M:Codefarts.IoC.Container.ResolveByType(System.Int32,System.Type)">
             <summary>
             Creates a instance of a type.
             </summary>
             <param name="depth">Specified the instantiation depth.</param>
             <param name="type">The type that is to be instantiated.</param>
-            <param name="args">Arguments to be passed to the type constructor.</param>
+            <exception cref="T:Codefarts.IoC.ExceededMaxInstantiationDepthException">Raised if the depth argument is greater then
+            the <see cref="P:Codefarts.IoC.Container.MaxInstantiationDepth"/> property.</exception>
             <returns>The reference to the created instance.</returns>
             <remarks><p>Attempts to create the specified <param name="type"/> with the most number
             of constructor arguments that can be satisfied.</p>
             <p>Constructors with value types are ignored and only public constructors are considered.</p></remarks>
-            <exception cref="T:System.TypeLoadException"> Thrown if the type could not be constructed because none
+            <exception cref="T:Codefarts.IoC.ContainerResolutionException"> Thrown if the type could not be constructed because none
             of the available constructors could be satisfied.
             </exception>
         </member>
@@ -158,15 +154,6 @@
             </summary>
             <typeparam name="T">Specifies the type to be instantiated.</typeparam>
             <param name="container">The container that will be used to resolve the type.</param>
-            <returns>Returns a reference to a instance of <see cref="!:T"/>.</returns>
-        </member>
-        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Resolve``1(Codefarts.IoC.Container,System.Object[])">
-            <summary>
-            Creates instance of a specified type.
-            </summary>
-            <typeparam name="T">Specifies the type to be instantiated.</typeparam>
-            <param name="container">The container that will be used to resolve the type.</param>
-            <param name="args">Arguments array to be passed to the constructor of the resolved type.</param>
             <returns>Returns a reference to a instance of <see cref="!:T"/>.</returns>
         </member>
         <member name="M:Codefarts.IoC.ContainerExtensionMethods.Register``1(Codefarts.IoC.Container,Codefarts.IoC.Container.Creator)">

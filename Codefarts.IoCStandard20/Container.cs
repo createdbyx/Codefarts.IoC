@@ -4,19 +4,18 @@
 // http://www.codefarts.com
 // </copyright>
 
-using System.Threading;
-
 namespace Codefarts.IoC
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Threading;
 
     /// <summary>
     /// Provides a simple IoC container functions.
     /// </summary>
-    public partial class Container : INotifyPropertyChanged
+    public class Container : INotifyPropertyChanged
     {
         /// <summary>
         /// The default value for <see cref="MaxInstantiationDepth"/>.
@@ -110,13 +109,11 @@ namespace Codefarts.IoC
         /// Creates instance of a specified type.
         /// </summary>
         /// <param name="type">Specifies the type to be instantiated.</param>
-        /// <param name="args">Arguments to be passed to the type constructor.</param>
         /// <returns>Returns a reference to a instance of <paramref name="type"/>.</returns>
         /// <remarks>
         /// <p>Will attempt to resolve the type even if there was no previous type <see cref="Creator"/> delegate specified for the type.</p>
-        /// <p>If no <paramref name="args"/> specified, will attempt to satisfy args automatically.</p>
         /// </remarks>
-        public object Resolve(Type type, params object[] args)
+        public object Resolve(Type type)
         {
             Creator provider;
             if (this.typeCreators.TryGetValue(type, out provider))
@@ -131,7 +128,7 @@ namespace Codefarts.IoC
                 }
             }
 
-            return this.ResolveByType(0, type, args);
+            return this.ResolveByType(0, type);
         }
 
         /// <summary>
@@ -165,6 +162,12 @@ namespace Codefarts.IoC
         {
             this.PreviouslyRegisteredCheck(key);
             var callCount = new Dictionary<int, int>();
+            if (key.Equals(concrete))
+            {
+                this.typeCreators[key] = () => this.ResolveByType(0, concrete);
+                return;
+            }
+
             this.typeCreators[key] = () =>
             {
                 // NOTE: the fallowing code smells and I should come back to it at some point
@@ -182,6 +185,19 @@ namespace Codefarts.IoC
                 object result;
                 try
                 {
+                    Creator provider;
+                    if (this.typeCreators.TryGetValue(concrete, out provider))
+                    {
+                        try
+                        {
+                            return provider();
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new ContainerResolutionException(concrete, ex);
+                        }
+                    }
+
                     result = this.ResolveByType(count, concrete);
                 }
                 finally
@@ -231,15 +247,16 @@ namespace Codefarts.IoC
         /// </summary>
         /// <param name="depth">Specified the instantiation depth.</param>
         /// <param name="type">The type that is to be instantiated.</param>
-        /// <param name="args">Arguments to be passed to the type constructor.</param>
+        /// <exception cref="ExceededMaxInstantiationDepthException">Raised if the depth argument is greater then
+        /// the <see cref="MaxInstantiationDepth"/> property.</exception>
         /// <returns>The reference to the created instance.</returns>
         /// <remarks><p>Attempts to create the specified <param name="type"/> with the most number
         /// of constructor arguments that can be satisfied.</p>
         /// <p>Constructors with value types are ignored and only public constructors are considered.</p></remarks>
-        /// <exception cref="TypeLoadException"> Thrown if the type could not be constructed because none
+        /// <exception cref="ContainerResolutionException"> Thrown if the type could not be constructed because none
         /// of the available constructors could be satisfied.
         /// </exception>
-        private object ResolveByType(int depth, Type type, params object[] args)
+        private object ResolveByType(int depth, Type type)
         {
             if (depth > this.MaxInstantiationDepth)
             {
@@ -247,42 +264,42 @@ namespace Codefarts.IoC
             }
 
             // can't resolve abstract classes, interfaces, value types, delegates, or strings
-            if (this.IsInvalidInstantiationType(type))
+            if (type.IsAbstract ||
+                type.IsInterface ||
+                type.IsValueType ||
+                typeof(Delegate).IsAssignableFrom(type) ||
+                type == typeof(string))
             {
                 throw new ContainerResolutionException(type, string.Format(Resources.ERR_IsInvalidInstantiationType, type.FullName));
             }
 
-            var hasSpecifiedArgs = args != null && args.Length > 0;
-            var constructors = hasSpecifiedArgs ?
-                this.GetPublicConstructorWithMatchingParameters(type, args) :
-                this.GetPublicConstructorWithValidParameters(type);
+            // get all valid public constructors
+            var constructors = from c in type.GetConstructors()
+                               let parameters = c.GetParameters()
+                               where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
+                                                                        typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
+                                                                        type == typeof(string))
+                               select c;
 
             // get constructor with the most parameters and attempt to instantiate it
             var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();
 
             try
             {
-                object[] arguments;
-                if (hasSpecifiedArgs)
+                var parameters = constructor.GetParameters();
+                var arguments = new object[parameters.Length];
+                for (var i = 0; i < arguments.Length; i++)
                 {
-                    arguments = args;
-                }
-                else
-                {
-                    var parameters = constructor.GetParameters();
-                    arguments = new object[parameters.Length];
-                    for (var i = 0; i < arguments.Length; i++)
+                    var paramType = parameters[i].ParameterType;
+
+                    Creator provider;
+                    if (this.typeCreators.TryGetValue(paramType, out provider))
                     {
-                        var paramType = parameters[i].ParameterType;
-                        Creator provider;
-                        if (this.typeCreators.TryGetValue(paramType, out provider))
-                        {
-                            arguments[i] = provider();
-                        }
-                        else
-                        {
-                            arguments[i] = this.ResolveByType(depth + 1, paramType, null);
-                        }
+                        arguments[i] = provider();
+                    }
+                    else
+                    {
+                        arguments[i] = this.ResolveByType(depth + 1, paramType);
                     }
                 }
 
@@ -292,6 +309,10 @@ namespace Codefarts.IoC
             catch (ExceededMaxInstantiationDepthException mde)
             {
                 throw mde;
+            }
+            catch (ContainerResolutionException cre)
+            {
+                throw cre;
             }
             catch (Exception ex)
             {

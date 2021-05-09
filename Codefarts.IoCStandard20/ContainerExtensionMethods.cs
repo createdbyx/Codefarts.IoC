@@ -1,5 +1,7 @@
 ﻿// <copyright file="ContainerExtensionMethods.cs" company="Codefarts">
 // Copyright (c) Codefarts
+// contact@codefarts.com
+// http://www.codefarts.com
 // </copyright>
 
 namespace Codefarts.IoC
@@ -47,18 +49,6 @@ namespace Codefarts.IoC
         }
 
         /// <summary>
-        /// Creates instance of a specified type.
-        /// </summary>
-        /// <typeparam name="T">Specifies the type to be instantiated.</typeparam>
-        /// <param name="container">The container that will be used to resolve the type.</param>
-        /// <param name="args">Arguments array to be passed to the constructor of the resolved type.</param>
-        /// <returns>Returns a reference to a instance of <see cref="T"/>.</returns>
-        public static T Resolve<T>(this Container container, object[] args)
-        {
-            return (T)container.Resolve(typeof(T), args);
-        }
-
-        /// <summary>
         /// Registers a <see cref="Container.Creator" /> delegate for a given type.
         /// </summary>
         /// <typeparam name="T">The type that is to be registered.</typeparam>
@@ -68,17 +58,6 @@ namespace Codefarts.IoC
         {
             container.Register(typeof(T), creator);
         }
-
-        ///// <summary>
-        ///// Registers a type within the container.
-        ///// </summary>
-        ///// <typeparam name="T">The type of the concrete class.</typeparam>
-        ///// <param name="container">The container that will be used to resolve the type.</param>
-        //public static void Register<T>(this Container container)
-        //    where T : class
-        //{
-        //    container.Register(typeof(T));
-        //}
 
         /// <summary>
         /// Registers a type key with a concrete type.
