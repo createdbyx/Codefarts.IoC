@@ -10,6 +10,10 @@
     {
     }
 
+    internal interface ITestMultiDeps
+    {
+    }
+
     internal class TestClassDefaultCtor : ITestInterface
     {
         public string Prop1
@@ -399,6 +403,37 @@
         }
 
         public TestClassMultiDepsMultiCtors(TestClassDefaultCtor prop1, TestClassDefaultCtor prop2)
+        {
+            this.Prop1 = prop1;
+            this.Prop2 = prop2;
+            this.NumberOfDepsResolved = 2;
+        }
+    }
+
+    internal class TestClassMultiInterfaceDepsMultiCtors : ITestMultiDeps
+    {
+        public ITestInterface Prop1
+        {
+            get; private set;
+        }
+
+        public ITestInterface Prop2
+        {
+            get; private set;
+        }
+
+        public int NumberOfDepsResolved
+        {
+            get; private set;
+        }
+
+        public TestClassMultiInterfaceDepsMultiCtors(ITestInterface prop1)
+        {
+            this.Prop1 = prop1;
+            this.NumberOfDepsResolved = 1;
+        }
+
+        public TestClassMultiInterfaceDepsMultiCtors(ITestInterface prop1, ITestInterface prop2)
         {
             this.Prop1 = prop1;
             this.Prop2 = prop2;

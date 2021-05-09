@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Codefarts.IoC.Tests
@@ -73,7 +74,22 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
-        public void RegisterTwice()
+        public void RegisterConcreteTwice()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register<IRepository, MockRepository>();
+                container.Register<IRepository, MockRepository>();
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        [TestMethod]
+        public void RegisterCreatorTwice()
         {
             var container = new Container();
             try
@@ -85,6 +101,187 @@ namespace Codefarts.IoC.Tests
             }
             catch (Exception ex)
             {
+            }
+        }
+
+        [TestMethod]
+        public void RegisterMatchingTypes()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register<MockRepository, MockRepository>();
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidAbstractConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(IRepository), typeof(TestClassBase));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidInterfaceConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(IRepository), typeof(ITestInterface));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidValueTypeConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(IRepository), typeof(int));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidActionDelegateConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(IRepository), typeof(Action));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidStringConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(IRepository), typeof(string));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterConcreteTypeCanNotBeCreatedFromKeyType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(ITestInterface), typeof(TestClassWithBaseClass));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterNullKeyValidConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(null, typeof(MockRepository));
+                Assert.Fail("Should have thrown a 'ArgumentNullException' exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterValidKeyNullConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                Type nullType = null;
+                container.Register(typeof(IRepository), nullType);
+                Assert.Fail("Should have thrown a 'ArgumentNullException' exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(ArgumentNullException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidStringValidConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(string), typeof(MockRepository));
+                Assert.Fail("Should have thrown a 'RegistrationException' exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidValueTypeValidConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(int), typeof(MockRepository));
+                Assert.Fail("Should have thrown a 'RegistrationException' exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidActionKeyValidConcreteType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(Action), typeof(MockRepository));
+                Assert.Fail("Should have thrown a 'RegistrationException' exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
             }
         }
 

@@ -21,6 +21,32 @@ namespace Codefarts.IoC.Tests
     public class ResolveTests
     {
         [TestMethod]
+        public void ResolveProviderThrowsException()
+        {
+            var container = new Container();
+            container.Register<ITestInterface>(() => throw new Exception("Unit Test Exception!"));
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<ITestInterface>();
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
+        public void ResolveNestedProviderThrowsException()
+        {
+            var container = new Container();
+            container.Register<ITestInterface>(() => throw new Exception("Unit Test Exception!"));
+            container.Register<TestClassMultiInterfaceDepsMultiCtors>(() => new TestClassMultiInterfaceDepsMultiCtors(container.Resolve<ITestInterface>(),container.Resolve<ITestInterface>()));
+            container.Register<ITestMultiDeps, TestClassMultiInterfaceDepsMultiCtors>();
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<ITestMultiDeps>();
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
+
+        [TestMethod]
         public void ResolveIEnumerableDependencyWithoutRegistration()
         {
             var container = new Container();
@@ -409,8 +435,8 @@ namespace Codefarts.IoC.Tests
         public void MultiInstanceFactoryNoConstructorSpecified_UsesCorrectCtor()
         {
             var container = new Container();
-            container.Register<TestClassDefaultCtor, TestClassDefaultCtor>();
-            container.Register<TestClassMultiDepsMultiCtors, TestClassMultiDepsMultiCtors>();
+           // container.Register<TestClassDefaultCtor, TestClassDefaultCtor>();
+           // container.Register<TestClassMultiDepsMultiCtors, TestClassMultiDepsMultiCtors>();
 
             var result = container.Resolve<TestClassMultiDepsMultiCtors>();
 

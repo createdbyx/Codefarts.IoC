@@ -17,10 +17,10 @@ namespace Codefarts.IoC.Tests
         public void Unregister_RegisteredImplementation_CanUnregister()
         {
             var container = new Container();
-            container.Register<TestClassDefaultCtor, TestClassDefaultCtor>();
+            container.Register<ITestInterface, TestClassDefaultCtor>();
 
-            var unregistered = container.Unregister(typeof(TestClassDefaultCtor));
-            var resolved = container.CanResolve<TestClassDefaultCtor>();
+            var unregistered = container.Unregister(typeof(ITestInterface));
+            var resolved = container.CanResolve<ITestInterface>();
 
             Assert.IsTrue(unregistered);
             Assert.IsFalse(resolved);
@@ -63,10 +63,10 @@ namespace Codefarts.IoC.Tests
         public void Unregister_T_RegisteredImplementation_CanUnregister()
         {
             var container = new Container();
-            container.Register<TestClassDefaultCtor, TestClassDefaultCtor>();
+            container.Register<ITestInterface, TestClassDefaultCtor>();
 
-            var unregistered = container.Unregister<TestClassDefaultCtor>();
-            var resolved = container.CanResolve<TestClassDefaultCtor>();
+            var unregistered = container.Unregister<ITestInterface>();
+            var resolved = container.CanResolve<ITestInterface>();
 
             Assert.IsTrue(unregistered);
             Assert.IsFalse(resolved);

@@ -21,6 +21,17 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
+        public void Set_MaxInstantiationDepth_RaisesPropertyChanged()
+        {
+            var container = new Container();
+            var count = 0;
+            container.PropertyChanged += (s, e) => count += e.PropertyName == nameof(container.MaxInstantiationDepth) ? 1 : 0;
+            container.MaxInstantiationDepth = 6;
+            Assert.AreEqual(6u, container.MaxInstantiationDepth);
+            Assert.AreEqual(1, count);
+        }
+
+        [TestMethod]
         public void MaxInstantiationDepth_Zero_NoDependencies()
         {
             var container = new Container();
