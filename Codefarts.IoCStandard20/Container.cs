@@ -175,18 +175,10 @@ namespace Codefarts.IoC
                 concrete.IsInterface ||
                 concrete.IsValueType ||
                 typeof(Delegate).IsAssignableFrom(concrete) ||
-                !key.IsAssignableFrom(concrete) ||
-                concrete == typeof(string))
+                concrete == typeof(string) ||
+                !key.IsAssignableFrom(concrete))
             {
                 throw new RegistrationException(string.Format(Resources.ERR_InvalidConcreteType, concrete.FullName));
-            }
-
-            // validate the concrete type.
-            if (key.IsValueType ||
-                typeof(Delegate).IsAssignableFrom(concrete) ||
-                concrete == typeof(string))
-            {
-                throw new RegistrationException(string.Format(Resources.ERR_InvalidKeyType, key.FullName));
             }
 
             var callCount = new Dictionary<int, int>();
@@ -297,11 +289,11 @@ namespace Codefarts.IoC
 
             // get all valid public constructors
             var constructors = from c in type.GetConstructors()
-                               let parameters = c.GetParameters()
-                               where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
-                                                                        typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
-                                                                        type == typeof(string))
-                               select c;
+                let parameters = c.GetParameters()
+                where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
+                                                         typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
+                                                         type == typeof(string))
+                select c;
 
             // get constructor with the most parameters and attempt to instantiate it
             var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();
