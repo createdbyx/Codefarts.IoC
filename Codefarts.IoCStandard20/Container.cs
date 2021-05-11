@@ -66,10 +66,7 @@ namespace Codefarts.IoC
         /// </summary>
         public static Container Default
         {
-            get
-            {
-                return DefaultInstance;
-            }
+            get { return DefaultInstance; }
         }
 
         /// <summary>
@@ -78,10 +75,7 @@ namespace Codefarts.IoC
         /// <remarks>Max instantiation depth prevents the <see cref="Resolve"/> method from making circular instantiation references.</remarks>
         public uint MaxInstantiationDepth
         {
-            get
-            {
-                return this.maxInstantiationDepth;
-            }
+            get { return this.maxInstantiationDepth; }
 
             set
             {
@@ -99,10 +93,7 @@ namespace Codefarts.IoC
         /// </summary>
         public IEnumerable<Type> RegisteredTypes
         {
-            get
-            {
-                return this.typeCreators.Keys;
-            }
+            get { return this.typeCreators.Keys; }
         }
 
         /// <summary>

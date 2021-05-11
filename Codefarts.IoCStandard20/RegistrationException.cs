@@ -1,5 +1,7 @@
 // <copyright file="RegistrationException.cs" company="Codefarts">
 // Copyright (c) Codefarts
+// contact@codefarts.com
+// http://www.codefarts.com
 // </copyright>
 
 namespace Codefarts.IoC
@@ -30,11 +32,13 @@ namespace Codefarts.IoC
         {
         }
 
+        /// <inheritdoc />
         public RegistrationException(string message, Exception inner)
             : base(message, inner)
         {
         }
 
+        /// <inheritdoc />
         protected RegistrationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

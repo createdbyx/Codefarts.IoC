@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Codefarts.IoCStandard20</name>
+        <name>Codefarts.IoCNET5</name>
     </assembly>
     <members>
         <member name="T:Codefarts.IoC.Container">
@@ -264,24 +264,6 @@
             <param name="info">The info.</param>
             <param name="context">The context.</param>
         </member>
-        <member name="T:Codefarts.IoC.RegistrationException">
-            <summary>
-            Provides an exception for registration errors.
-            </summary>
-            <seealso cref="T:System.Exception" />
-        </member>
-        <member name="M:Codefarts.IoC.RegistrationException.#ctor">
-            <inheritdoc />
-        </member>
-        <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.String)">
-            <inheritdoc />
-        </member>
-        <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.String,System.Exception)">
-            <inheritdoc />
-        </member>
-        <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <inheritdoc />
-        </member>
         <member name="T:Codefarts.IoC.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -332,6 +314,24 @@
             <summary>
               Looks up a localized string similar to The type &apos;{0}&apos; could not be instantiated because none of the available constructors could be satisfied..
             </summary>
+        </member>
+        <member name="T:Codefarts.IoC.RegistrationException">
+            <summary>
+            Provides an exception for registration errors.
+            </summary>
+            <seealso cref="T:System.Exception" />
+        </member>
+        <member name="M:Codefarts.IoC.RegistrationException.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.String,System.Exception)">
+            <inheritdoc />
+        </member>
+        <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <inheritdoc />
         </member>
         <member name="T:Codefarts.IoC.SafeDictionary`2">
             <summary>

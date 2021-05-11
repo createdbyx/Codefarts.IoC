@@ -48,9 +48,6 @@
     <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs">
       <Link>Container NET20.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\Container NET35.cs">
-      <Link>Container NET35.cs</Link>
-    </Compile>
     <Compile Include="..\Codefarts.IoCStandard20\Container.cs">
       <Link>Container.cs</Link>
     </Compile>
@@ -63,14 +60,8 @@
     <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
       <Link>RegistrationException.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\RegistrationTypeException.cs">
-      <Link>RegistrationTypeException.cs</Link>
-    </Compile>
     <Compile Include="..\Codefarts.IoCStandard20\SafeDictionary.cs">
       <Link>SafeDictionary.cs</Link>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\UnregisteredTypeException.cs">
-      <Link>UnregisteredTypeException.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

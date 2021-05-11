@@ -7,6 +7,10 @@
     <FileVersion>2021.5.6.1</FileVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>P:\Code Projects\Codefarts.IoC\Codefarts.IoCNET5\Codefarts.IoCNET5.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs" Link="Container NET20.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\Container.cs" Link="Container.cs" />
@@ -19,9 +23,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs" Link="RegistrationException.cs" />
-    <Compile Include="..\Codefarts.IoCStandard20\RegistrationTypeException.cs" Link="RegistrationTypeException.cs" />
     <Compile Include="..\Codefarts.IoCStandard20\SafeDictionary.cs" Link="SafeDictionary.cs" />
-    <Compile Include="..\Codefarts.IoCStandard20\UnregisteredTypeException.cs" Link="UnregisteredTypeException.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,7 @@
 ﻿// <copyright file="Container NET20.cs" company="Codefarts">
 // Copyright (c) Codefarts
+// contact@codefarts.com
+// http://www.codefarts.com
 // </copyright>
 
 #if NET20
