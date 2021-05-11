@@ -48,7 +48,7 @@ namespace Codefarts.IoC.Tests
         public void Register_WithDelegateFactoryLambda_CanRegister()
         {
             var container = new Container();
-            container.Register<ITestInterface>(() => new TestClassDefaultCtor() { Prop1 = "Testing" });
+            container.Register<ITestInterface>(() => new TestClassDefaultCtor() {Prop1 = "Testing"});
         }
 
         [TestMethod]
@@ -165,6 +165,21 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
+        public void RegisterInvalidValueTypeKeyType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(int), typeof(TestClassWithBaseClass));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
         public void RegisterInvalidActionDelegateConcreteType()
         {
             var container = new Container();
@@ -180,12 +195,42 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
+        public void RegisterInvalidActionDelegateKeyType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(Action), typeof(TestClassWithBaseClass));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
         public void RegisterInvalidStringConcreteType()
         {
             var container = new Container();
             try
             {
                 container.Register(typeof(IRepository), typeof(string));
+                Assert.Fail("Should have thrown an exception.");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOfType(ex, typeof(RegistrationException));
+            }
+        }
+
+        [TestMethod]
+        public void RegisterInvalidStringKeyType()
+        {
+            var container = new Container();
+            try
+            {
+                container.Register(typeof(string), typeof(TestClassWithBaseClass));
                 Assert.Fail("Should have thrown an exception.");
             }
             catch (Exception ex)
