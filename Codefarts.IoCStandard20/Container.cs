@@ -66,7 +66,10 @@ namespace Codefarts.IoC
         /// </summary>
         public static Container Default
         {
-            get { return DefaultInstance; }
+            get
+            {
+                return DefaultInstance;
+            }
         }
 
         /// <summary>
@@ -75,7 +78,10 @@ namespace Codefarts.IoC
         /// <remarks>Max instantiation depth prevents the <see cref="Resolve"/> method from making circular instantiation references.</remarks>
         public uint MaxInstantiationDepth
         {
-            get { return this.maxInstantiationDepth; }
+            get
+            {
+                return this.maxInstantiationDepth;
+            }
 
             set
             {
@@ -93,7 +99,10 @@ namespace Codefarts.IoC
         /// </summary>
         public IEnumerable<Type> RegisteredTypes
         {
-            get { return this.typeCreators.Keys; }
+            get
+            {
+                return this.typeCreators.Keys;
+            }
         }
 
         /// <summary>
@@ -181,11 +190,13 @@ namespace Codefarts.IoC
                 throw new RegistrationException(string.Format(Resources.ERR_InvalidConcreteType, concrete.FullName));
             }
 
+            // The purpose of tracking call counts to to prevent stack overflow exceptions and
+            // stay within the MaxInstantiationDepth value for call depths.
             var callCount = new Dictionary<int, int>();
             this.typeCreators[key] = () =>
             {
                 // NOTE: the fallowing code smells and I should come back to it at some point
-                // I feel like the overall architecture is not elegant enough.
+                // I feel like the overall architecture approach is not elegant enough.
                 var threadId = Thread.CurrentThread.ManagedThreadId;
                 int count;
                 lock (callCount)
@@ -289,11 +300,11 @@ namespace Codefarts.IoC
 
             // get all valid public constructors
             var constructors = from c in type.GetConstructors()
-                let parameters = c.GetParameters()
-                where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
-                                                         typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
-                                                         type == typeof(string))
-                select c;
+                               let parameters = c.GetParameters()
+                               where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
+                                                                        typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
+                                                                        type == typeof(string))
+                               select c;
 
             // get constructor with the most parameters and attempt to instantiate it
             var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();

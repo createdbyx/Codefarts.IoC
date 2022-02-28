@@ -53,6 +53,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mockups\SimpleResolveMemberClass.cs" />
     <Compile Include="UnitTests\BuildUpTests.cs" />
     <Compile Include="UnitTests\CanResolveTests.cs" />
     <Compile Include="UnitTests\ContainerTests Unused.cs" />

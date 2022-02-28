@@ -37,7 +37,8 @@ namespace Codefarts.IoC.Tests
         {
             var container = new Container();
             container.Register<ITestInterface>(() => throw new Exception("Unit Test Exception!"));
-            container.Register<TestClassMultiInterfaceDepsMultiCtors>(() => new TestClassMultiInterfaceDepsMultiCtors(container.Resolve<ITestInterface>(),container.Resolve<ITestInterface>()));
+            container.Register<TestClassMultiInterfaceDepsMultiCtors>(
+                () => new TestClassMultiInterfaceDepsMultiCtors(container.Resolve<ITestInterface>(), container.Resolve<ITestInterface>()));
             container.Register<ITestMultiDeps, TestClassMultiInterfaceDepsMultiCtors>();
             Assert.ThrowsException<ContainerResolutionException>(() =>
             {
@@ -64,10 +65,10 @@ namespace Codefarts.IoC.Tests
             container.Register<IEnumerable<ITestInterface>, List<ITestInterface>>();
 
             Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
-                {
-                    var value = container.Resolve<TestClassEnumerableDependency>();
-                    Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
-                });
+            {
+                var value = container.Resolve<TestClassEnumerableDependency>();
+                Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
+            });
         }
 
         [TestMethod]
@@ -435,8 +436,8 @@ namespace Codefarts.IoC.Tests
         public void MultiInstanceFactoryNoConstructorSpecified_UsesCorrectCtor()
         {
             var container = new Container();
-           // container.Register<TestClassDefaultCtor, TestClassDefaultCtor>();
-           // container.Register<TestClassMultiDepsMultiCtors, TestClassMultiDepsMultiCtors>();
+            // container.Register<TestClassDefaultCtor, TestClassDefaultCtor>();
+            // container.Register<TestClassMultiDepsMultiCtors, TestClassMultiDepsMultiCtors>();
 
             var result = container.Resolve<TestClassMultiDepsMultiCtors>();
 
@@ -515,6 +516,102 @@ namespace Codefarts.IoC.Tests
             Assert.IsNotNull(result.Prop1, "Unit test failure! Property should have been set in constructor.");
             Assert.IsInstanceOfType(result.Prop1, typeof(TestClassBase));
             Assert.IsInstanceOfType(result.Prop1, typeof(TestClassWithBaseClass));
+        }
+
+        [TestMethod]
+        public void ResolveMembersSimple()
+        {
+            var container = new Container();
+
+            var someObject = new SimpleResolveMemberClass();
+
+            container.ResolveMembers(someObject);
+            Assert.IsNotNull(someObject.TestClassProperty, "Should have been assigned a value.");
+        }
+
+        [TestMethod]
+        public void ResolveMembersNulArg()
+        {
+            var container = new Container();
+
+            Assert.ThrowsException<ArgumentNullException>(() => { container.ResolveMembers(null); });
+        }
+
+        [TestMethod]
+        public void ResolveMembersFieldAlreadySet()
+        {
+            var container = new Container();
+            var someValue = new SimpleResolveMemberClass();
+            var fieldValue = container.Resolve<TestClassDefaultCtor>();
+            someValue.TestClassField = fieldValue;
+            container.ResolveMembers(someValue);
+
+            Assert.AreSame(someValue.TestClassField, fieldValue);
+        }
+
+        [TestMethod]
+        public void ResolveMembersFieldInstanciationWillThrowException()
+        {
+            var container = new Container();
+            var someValue = new SimpleResolveMemberClassWithUnresolvableField();
+            Assert.ThrowsException<ContainerResolutionException>(() => { container.ResolveMembers(someValue); });
+        }
+
+        [TestMethod]
+        public void ResolveMembersFieldInstanciationWillThrowException_Supressed()
+        {
+            var container = new Container();
+            var someValue = new SimpleResolveMemberClassWithUnresolvableField();
+            container.ResolveMembers(someValue, true);
+
+            Assert.IsNotNull(someValue.TestClassProperty);
+            Assert.IsNull(someValue.TestClassField);
+        }
+
+        [TestMethod]
+        public void ResolveMembersFieldInstanciationSupressedExceptions()
+        {
+            var container = new Container();
+            var someValue = new SimpleResolveMemberClass();
+            container.ResolveMembers(someValue, true);
+
+            Assert.IsNotNull(someValue.TestClassProperty);
+            Assert.IsNotNull(someValue.TestClassField);
+        }
+
+        [TestMethod]
+        public void ResolveWithDefaultFallbackSuccess()
+        {
+            var container = new Container();
+
+            var defaultValue = new SimpleResolveMemberClass();
+            defaultValue.TestClassField = new TestClassDefaultCtor();
+            defaultValue.TestClassProperty = new TestClassDefaultCtor();
+            defaultValue.TestClassProperty.Prop1 = "Prop";
+            defaultValue.TestClassField.Prop1 = "Field";
+            var someValue = container.Resolve<SimpleResolveMemberClass>(defaultValue);
+
+            Assert.IsNotNull(someValue);
+            Assert.IsNull(someValue.TestClassProperty);
+            Assert.IsNull(someValue.TestClassField);
+        }
+
+        [TestMethod]
+        public void ResolveWithDefaultFallbackFailure()
+        {
+            var container = new Container();
+
+            var defaultValue = new SimpleClassCtorThrowsExeption(false);
+            defaultValue.TestClassField = new TestClassWithInterfaceDependency(new TestClassDefaultCtor(), 123, "Prop");
+            defaultValue.TestClassProperty = new TestClassDefaultCtor();
+            var someValue = container.Resolve<SimpleClassCtorThrowsExeption>(defaultValue);
+
+            Assert.AreSame(defaultValue, someValue);
+            Assert.IsNotNull(someValue);
+            Assert.IsNotNull(someValue.TestClassField);
+            Assert.IsNotNull(someValue.TestClassProperty);
+            Assert.AreEqual("Prop", someValue.TestClassField.Param2);
+            Assert.AreEqual(123, someValue.TestClassField.Param1);
         }
     }
 }

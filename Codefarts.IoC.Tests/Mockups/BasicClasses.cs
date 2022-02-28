@@ -6,7 +6,7 @@
 
     using Codefarts.IoC;
 
-    internal interface ITestInterface
+    public interface ITestInterface
     {
     }
 
@@ -14,7 +14,7 @@
     {
     }
 
-    internal class TestClassDefaultCtor : ITestInterface
+    public class TestClassDefaultCtor : ITestInterface
     {
         public string Prop1
         {
@@ -58,7 +58,7 @@
         }
     }
 
-    internal class TestClassWithInterfaceDependency : ITestInterface2
+    public class TestClassWithInterfaceDependency : ITestInterface2
     {
         public ITestInterface Dependency
         {
