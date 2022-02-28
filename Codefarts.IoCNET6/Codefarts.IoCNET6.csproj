@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Codefarts.IoC</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Authors>Dean Lunz</Authors>
+        <Copyright>Codefarts</Copyright>
+        <RepositoryUrl>https://bitbucket.org/createdbyx/codefarts.ioc</RepositoryUrl>
+        <PackageTags>C#</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs">
+        <Link>Container NET20.cs</Link>
+      </Compile>
+      <Compile Include="..\Codefarts.IoCStandard20\Container.cs">
+        <Link>Container.cs</Link>
+      </Compile>
+      <Compile Include="..\Codefarts.IoCStandard20\ContainerExtensionMethods.cs">
+        <Link>ContainerExtensionMethods.cs</Link>
+      </Compile>
+      <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs">
+        <Link>ContainerResolutionException.cs</Link>
+      </Compile>
+      <Compile Include="..\Codefarts.IoCStandard20\ExceededMaxInstantiationDepthException.cs">
+        <Link>ExceededMaxInstantiationDepthException.cs</Link>
+      </Compile>
+      <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
+        <Link>RegistrationException.cs</Link>
+      </Compile>
+      <Compile Include="..\Codefarts.IoCStandard20\Resources.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Resources.resx</DependentUpon>
+        <Link>Resources.Designer.cs</Link>
+      </Compile>
+      <Compile Include="..\Codefarts.IoCStandard20\SafeDictionary.cs">
+        <Link>SafeDictionary.cs</Link>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="..\Codefarts.IoCStandard20\Resources.resx">
+        <Link>Resources.resx</Link>
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
+        <Link>stylecop.json</Link>
+      </AdditionalFiles>
+    </ItemGroup>
+
+</Project>

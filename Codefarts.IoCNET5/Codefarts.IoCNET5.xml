@@ -322,10 +322,15 @@
             <seealso cref="T:System.Exception" />
         </member>
         <member name="M:Codefarts.IoC.RegistrationException.#ctor">
-            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.RegistrationException"/> class.
+            </summary>
         </member>
         <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.String)">
-            <inheritdoc />
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.RegistrationException"/> class.
+            </summary>
+            <param name="message">The error message.</param>
         </member>
         <member name="M:Codefarts.IoC.RegistrationException.#ctor(System.String,System.Exception)">
             <inheritdoc />

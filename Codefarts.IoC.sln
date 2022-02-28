@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codefarts.IoC.Tests", "Code
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codefarts.IoCNET5", "Codefarts.IoCNET5\Codefarts.IoCNET5.csproj", "{D3F8ED4E-4740-4946-9C5A-AE5F690356D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codefarts.IoCNET6", "Codefarts.IoCNET6\Codefarts.IoCNET6.csproj", "{AB25D08A-9CD6-4E0B-84D2-7BD7B14C36A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D3F8ED4E-4740-4946-9C5A-AE5F690356D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3F8ED4E-4740-4946-9C5A-AE5F690356D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3F8ED4E-4740-4946-9C5A-AE5F690356D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB25D08A-9CD6-4E0B-84D2-7BD7B14C36A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB25D08A-9CD6-4E0B-84D2-7BD7B14C36A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB25D08A-9CD6-4E0B-84D2-7BD7B14C36A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB25D08A-9CD6-4E0B-84D2-7BD7B14C36A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
