@@ -9,7 +9,8 @@ namespace Codefarts.IoC
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
+   // using System.Linq;
+    using System.Reflection;
     using System.Threading;
 
     /// <summary>
@@ -298,16 +299,7 @@ namespace Codefarts.IoC
                 throw new ContainerResolutionException(type, string.Format(Resources.ERR_IsInvalidInstantiationType, type.FullName));
             }
 
-            // get all valid public constructors
-            var constructors = from c in type.GetConstructors()
-                               let parameters = c.GetParameters()
-                               where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
-                                                                        typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
-                                                                        type == typeof(string))
-                               select c;
-
-            // get constructor with the most parameters and attempt to instantiate it
-            var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();
+            var constructor = this.GetBestConstructorInfo(type);
 
             try
             {
@@ -344,6 +336,59 @@ namespace Codefarts.IoC
                 throw new ContainerResolutionException(type, string.Format(Resources.ERR_NoAvailableConstructors, type.FullName), ex);
             }
         }
+
+        private ConstructorInfo GetBestConstructorInfo(Type type)
+        {
+            // get all valid public constructors
+            var constructors = type.GetConstructors();
+            ConstructorInfo constructor = null;
+            var lastParameterLength = 0;
+
+            // search for best constructor
+            foreach (var c in constructors)
+            {
+                if (c.IsPublic)
+                {
+                    var parameters = c.GetParameters();
+                    var invalidParameters = false;
+                    foreach (var x in parameters)
+                    {
+                        invalidParameters = x.ParameterType.IsValueType ||
+                                            typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
+                                            type == typeof(string);
+                        if (invalidParameters)
+                        {
+                            break;
+                        }
+                    }
+
+                    // parameters are not invalid
+                    if (!invalidParameters && parameters.Length >= lastParameterLength)
+                    {
+                        lastParameterLength = parameters.Length;
+                        constructor = c;
+                    }
+                }
+            }
+
+            // return constructor if found
+            return constructor;
+        }
+
+        // private ConstructorInfo GetBestConstructorInfoOld(Type type)
+        // {
+        //     // get all valid public constructors
+        //     var constructors = from c in type.GetConstructors()
+        //                        let parameters = c.GetParameters()
+        //                        where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
+        //                                                                 typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
+        //                                                                 type == typeof(string))
+        //                        select c;
+        //
+        //     // get constructor with the most parameters and attempt to instantiate it
+        //     var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();
+        //     return constructor;
+        // }
 
         /// <summary>
         /// Checks for previously registered type and if found throws an exception.
