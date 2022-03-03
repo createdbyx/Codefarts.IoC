@@ -4,12 +4,14 @@
 // http://www.codefarts.com
 // </copyright>
 
+using System.Collections;
+
 namespace Codefarts.IoC
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
-   // using System.Linq;
     using System.Reflection;
     using System.Threading;
 
@@ -31,7 +33,7 @@ namespace Codefarts.IoC
         /// <summary>
         /// The dictionary containing the registered types and there creation delegate reference.
         /// </summary>
-        private readonly SafeDictionary<Type, Creator> typeCreators;
+        private readonly ConcurrentDictionary<Type, Creator> typeCreators;
 
         /// <summary>
         /// Backing field for the <see cref="MaxInstantiationDepth"/> property.
@@ -50,7 +52,7 @@ namespace Codefarts.IoC
         /// </summary>
         public Container()
         {
-            this.typeCreators = new SafeDictionary<Type, Creator>();
+            this.typeCreators = new ConcurrentDictionary<Type, Creator>();
         }
 
         /// <summary>
@@ -193,54 +195,54 @@ namespace Codefarts.IoC
 
             // The purpose of tracking call counts to to prevent stack overflow exceptions and
             // stay within the MaxInstantiationDepth value for call depths.
-            var callCount = new Dictionary<int, int>();
+            //   var callCount = new Dictionary<int, int>();
             this.typeCreators[key] = () =>
             {
-                // NOTE: the fallowing code smells and I should come back to it at some point
-                // I feel like the overall architecture approach is not elegant enough.
-                var threadId = Thread.CurrentThread.ManagedThreadId;
-                int count;
-                lock (callCount)
-                {
-                    callCount.TryGetValue(threadId, out count);
-
-                    count++;
-                    callCount[threadId] = count;
-                }
+                // // NOTE: the fallowing code smells and I should come back to it at some point
+                // // I feel like the overall architecture approach is not elegant enough.
+                // var threadId = Thread.CurrentThread.ManagedThreadId;
+                // int count;
+                // lock (callCount)
+                // {
+                //     callCount.TryGetValue(threadId, out count);
+                //
+                //     count++;
+                //     callCount[threadId] = count;
+                // }
 
                 object result;
-                try
+                // try
+                // {
+                Creator provider;
+                if (this.typeCreators.TryGetValue(concrete, out provider))
                 {
-                    Creator provider;
-                    if (this.typeCreators.TryGetValue(concrete, out provider))
+                    try
                     {
-                        try
-                        {
-                            return provider();
-                        }
-                        catch (Exception ex)
-                        {
-                            throw new ContainerResolutionException(concrete, ex);
-                        }
+                        return provider();
                     }
+                    catch (Exception ex)
+                    {
+                        throw new ContainerResolutionException(concrete, ex);
+                    }
+                }
 
-                    result = this.ResolveByType(count, concrete);
-                }
-                finally
-                {
-                    lock (callCount)
-                    {
-                        count--;
-                        if (count <= 0)
-                        {
-                            callCount.Remove(threadId);
-                        }
-                        else
-                        {
-                            callCount[threadId] = count;
-                        }
-                    }
-                }
+                result = this.ResolveByType(0, concrete);
+                // }
+                // finally
+                // {
+                //     lock (callCount)
+                //     {
+                //         count--;
+                //         if (count <= 0)
+                //         {
+                //             callCount.Remove(threadId);
+                //         }
+                //         else
+                //         {
+                //             callCount[threadId] = count;
+                //         }
+                //     }
+                // }
 
                 return result;
             };
@@ -253,7 +255,8 @@ namespace Codefarts.IoC
         /// <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
         public bool Unregister(Type type)
         {
-            return this.typeCreators.Remove(type);
+            Creator value;
+            return this.typeCreators.Remove(type, out value);
         }
 
         /// <summary>
@@ -261,7 +264,8 @@ namespace Codefarts.IoC
         /// </summary>
         /// <param name="type">The type to check if it can be resolved.</param>
         /// <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
-        /// <remarks><see cref="CanResolve"/> checks <see cref="RegisteredTypes"/> property to see if a type has previously been registered with a <see cref="Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
+        /// <remarks><see cref="CanResolve"/> checks <see cref="RegisteredTypes"/> property to see if a type has previously been registered with a
+        /// <see cref="Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
         public bool CanResolve(Type type)
         {
             Creator value;
@@ -279,15 +283,15 @@ namespace Codefarts.IoC
         /// <remarks><p>Attempts to create the specified <param name="type"/> with the most number
         /// of constructor arguments that can be satisfied.</p>
         /// <p>Constructors with value types are ignored and only public constructors are considered.</p></remarks>
-        /// <exception cref="ContainerResolutionException"> Thrown if the type could not be constructed because none
-        /// of the available constructors could be satisfied.
+        /// <exception cref="ContainerResolutionException"> Thrown if the type could not be constructed because 
+        /// the chosen constructor could be satisfied.
         /// </exception>
         private object ResolveByType(int depth, Type type)
         {
-            if (depth > this.MaxInstantiationDepth)
-            {
-                throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
-            }
+            // if (depth > this.MaxInstantiationDepth)
+            // {
+            //     throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
+            // }
 
             // can't resolve abstract classes, interfaces, value types, delegates, or strings
             if (type.IsAbstract ||
@@ -299,31 +303,37 @@ namespace Codefarts.IoC
                 throw new ContainerResolutionException(type, string.Format(Resources.ERR_IsInvalidInstantiationType, type.FullName));
             }
 
-            var constructor = this.GetBestConstructorInfo(type);
-
-            try
+            if (type.IsAssignableTo(typeof(IEnumerable)) && (type.IsArray || type.IsAssignableTo(typeof(IList))))
             {
-                var parameters = constructor.GetParameters();
-                var arguments = new object[parameters.Length];
-                for (var i = 0; i < arguments.Length; i++)
+                ConstructorInfo? c = null;
+                if (type.IsArray)
                 {
-                    var paramType = parameters[i].ParameterType;
+                    c = type.GetConstructors()[0];
+                    return c.Invoke(new object[] { 0 });
+                }
 
-                    Creator provider;
-                    if (this.typeCreators.TryGetValue(paramType, out provider))
+                foreach (var x in type.GetConstructors())
+                {
+                    if (x.GetParameters().Length == 0)
                     {
-                        arguments[i] = provider();
-                    }
-                    else
-                    {
-                        arguments[i] = this.ResolveByType(depth + 1, paramType);
+                        c = x;
+                        break;
                     }
                 }
 
+                return c.Invoke(new object[0]);
+            }
+
+            var constructor = this.GetBestConstructorInfo(type);
+            try
+
+            {
+                var arguments = this.BuildConstructorArguments(constructor);
                 var value = constructor.Invoke(arguments);
                 return value;
             }
-            catch (ExceededMaxInstantiationDepthException mde)
+            catch
+                (ExceededMaxInstantiationDepthException mde)
             {
                 throw mde;
             }
@@ -337,6 +347,19 @@ namespace Codefarts.IoC
             }
         }
 
+        private object[] BuildConstructorArguments(ConstructorInfo constructor)
+        {
+            var parameters = constructor.GetParameters();
+            var arguments = new object[parameters.Length];
+            for (var i = 0; i < arguments.Length; i++)
+            {
+                var paramType = parameters[i].ParameterType;
+                arguments[i] = this.Resolve(paramType);
+            }
+
+            return arguments;
+        }
+
         private ConstructorInfo GetBestConstructorInfo(Type type)
         {
             // get all valid public constructors
@@ -347,48 +370,35 @@ namespace Codefarts.IoC
             // search for best constructor
             foreach (var c in constructors)
             {
-                if (c.IsPublic)
+                if (!c.IsPublic)
                 {
-                    var parameters = c.GetParameters();
-                    var invalidParameters = false;
-                    foreach (var x in parameters)
-                    {
-                        invalidParameters = x.ParameterType.IsValueType ||
-                                            typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
-                                            type == typeof(string);
-                        if (invalidParameters)
-                        {
-                            break;
-                        }
-                    }
+                    continue;
+                }
 
-                    // parameters are not invalid
-                    if (!invalidParameters && parameters.Length >= lastParameterLength)
+                var parameters = c.GetParameters();
+                var invalidParameters = false;
+                foreach (var x in parameters)
+                {
+                    invalidParameters = x.ParameterType.IsValueType ||
+                                        typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
+                                        type == typeof(string);
+                    if (invalidParameters)
                     {
-                        lastParameterLength = parameters.Length;
-                        constructor = c;
+                        break;
                     }
+                }
+
+                // parameters are not invalid
+                if (!invalidParameters && parameters.Length >= lastParameterLength)
+                {
+                    lastParameterLength = parameters.Length;
+                    constructor = c;
                 }
             }
 
             // return constructor if found
             return constructor;
         }
-
-        // private ConstructorInfo GetBestConstructorInfoOld(Type type)
-        // {
-        //     // get all valid public constructors
-        //     var constructors = from c in type.GetConstructors()
-        //                        let parameters = c.GetParameters()
-        //                        where c.IsPublic && !parameters.Any(x => x.ParameterType.IsValueType ||
-        //                                                                 typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
-        //                                                                 type == typeof(string))
-        //                        select c;
-        //
-        //     // get constructor with the most parameters and attempt to instantiate it
-        //     var constructor = constructors.OrderBy(x => x.GetParameters().Length).LastOrDefault();
-        //     return constructor;
-        // }
 
         /// <summary>
         /// Checks for previously registered type and if found throws an exception.
