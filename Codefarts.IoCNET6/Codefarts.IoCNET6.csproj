@@ -10,6 +10,8 @@
         <Copyright>Codefarts</Copyright>
         <RepositoryUrl>https://bitbucket.org/createdbyx/codefarts.ioc</RepositoryUrl>
         <PackageTags>C#</PackageTags>
+        <PackageId>Codefarts.IoC</PackageId>
+        <PackageProjectUrl>https://bitbucket.org/createdbyx/codefarts.ioc</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>

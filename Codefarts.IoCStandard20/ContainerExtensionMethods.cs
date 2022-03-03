@@ -18,6 +18,27 @@ namespace Codefarts.IoC
         /// <summary>
         /// Tries the resolve the type.
         /// </summary>
+        /// <param name="container">The container that will be used to resolve the type.</param>
+        /// <param name="defaultValue">The default value to return if the type can't be resolved.</param>
+        /// <param name="value">The value that will be returned.</param>
+        /// <returns>Returns true if the type was resolved; otherwise false;</returns>
+        public static bool TryResolve(this Container container, Type type, object defaultValue, out object value)
+        {
+            value = defaultValue;
+            try
+            {
+                value = container.Resolve(type);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries the resolve the type.
+        /// </summary>
         /// <typeparam name="T">The type to be resolved.</typeparam>
         /// <param name="container">The container that will be used to resolve the type.</param>
         /// <param name="defaultValue">The default value to return if the type can't be resolved.</param>
@@ -99,10 +120,22 @@ namespace Codefarts.IoC
         /// <typeparam name="T">The type to be resolved.</typeparam>
         /// <param name="container">The container that will be used to resolve the type.</param>
         /// <param name="defaultValue">The default value to return if the type can't be resolved.</param>
-        /// <returns>Returns true if the type was resolved; otherwise false;</returns>
+        /// <returns>Returns the resolved object if successful, otherwise returns provided default value.</returns>
         public static T Resolve<T>(this Container container, T defaultValue)
         {
             T value;
+            return TryResolve(container, defaultValue, out value) ? value : defaultValue;
+        }
+
+        /// <summary>
+        /// Tries the resolve the type.
+        /// </summary>
+        /// <param name="container">The container that will be used to resolve the type.</param>
+        /// <param name="defaultValue">The default value to return if the type can't be resolved.</param>
+        /// <returns>Returns true if the type was resolved; otherwise false;</returns>
+        public static object Resolve(this Container container, Type type, object defaultValue)
+        {
+            object value;
             return TryResolve(container, defaultValue, out value) ? value : defaultValue;
         }
 
@@ -123,7 +156,8 @@ namespace Codefarts.IoC
             var propertyMembers = from member in memberInfos
                                   where member.MemberType == MemberTypes.Property
                                   let info = (PropertyInfo)member
-                                  where info.GetGetMethod() != null && info.GetSetMethod() != null && !info.PropertyType.IsValueType && info.PropertyType != typeof(string)
+                                  where info.GetGetMethod() != null && info.GetSetMethod() != null && !info.PropertyType.IsValueType &&
+                                        info.PropertyType != typeof(string)
                                   let getMeth = info.GetGetMethod()
                                   let setMeth = info.GetSetMethod()
                                   where getMeth.IsPublic && setMeth.IsPublic

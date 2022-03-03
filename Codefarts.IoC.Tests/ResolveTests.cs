@@ -595,6 +595,23 @@ namespace Codefarts.IoC.Tests
             Assert.IsNull(someValue.TestClassProperty);
             Assert.IsNull(someValue.TestClassField);
         }
+        
+        [TestMethod]
+        public void ResolveWithSpecifiedTypeAndDefaultFallback()
+        {
+            var container = new Container();
+
+            var defaultValue = new SimpleResolveMemberClass();
+            defaultValue.TestClassField = new TestClassDefaultCtor();
+            defaultValue.TestClassProperty = new TestClassDefaultCtor();
+            defaultValue.TestClassProperty.Prop1 = "Prop";
+            defaultValue.TestClassField.Prop1 = "Field";
+            var someValue = (SimpleResolveMemberClass)container.Resolve(typeof(SimpleResolveMemberClass), defaultValue);
+
+            Assert.IsNotNull(someValue);
+            Assert.IsNull(someValue.TestClassProperty);
+            Assert.IsNull(someValue.TestClassField);
+        }
 
         [TestMethod]
         public void ResolveWithDefaultFallbackFailure()

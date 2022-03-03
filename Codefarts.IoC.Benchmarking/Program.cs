@@ -14,6 +14,6 @@ public class Benchmarks
     public void Resolve()
     {
         var container = new Container();
-        var value= container.Resolve<Stopwatch>();
+        var value = container.Resolve<Stopwatch>();
     }
 }
