@@ -132,11 +132,17 @@ namespace Codefarts.IoC
         /// </summary>
         /// <param name="container">The container that will be used to resolve the type.</param>
         /// <param name="defaultValue">The default value to return if the type can't be resolved.</param>
-        /// <returns>Returns true if the type was resolved; otherwise false;</returns>
+        /// <returns>Returns the object if the type was resolved, otherwise returns the default value.</returns>
         public static object Resolve(this Container container, Type type, object defaultValue)
         {
-            object value;
-            return TryResolve(container, defaultValue, out value) ? value : defaultValue;
+            try
+            {
+                return container.Resolve(type);
+            }
+            catch 
+            {
+                return defaultValue;
+            }
         }
 
         public static void ResolveMembers(this Container container, object value)

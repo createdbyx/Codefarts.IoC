@@ -23,7 +23,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs" Link="RegistrationException.cs" />
-    <Compile Include="..\Codefarts.IoCStandard20\SafeDictionary.cs" Link="SafeDictionary.cs" />
   </ItemGroup>
 
   <ItemGroup>
