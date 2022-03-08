@@ -33,12 +33,19 @@ namespace Codefarts.IoC
         /// <summary>
         /// The dictionary containing the registered types and there creation delegate reference.
         /// </summary>
-        private readonly ConcurrentDictionary<Type, Creator> typeCreators;
+        private readonly ConcurrentDictionary<Type, CreatorData> typeCreators;
 
         /// <summary>
         /// Backing field for the <see cref="MaxInstantiationDepth"/> property.
         /// </summary>
         private uint maxInstantiationDepth = DefaultMaxInstantiationDepth;
+
+        private class CreatorData
+        {
+            public Creator Creator { get; set; }
+            public Type ConcreteType { get; set; }
+            public bool InternalCreator { get; set; }
+        }
 
         /// <summary>
         /// Initializes static members of the <see cref="Container"/> class.
@@ -52,7 +59,7 @@ namespace Codefarts.IoC
         /// </summary>
         public Container()
         {
-            this.typeCreators = new ConcurrentDictionary<Type, Creator>();
+            this.typeCreators = new ConcurrentDictionary<Type, CreatorData>();
         }
 
         /// <summary>
@@ -118,12 +125,12 @@ namespace Codefarts.IoC
         /// </remarks>
         public object Resolve(Type type)
         {
-            Creator provider;
+            CreatorData provider;
             if (this.typeCreators.TryGetValue(type, out provider))
             {
                 try
                 {
-                    return provider();
+                    return provider.Creator();
                 }
                 catch (Exception ex)
                 {
@@ -153,7 +160,7 @@ namespace Codefarts.IoC
             }
 
             this.PreviouslyRegisteredCheck(type);
-            this.typeCreators[type] = creator;
+            this.typeCreators[type] = new CreatorData() { Creator = creator };
         }
 
         /// <summary>
@@ -196,55 +203,60 @@ namespace Codefarts.IoC
             // The purpose of tracking call counts to to prevent stack overflow exceptions and
             // stay within the MaxInstantiationDepth value for call depths.
             //   var callCount = new Dictionary<int, int>();
-            this.typeCreators[key] = () =>
+            this.typeCreators[key] = new CreatorData()
             {
-                // // NOTE: the fallowing code smells and I should come back to it at some point
-                // // I feel like the overall architecture approach is not elegant enough.
-                // var threadId = Thread.CurrentThread.ManagedThreadId;
-                // int count;
-                // lock (callCount)
-                // {
-                //     callCount.TryGetValue(threadId, out count);
-                //
-                //     count++;
-                //     callCount[threadId] = count;
-                // }
-
-                object result;
-                // try
-                // {
-                Creator provider;
-                if (this.typeCreators.TryGetValue(concrete, out provider))
+                InternalCreator = true, ConcreteType = concrete, Creator = () =>
                 {
-                    try
-                    {
-                        return provider();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new ContainerResolutionException(concrete, ex);
-                    }
+                    // // NOTE: the fallowing code smells and I should come back to it at some point
+                    // // I feel like the overall architecture approach is not elegant enough.
+                    // var threadId = Thread.CurrentThread.ManagedThreadId;
+                    // int count;
+                    // lock (callCount)
+                    // {
+                    //     callCount.TryGetValue(threadId, out count);
+                    //
+                    //     count++;
+                    //     callCount[threadId] = count;
+                    // }
+
+                    // object result;
+                    // // try
+                    // // {
+                    // Creator provider;
+                    // if (this.typeCreators.TryGetValue(concrete, out provider))
+                    // {
+                    //     try
+                    //     {
+                    //         return provider();
+                    //     }
+                    //     catch (Exception ex)
+                    //     {
+                    //         throw new ContainerResolutionException(concrete, ex);
+                    //     }
+                    // }
+                    //
+                    // result = this.ResolveByType(0, concrete);
+                    // }
+                    // finally
+                    // {
+                    //     lock (callCount)
+                    //     {
+                    //         count--;
+                    //         if (count <= 0)
+                    //         {
+                    //             callCount.Remove(threadId);
+                    //         }
+                    //         else
+                    //         {
+                    //             callCount[threadId] = count;
+                    //         }
+                    //     }
+                    // }
+
+                    //return result;
+
+                    return ResolveByType(0, concrete);
                 }
-
-                result = this.ResolveByType(0, concrete);
-                // }
-                // finally
-                // {
-                //     lock (callCount)
-                //     {
-                //         count--;
-                //         if (count <= 0)
-                //         {
-                //             callCount.Remove(threadId);
-                //         }
-                //         else
-                //         {
-                //             callCount[threadId] = count;
-                //         }
-                //     }
-                // }
-
-                return result;
             };
         }
 
@@ -255,7 +267,7 @@ namespace Codefarts.IoC
         /// <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
         public bool Unregister(Type type)
         {
-            Creator value;
+            CreatorData value;
             return this.typeCreators.Remove(type, out value);
         }
 
@@ -268,8 +280,23 @@ namespace Codefarts.IoC
         /// <see cref="Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
         public bool CanResolve(Type type)
         {
-            Creator value;
-            return this.typeCreators.TryGetValue(type, out value);
+            CreatorData value;
+            if (this.typeCreators.TryGetValue(type, out value))
+            {
+                return true;
+            }
+
+            // can't resolve abstract classes, interfaces, value types, delegates, or strings
+            if (type.IsAbstract ||
+                type.IsInterface ||
+                type.IsValueType ||
+                typeof(Delegate).IsAssignableFrom(type) ||
+                type == typeof(string))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -303,34 +330,154 @@ namespace Codefarts.IoC
                 throw new ContainerResolutionException(type, string.Format(Resources.ERR_IsInvalidInstantiationType, type.FullName));
             }
 
-            if (type.IsAssignableTo(typeof(IEnumerable)) && (type.IsArray || type.IsAssignableTo(typeof(IList))))
+            // if the type implements IEnumerable 
+            if (type.IsAssignableTo(typeof(ICollection)))
             {
-                ConstructorInfo? c = null;
-                if (type.IsArray)
-                {
-                    c = type.GetConstructors()[0];
-                    return c.Invoke(new object[] { 0 });
-                }
-
-                foreach (var x in type.GetConstructors())
-                {
-                    if (x.GetParameters().Length == 0)
-                    {
-                        c = x;
-                        break;
-                    }
-                }
-
-                return c.Invoke(new object[0]);
+                return CreateEmptyCollection(type);
+                // if (type.IsAssignableTo(typeof(IDictionary)))
+                // {
+                // }
+                // else
+                // {
+                //     return Enumerable.Empty<Type>();
+                // }
+                //
+                // ConstructorInfo? c = null;
+                // if (type.IsArray)
+                // {
+                //     c = type.GetConstructors()[0];
+                //     return c.Invoke(new object[] { 0 });
+                // }
+                //
+                // foreach (var x in type.GetConstructors())
+                // {
+                //     if (x.GetParameters().Length == 0)
+                //     {
+                //         c = x;
+                //         break;
+                //     }
+                // }
+                //
+                // return c.Invoke(new object[0]);
             }
 
-            var constructor = this.GetBestConstructorInfo(type);
             try
-
             {
-                var arguments = this.BuildConstructorArguments(constructor);
-                var value = constructor.Invoke(arguments);
-                return value;
+                var list = new List<InfoContainer>();
+
+                var constructor = GetBestConstructorInfo(type);
+                var info = new InfoContainer(constructor);
+                list.Add(info);
+                var listIndex = 0;
+
+                // mapping
+                while (listIndex < list.Count)
+                {
+                    // if (list.Count > this.MaxInstantiationDepth)
+                    // {
+                    //     throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
+                    // }
+
+                    // get last
+                    var current = list[listIndex];
+
+                    // map constructor tree
+                    var parameters = current.Constructor.GetParameters();
+                    var pList = new List<InfoContainer>();
+                    for (var pIndex = 0; pIndex < parameters.Length; pIndex++)
+                    {
+                        var parameterInfo = parameters[pIndex];
+                        var pCon = this.GetBestConstructorInfo(parameterInfo.ParameterType);
+                        if (pCon != null)
+                        {
+                            pList.Add(new InfoContainer(pCon));
+                        }
+                        else
+                        {
+                            Creator provider;
+                            object value = null;
+                            if (this.typeCreators.TryGetValue(parameterInfo.ParameterType, out provider))
+                            {
+                                try
+                                {
+                                    value = provider();
+                                    var pc = new InfoContainer();
+                                    pc.ObjectReference = value;
+                                    pc.Constructor = this.GetBestConstructorInfo(value.GetType());
+                                    pList.Add(pc);
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new ContainerResolutionException(type, ex);
+                                }
+                            }
+                        }
+
+                        // info = new InfoContainer(pCon, true);
+                        // var infoParams = pCon.GetParameters();
+                        // if (infoParams.Length > 0)
+                        // {
+                        //     var args = new InfoContainer[infoParams.Length];
+                        //     for (var i = 0; i < infoParams.Length; i++)
+                        //     {
+                        //         var param = infoParams[i];
+                        //         args[i] = new InfoContainer(this.GetBestConstructorInfo(param.ParameterType));
+                        //     }
+                        //
+                        //     info.Parameters = args;
+                        //     list.Insert(listIndex + 1, info);
+                        // }
+                    }
+
+                    current.Parameters = pList.Count == 0 ? null : pList;
+                    list.AddRange(pList);
+
+                    listIndex++;
+                    //
+                    // var last = stack.Pop();
+                    // if (last.Parameters!=null)
+                    // {
+                    //     while (last.ObjectReference == null)
+                    //     {
+                    //         last.ObjectReference = last.Constructor.Invoke(null);
+                    //     }
+                    // }
+                    // else
+                    // {
+                    //     stack.Push(last);
+                    // }
+                }
+
+                // building
+                while (list.Count > 0)
+                {
+                    var last = list[^1];
+                    //  var args = last.Parameters == null ? null : last.Parameters;
+                    var argRefs = last.Parameters == null ? null : new object[last.Parameters.Count];
+                    if (last.Parameters != null)
+                    {
+                        for (var i = 0; i < last.Parameters.Count; i++)
+                        {
+                            var item = last.Parameters[i];
+                            argRefs[i] = item.ObjectReference; //.Parameters[i].Constructor.Invoke(null);
+                        }
+                    }
+
+                    if (last.Constructor.DeclaringType.IsArray)
+                    {
+                        last.ObjectReference = last.Constructor.Invoke(new object[] { 0 });
+                    }
+                    else
+                    {
+                        last.ObjectReference = last.Constructor.Invoke(argRefs);
+                    }
+
+                    list.RemoveAt(list.Count - 1);
+                }
+
+                // var arguments = this.BuildConstructorArguments(constructor);
+                // var value = constructor.Invoke(arguments);
+                return info.ObjectReference;
             }
             catch
                 (ExceededMaxInstantiationDepthException mde)
@@ -347,25 +494,47 @@ namespace Codefarts.IoC
             }
         }
 
-        private object[] BuildConstructorArguments(ConstructorInfo constructor)
-        {
-            var parameters = constructor.GetParameters();
-            var arguments = new object[parameters.Length];
-            for (var i = 0; i < arguments.Length; i++)
-            {
-                var paramType = parameters[i].ParameterType;
-                arguments[i] = this.Resolve(paramType);
-            }
-
-            return arguments;
-        }
-
         private ConstructorInfo GetBestConstructorInfo(Type type)
         {
             // get all valid public constructors
             var constructors = type.GetConstructors();
             ConstructorInfo constructor = null;
             var lastParameterLength = 0;
+
+            if (type.IsAssignableTo(typeof(ICollection)) || type.IsAssignableTo(typeof(IEnumerable)))
+            {
+                Creator provider;
+                object value = null;
+                if (this.typeCreators.TryGetValue(type, out provider))
+                {
+                    try
+                    {
+                        value = provider();
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new ContainerResolutionException(type, ex);
+                    }
+                }
+
+                type = value == null ? type : value.GetType(); //.GetConstructors()[0];
+
+                if (type.IsArray)
+                {
+                    return type.GetConstructors()[0];
+                }
+                else
+                {
+                    if (type.IsAssignableTo(typeof(IDictionary)))
+                    {
+                        return this.GetDictionaryConstructor(type);
+                    }
+                    else
+                    {
+                        return this.GetListConstructor(type.GetGenericArguments()[0]);
+                    }
+                }
+            }
 
             // search for best constructor
             foreach (var c in constructors)
@@ -400,6 +569,131 @@ namespace Codefarts.IoC
             return constructor;
         }
 
+        private IEnumerable<T> GetIEnumerable<T>()
+        {
+            return Enumerable.Empty<T>();
+        }
+
+        private ConstructorInfo GetArrayConstructor<T>()
+        {
+            var type = typeof(T[]);
+            return type.GetConstructors()[0];
+        }
+
+        private ConstructorInfo GetListConstructor(Type type)
+        {
+            var t = typeof(List<>).MakeGenericType(type);
+            var ctors = t.GetConstructors();
+            // find default ctor
+            foreach (var c in ctors)
+            {
+                if (c.GetParameters().Length == 0)
+                {
+                    return c;
+                }
+            }
+
+            return null;
+        }
+
+        private ConstructorInfo GetDictionaryConstructor(Type type)
+        {
+            var t = typeof(Dictionary<,>).MakeGenericType(type.GetGenericArguments());
+            var ctors = t.GetConstructors();
+            // find default ctor
+            foreach (var c in ctors)
+            {
+                if (c.GetParameters().Length == 0)
+                {
+                    return c;
+                }
+            }
+
+            return null;
+        }
+
+        private IEnumerable CreateEmptyCollection(Type type)
+        {
+            if (type.IsArray)
+            {
+                return (IEnumerable)type.GetConstructors()[0].Invoke(new object[] { 0 });
+            }
+            else
+            {
+                if (type.IsAssignableTo(typeof(IDictionary)))
+                {
+                    return (IEnumerable)this.GetDictionaryConstructor(type).Invoke(null);
+                }
+                else
+                {
+                    return (IEnumerable)this.GetListConstructor(type.GetGenericArguments()[0]).Invoke(null);
+                }
+            }
+
+            // var methodInfo = this.GetType().GetMethod("GetIEnumerable", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(type);
+            // var result = methodInfo.Invoke(this, null);
+            // return (IEnumerable)result;
+        }
+
+        /*
+        /// <summary>
+        /// Private method that acts as a wrapper for the Resolve method.
+        /// </summary>
+        /// <typeparam name="T">The type to cast to before returning.</typeparam>
+        /// <remarks>This is called by the <seealso cref="CreateAction"/> method.</remarks>
+        private Func<IEnumerable<T>> Perform<T>()
+        {
+            return () => Enumerable.Empty<T>();
+        }
+
+        /// <summary>
+        /// Called by the <seealso cref="ResolveGenericType"/> method.
+        /// </summary>
+        private Delegate CreateCollection(Type type)
+        {
+            var methodInfo = this.GetType().GetMethod("Perform", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(type);
+            var funcGenericType = typeof(Func<>).MakeGenericType(type);
+            return (Delegate)Convert.ChangeType(methodInfo.Invoke(this, null), funcGenericType);
+        } */
+
+
+        private class InfoContainer
+        {
+            public ConstructorInfo Constructor;
+
+            public InfoContainer(ConstructorInfo constructor)
+            {
+                this.Constructor = constructor;
+            }
+
+            public InfoContainer(ConstructorInfo constructor, bool isParameter)
+            {
+                this.Constructor = constructor;
+                this.IsParameter = isParameter;
+            }
+
+            public object ObjectReference;
+            public bool IsParameter;
+            public List<InfoContainer> Parameters;
+
+            public InfoContainer()
+            {
+            }
+        }
+
+        private object[] BuildConstructorArguments(ConstructorInfo constructor)
+        {
+            var parameters = constructor.GetParameters();
+            var arguments = new object[parameters.Length];
+            for (var i = 0; i < arguments.Length; i++)
+            {
+                var paramType = parameters[i].ParameterType;
+                arguments[i] = this.Resolve(paramType);
+            }
+
+            return arguments;
+        }
+
         /// <summary>
         /// Checks for previously registered type and if found throws an exception.
         /// </summary>
@@ -407,7 +701,7 @@ namespace Codefarts.IoC
         /// <exception cref="Codefarts.IoC.RegistrationException">If type has been registered already.</exception>
         private void PreviouslyRegisteredCheck(Type type)
         {
-            Creator creator;
+            CreatorData creator;
             if (this.typeCreators.TryGetValue(type, out creator) || creator != null)
             {
                 throw new RegistrationException(string.Format(Resources.ERR_AlreadyRegistered, type.FullName));
