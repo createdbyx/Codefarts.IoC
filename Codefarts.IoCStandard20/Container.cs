@@ -296,7 +296,7 @@ namespace Codefarts.IoC
                 return false;
             }
 
-            return true;
+            return type.IsPublic;
         }
 
         /// <summary>
@@ -382,51 +382,59 @@ namespace Codefarts.IoC
                     var current = list[listIndex];
 
                     // map constructor tree
-                    var parameters = current.Constructor.GetParameters();
                     var pList = new List<InfoContainer>();
-                    for (var pIndex = 0; pIndex < parameters.Length; pIndex++)
+                    if (current.Constructor != null && !current.Constructor.DeclaringType.IsArray)
                     {
-                        var parameterInfo = parameters[pIndex];
-                        var pCon = this.GetBestConstructorInfo(parameterInfo.ParameterType);
-                        if (pCon != null)
+                        var parameters = current.Constructor.GetParameters();
+                        for (var pIndex = 0; pIndex < parameters.Length; pIndex++)
                         {
-                            pList.Add(new InfoContainer(pCon));
-                        }
-                        else
-                        {
-                            Creator provider;
-                            object value = null;
-                            if (this.typeCreators.TryGetValue(parameterInfo.ParameterType, out provider))
+                            var parameterInfo = parameters[pIndex];
+                            var pCon = this.GetBestConstructorInfo(parameterInfo.ParameterType);
+                            if (pCon != null)
                             {
-                                try
+                                pList.Add(new InfoContainer(pCon));
+                            }
+                            else
+                            {
+                                CreatorData provider;
+                                //object value = null;
+                                if (this.typeCreators.TryGetValue(parameterInfo.ParameterType, out provider))
                                 {
-                                    value = provider();
-                                    var pc = new InfoContainer();
-                                    pc.ObjectReference = value;
-                                    pc.Constructor = this.GetBestConstructorInfo(value.GetType());
-                                    pList.Add(pc);
+                                    var cInfo = this.GetBestConstructorInfo(provider.ConcreteType);
+                                    if (cInfo != null)
+                                    {
+                                        var pc = new InfoContainer(cInfo);
+                                        pList.Add(pc);
+                                    }
+                                    else
+                                    {
+                                        var pc = new InfoContainer() { ObjectReference = provider.Creator() };
+                                        pList.Add(pc);
+                                    }
                                 }
-                                catch (Exception ex)
+                                else
                                 {
-                                    throw new ContainerResolutionException(type, ex);
+                                    throw new ContainerResolutionException(parameterInfo.ParameterType,
+                                                                           string.Format(Resources.ERR_IsInvalidInstantiationType,
+                                                                                         parameterInfo.ParameterType));
                                 }
                             }
-                        }
 
-                        // info = new InfoContainer(pCon, true);
-                        // var infoParams = pCon.GetParameters();
-                        // if (infoParams.Length > 0)
-                        // {
-                        //     var args = new InfoContainer[infoParams.Length];
-                        //     for (var i = 0; i < infoParams.Length; i++)
-                        //     {
-                        //         var param = infoParams[i];
-                        //         args[i] = new InfoContainer(this.GetBestConstructorInfo(param.ParameterType));
-                        //     }
-                        //
-                        //     info.Parameters = args;
-                        //     list.Insert(listIndex + 1, info);
-                        // }
+                            // info = new InfoContainer(pCon, true);
+                            // var infoParams = pCon.GetParameters();
+                            // if (infoParams.Length > 0)
+                            // {
+                            //     var args = new InfoContainer[infoParams.Length];
+                            //     for (var i = 0; i < infoParams.Length; i++)
+                            //     {
+                            //         var param = infoParams[i];
+                            //         args[i] = new InfoContainer(this.GetBestConstructorInfo(param.ParameterType));
+                            //     }
+                            //
+                            //     info.Parameters = args;
+                            //     list.Insert(listIndex + 1, info);
+                            // }
+                        }
                     }
 
                     current.Parameters = pList.Count == 0 ? null : pList;
@@ -463,13 +471,16 @@ namespace Codefarts.IoC
                         }
                     }
 
-                    if (last.Constructor.DeclaringType.IsArray)
+                    if (last.ObjectReference == null && last.Constructor != null)
                     {
-                        last.ObjectReference = last.Constructor.Invoke(new object[] { 0 });
-                    }
-                    else
-                    {
-                        last.ObjectReference = last.Constructor.Invoke(argRefs);
+                        if (last.Constructor.DeclaringType.IsArray)
+                        {
+                            last.ObjectReference = last.Constructor.Invoke(new object[] { 0 });
+                        }
+                        else
+                        {
+                            last.ObjectReference = last.Constructor.Invoke(argRefs);
+                        }
                     }
 
                     list.RemoveAt(list.Count - 1);
@@ -496,6 +507,11 @@ namespace Codefarts.IoC
 
         private ConstructorInfo GetBestConstructorInfo(Type type)
         {
+            if (type == null)
+            {
+                return null;
+            }
+
             // get all valid public constructors
             var constructors = type.GetConstructors();
             ConstructorInfo constructor = null;
@@ -503,21 +519,29 @@ namespace Codefarts.IoC
 
             if (type.IsAssignableTo(typeof(ICollection)) || type.IsAssignableTo(typeof(IEnumerable)))
             {
-                Creator provider;
+                CreatorData provider;
                 object value = null;
                 if (this.typeCreators.TryGetValue(type, out provider))
                 {
-                    try
+                    if (provider.ConcreteType != null)
                     {
-                        value = provider();
+                        type = provider.ConcreteType;
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        throw new ContainerResolutionException(type, ex);
+                        return null;
                     }
+                    // try
+                    // {
+                    //     value = provider();
+                    // }
+                    // catch (Exception ex)
+                    // {
+                    //     throw new ContainerResolutionException(type, ex);
+                    // }
                 }
 
-                type = value == null ? type : value.GetType(); //.GetConstructors()[0];
+                //type = value == null ? type : value.GetType(); //.GetConstructors()[0];
 
                 if (type.IsArray)
                 {
@@ -529,10 +553,8 @@ namespace Codefarts.IoC
                     {
                         return this.GetDictionaryConstructor(type);
                     }
-                    else
-                    {
-                        return this.GetListConstructor(type.GetGenericArguments()[0]);
-                    }
+
+                    return this.GetListConstructor(type.GetGenericArguments()[0]);
                 }
             }
 
