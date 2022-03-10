@@ -29,7 +29,7 @@ namespace Codefarts.IoC.Tests
             var container = new Container();
             var result = container.CanResolve<TestClassDefaultCtor>();
 
-            Assert.IsFalse(result);
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace Codefarts.IoC.Tests
 
             var testing = container.CanResolve<GenericClassWithInterface<int, string>>();
 
-            Assert.IsFalse(testing);
+            Assert.IsTrue(testing);
         }
 
         [TestMethod]

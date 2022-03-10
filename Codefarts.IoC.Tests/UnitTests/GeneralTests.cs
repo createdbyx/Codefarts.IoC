@@ -83,7 +83,7 @@ namespace Codefarts.IoC.Tests
         public void GetChildContainer()
         {
             var container = new Container();
-            Assert.IsFalse(container.CanResolve<Container>());
+            Assert.IsTrue(container.CanResolve<Container>());
         }
 
         [TestMethod]
@@ -107,20 +107,14 @@ namespace Codefarts.IoC.Tests
         public void SelfReferentialConstructor()
         {
             var container = new Container();
-            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
-            {
-                container.Resolve<TestClassConstructorSelfReferential>();
-            });
+            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() => { container.Resolve<TestClassConstructorSelfReferential>(); });
         }
 
         [TestMethod]
         public void CircularReferenceConstructor()
         {
             var container = new Container();
-            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
-            {
-                container.Resolve<TestClassCircularReferenceA>();
-            });
+            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() => { container.Resolve<TestClassCircularReferenceA>(); });
         }
     }
 }

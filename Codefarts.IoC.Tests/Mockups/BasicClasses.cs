@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using Codefarts.IoC;
 
     public interface ITestInterface
@@ -16,14 +15,10 @@
 
     public class TestClassDefaultCtor : ITestInterface
     {
-        public string Prop1
-        {
-            get; set;
-        }
+        public string Prop1 { get; set; }
 
         public TestClassDefaultCtor()
         {
-
         }
 
         public static ITestInterface CreateNew(Container container)
@@ -42,10 +37,7 @@
 
     internal class TestClassWithContainerDependency
     {
-        public Container _Container
-        {
-            get; private set;
-        }
+        public Container _Container { get; private set; }
 
         public TestClassWithContainerDependency(Container container)
         {
@@ -60,20 +52,11 @@
 
     public class TestClassWithInterfaceDependency : ITestInterface2
     {
-        public ITestInterface Dependency
-        {
-            get; set;
-        }
+        public ITestInterface Dependency { get; set; }
 
-        public int Param1
-        {
-            get; private set;
-        }
+        public int Param1 { get; private set; }
 
-        public string Param2
-        {
-            get; private set;
-        }
+        public string Param2 { get; private set; }
 
         public TestClassWithInterfaceDependency(ITestInterface dependency)
         {
@@ -93,10 +76,7 @@
 
     internal class TestClassWithAbstractDependency
     {
-        public TestClassBase Prop1
-        {
-            get; set;
-        }
+        public TestClassBase Prop1 { get; set; }
 
         public TestClassWithAbstractDependency(TestClassBase arg)
         {
@@ -106,20 +86,11 @@
 
     internal class TestClassWithDependency
     {
-        public TestClassDefaultCtor Dependency
-        {
-            get; set;
-        }
+        public TestClassDefaultCtor Dependency { get; set; }
 
-        public int Param1
-        {
-            get; private set;
-        }
+        public int Param1 { get; private set; }
 
-        public string Param2
-        {
-            get; private set;
-        }
+        public string Param2 { get; private set; }
 
         public TestClassWithDependency(TestClassDefaultCtor dependency)
         {
@@ -145,15 +116,9 @@
 
     internal class TestClassWithStringAndIntParameters
     {
-        public string StringProperty
-        {
-            get; set;
-        }
+        public string StringProperty { get; set; }
 
-        public int IntProperty
-        {
-            get; set;
-        }
+        public int IntProperty { get; set; }
 
         public TestClassWithStringAndIntParameters(string stringProperty, int intProperty)
         {
@@ -164,10 +129,7 @@
 
     internal class TestClassWithStringParameter
     {
-        public string StringProperty
-        {
-            get; set;
-        }
+        public string StringProperty { get; set; }
 
         public TestClassWithStringParameter(string stringProperty)
         {
@@ -177,20 +139,11 @@
 
     internal class TestClassWithDependencyAndParameters
     {
-        TestClassDefaultCtor Dependency
-        {
-            get; set;
-        }
+        TestClassDefaultCtor Dependency { get; set; }
 
-        public int Param1
-        {
-            get; private set;
-        }
+        public int Param1 { get; private set; }
 
-        public string Param2
-        {
-            get; private set;
-        }
+        public string Param2 { get; private set; }
 
         public TestClassWithDependencyAndParameters(TestClassDefaultCtor dependency, int param1, string param2)
         {
@@ -207,16 +160,12 @@
     {
         public TestClassNoInterfaceDefaultCtor()
         {
-
         }
     }
 
     internal class TestClassNoInterfaceDependency
     {
-        public ITestInterface Dependency
-        {
-            get; set;
-        }
+        public ITestInterface Dependency { get; set; }
 
         public TestClassNoInterfaceDependency(ITestInterface dependency)
         {
@@ -231,25 +180,17 @@
     {
         public void Dispose()
         {
-
         }
     }
 
     public class GenericClassWithInterface<I, S> : ITestInterface
     {
-        public I Prop1
-        {
-            get; set;
-        }
+        public I Prop1 { get; set; }
 
-        public S Prop2
-        {
-            get; set;
-        }
+        public S Prop2 { get; set; }
 
         public GenericClassWithInterface()
         {
-
         }
 
         public GenericClassWithInterface(I prop1, S prop2)
@@ -262,20 +203,11 @@
 
     internal class GenericClassWithParametersAndDependencies<I, S>
     {
-        public ITestInterface2 Dependency
-        {
-            get; private set;
-        }
+        public ITestInterface2 Dependency { get; private set; }
 
-        public I Prop1
-        {
-            get; set;
-        }
+        public I Prop1 { get; set; }
 
-        public S Prop2
-        {
-            get; set;
-        }
+        public S Prop2 { get; set; }
 
         public GenericClassWithParametersAndDependencies(ITestInterface2 dependency)
         {
@@ -294,15 +226,9 @@
     {
         private Func<TestClassDefaultCtor> _Factory;
 
-        public TestClassDefaultCtor Prop1
-        {
-            get; private set;
-        }
+        public TestClassDefaultCtor Prop1 { get; private set; }
 
-        public TestClassDefaultCtor Prop2
-        {
-            get; private set;
-        }
+        public TestClassDefaultCtor Prop2 { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the TestClassWithLazyFactory class.
@@ -328,15 +254,9 @@
     {
         private Func<string, TestClassDefaultCtor> _Factory;
 
-        public TestClassDefaultCtor Prop1
-        {
-            get; private set;
-        }
+        public TestClassDefaultCtor Prop1 { get; private set; }
 
-        public TestClassDefaultCtor Prop2
-        {
-            get; private set;
-        }
+        public TestClassDefaultCtor Prop2 { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the TestClassWithLazyFactory class.
@@ -356,17 +276,13 @@
         {
             this.Prop2 = this._Factory.Invoke(string.Empty);
         }
-
     }
 
     internal class TestClassWithNameAndParamsLazyFactory
     {
         private Func<string, IDictionary<string, object>, TestClassWithStringAndIntParameters> _Factory;
 
-        public TestClassWithStringAndIntParameters Prop1
-        {
-            get; private set;
-        }
+        public TestClassWithStringAndIntParameters Prop1 { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the TestClassWithNameAndParamsLazyFactory class.
@@ -375,26 +291,18 @@
         public TestClassWithNameAndParamsLazyFactory(Func<string, IDictionary<string, object>, TestClassWithStringAndIntParameters> factory)
         {
             this._Factory = factory;
-            this.Prop1 = this._Factory.Invoke(string.Empty, new Dictionary<string, object> { { "stringProperty", "Testing" }, { "intProperty", 22 } });
+            this.Prop1 = this._Factory.Invoke(
+                string.Empty, new Dictionary<string, object> { { "stringProperty", "Testing" }, { "intProperty", 22 } });
         }
     }
 
     internal class TestClassMultiDepsMultiCtors
     {
-        public TestClassDefaultCtor Prop1
-        {
-            get; private set;
-        }
+        public TestClassDefaultCtor Prop1 { get; private set; }
 
-        public TestClassDefaultCtor Prop2
-        {
-            get; private set;
-        }
+        public TestClassDefaultCtor Prop2 { get; private set; }
 
-        public int NumberOfDepsResolved
-        {
-            get; private set;
-        }
+        public int NumberOfDepsResolved { get; private set; }
 
         public TestClassMultiDepsMultiCtors(TestClassDefaultCtor prop1)
         {
@@ -412,20 +320,11 @@
 
     internal class TestClassMultiInterfaceDepsMultiCtors : ITestMultiDeps
     {
-        public ITestInterface Prop1
-        {
-            get; private set;
-        }
+        public ITestInterface Prop1 { get; private set; }
 
-        public ITestInterface Prop2
-        {
-            get; private set;
-        }
+        public ITestInterface Prop2 { get; private set; }
 
-        public int NumberOfDepsResolved
-        {
-            get; private set;
-        }
+        public int NumberOfDepsResolved { get; private set; }
 
         public TestClassMultiInterfaceDepsMultiCtors(ITestInterface prop1)
         {
@@ -448,7 +347,6 @@
         /// </summary>
         public TestClassConstructorSelfReferential(TestClassConstructorSelfReferential self)
         {
-
         }
     }
 
@@ -499,61 +397,35 @@
 
     internal class TestClassWithBaseClass : TestClassBase
     {
-
     }
 
     internal class TestClassPropertyDependencies
     {
-        public ITestInterface Property1
-        {
-            get; set;
-        }
+        public ITestInterface Property1 { get; set; }
 
-        public ITestInterface2 Property2
-        {
-            get; set;
-        }
+        public ITestInterface2 Property2 { get; set; }
 
-        public int Property3
-        {
-            get; set;
-        }
+        public int Property3 { get; set; }
 
-        public string Property4
-        {
-            get; set;
-        }
+        public string Property4 { get; set; }
 
-        public TestClassDefaultCtor ConcreteProperty
-        {
-            get; set;
-        }
+        public TestClassDefaultCtor ConcreteProperty { get; set; }
 
-        public ITestInterface ReadOnlyProperty
-        {
-            get; private set;
-        }
+        public ITestInterface ReadOnlyProperty { get; private set; }
 
-        public ITestInterface2 WriteOnlyProperty
-        {
-            internal get; set;
-        }
+        public ITestInterface2 WriteOnlyProperty { internal get; set; }
 
         /// <summary>
         /// Initializes a new instance of the TestClassPropertyDependencies class.
         /// </summary>
         public TestClassPropertyDependencies()
         {
-
         }
     }
 
     internal class TestClassEnumerableDependency
     {
-        public IEnumerable<ITestInterface> Enumerable
-        {
-            get; private set;
-        }
+        public IEnumerable<ITestInterface> Enumerable { get; private set; }
 
         public int EnumerableCount
         {
@@ -571,10 +443,7 @@
 
     internal class TestClassEnumerableDependency2
     {
-        public IEnumerable<ITestInterface2> Enumerable
-        {
-            get; private set;
-        }
+        public IEnumerable<ITestInterface2> Enumerable { get; private set; }
 
         public int EnumerableCount
         {
@@ -602,5 +471,4 @@
             return new T();
         }
     }
-
 }

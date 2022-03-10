@@ -291,91 +291,20 @@ namespace Codefarts.IoC
             {
                 var list = new List<InfoContainer>();
 
-                var constructor = GetBestConstructorInfo(type);
-                var info = new InfoContainer(constructor);
-                list.Add(info);
-                var listIndex = 0;
-
-                // mapping
-                while (listIndex < list.Count)
+                var constructor = this.GetBestConstructorInfo(type);
+                if (constructor == null)
                 {
-                    // get last
-                    var current = list[listIndex];
-
-                    // map constructor tree
-                    var pList = new List<InfoContainer>();
-                    if (current.Constructor != null && !current.Constructor.DeclaringType.IsArray)
-                    {
-                        var parameters = current.Constructor.GetParameters();
-                        for (var pIndex = 0; pIndex < parameters.Length; pIndex++)
-                        {
-                            var parameterInfo = parameters[pIndex];
-                            var pCon = this.GetBestConstructorInfo(parameterInfo.ParameterType);
-                            if (pCon != null)
-                            {
-                                pList.Add(new InfoContainer(pCon));
-                            }
-                            else
-                            {
-                                CreatorData provider;
-                                if (this.typeCreators.TryGetValue(parameterInfo.ParameterType, out provider))
-                                {
-                                    var cInfo = this.GetBestConstructorInfo(provider.ConcreteType);
-                                    if (cInfo != null)
-                                    {
-                                        var pc = new InfoContainer(cInfo);
-                                        pList.Add(pc);
-                                    }
-                                    else
-                                    {
-                                        var pc = new InfoContainer() { ObjectReference = provider.Creator() };
-                                        pList.Add(pc);
-                                    }
-                                }
-                                else
-                                {
-                                    throw new ContainerResolutionException(parameterInfo.ParameterType,
-                                                                           string.Format(Resources.ERR_IsInvalidInstantiationType,
-                                                                                         parameterInfo.ParameterType));
-                                }
-                            }
-                        }
-                    }
-
-                    current.Parameters = pList.Count == 0 ? null : pList;
-                    list.AddRange(pList);
-
-                    listIndex++;
+                    throw new ContainerResolutionException(type, string.Format(Resources.ERR_NoAvailableConstructors, type.FullName));
                 }
+
+                var info = new InfoContainer(constructor) { Depth = 0 };
+                list.Add(info);
+
+                // Map the invocation hierarchy
+                this.MapConstructorHierarchy(list);
 
                 // building
-                while (list.Count > 0)
-                {
-                    var last = list[^1];
-                    var argRefs = last.Parameters == null ? null : new object[last.Parameters.Count];
-                    if (last.Parameters != null)
-                    {
-                        for (var i = 0; i < last.Parameters.Count; i++)
-                        {
-                            var item = last.Parameters[i];
-                            argRefs[i] = item.ObjectReference;
-                        }
-                    }
-
-                    if (last.ObjectReference == null && last.Constructor != null)
-                    {
-                        if (last.Constructor.DeclaringType.IsArray)
-                        {
-                            last.ObjectReference = last.Constructor.Invoke(new object[] { 0 });
-                        }
-                        else
-                        {
-                            last.ObjectReference = last.Constructor.Invoke(argRefs);
-                        }
-                    }
-
-                    list.RemoveAt(list.Count - 1);
-                }
+                this.BuildConstructorHierarchy(list);
 
                 return info.ObjectReference;
             }
@@ -391,6 +320,103 @@ namespace Codefarts.IoC
             catch (Exception ex)
             {
                 throw new ContainerResolutionException(type, string.Format(Resources.ERR_NoAvailableConstructors, type.FullName), ex);
+            }
+        }
+
+        private void BuildConstructorHierarchy(List<InfoContainer> list)
+        {
+            while (list.Count > 0)
+            {
+                var last = list[^1];
+                var argRefs = last.Parameters == null ? null : new object[last.Parameters.Count];
+                if (last.Parameters != null)
+                {
+                    for (var i = 0; i < last.Parameters.Count; i++)
+                    {
+                        var item = last.Parameters[i];
+                        argRefs[i] = item.ObjectReference;
+                    }
+                }
+
+                if (last.ObjectReference == null && last.Constructor != null)
+                {
+                    if (last.Constructor.DeclaringType.IsArray)
+                    {
+                        last.ObjectReference = last.Constructor.Invoke(new object[] { 0 });
+                    }
+                    else
+                    {
+                        last.ObjectReference = last.Constructor.Invoke(argRefs);
+                    }
+                }
+
+                list.RemoveAt(list.Count - 1);
+            }
+        }
+
+        private void MapConstructorHierarchy(List<InfoContainer> list)
+        {
+            var listIndex = 0;
+
+            // mapping
+            while (listIndex < list.Count)
+            {
+                // get last
+                var current = list[listIndex];
+                if (current.Depth > this.MaxInstantiationDepth)
+                {
+                    throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
+                }
+
+                // map constructor tree
+                var pList = new List<InfoContainer>();
+                if (current.Constructor != null && !current.Constructor.DeclaringType.IsArray)
+                {
+                    var parameters = current.Constructor.GetParameters();
+                    for (var pIndex = 0; pIndex < parameters.Length; pIndex++)
+                    {
+                        this.GetConstructorsForParameters(parameters, pIndex, pList, current.Depth);
+                    }
+                }
+
+                current.Parameters = pList.Count == 0 ? null : pList;
+                list.AddRange(pList);
+
+                listIndex++;
+            }
+        }
+
+        private void GetConstructorsForParameters(ParameterInfo[] parameters, int pIndex, List<InfoContainer> pList, int currentDepth)
+        {
+            var parameterInfo = parameters[pIndex];
+            var pCon = this.GetBestConstructorInfo(parameterInfo.ParameterType);
+            if (pCon != null)
+            {
+                pList.Add(new InfoContainer(pCon) { Depth = currentDepth + 1 });
+            }
+            else
+            {
+                CreatorData provider;
+                if (this.typeCreators.TryGetValue(parameterInfo.ParameterType, out provider))
+                {
+                    var cInfo = this.GetBestConstructorInfo(provider.ConcreteType);
+                    if (cInfo != null)
+                    {
+                        var pc = new InfoContainer(cInfo) { Depth = currentDepth + 1 };
+                        pList.Add(pc);
+                    }
+                    else
+                    {
+                        var pc = new InfoContainer() { ObjectReference = provider.Creator(), Depth = currentDepth + 1 };
+                        pList.Add(pc);
+                    }
+                }
+                else
+                {
+                    throw new ContainerResolutionException(parameterInfo.ParameterType,
+                                                           string.Format(Resources.ERR_IsInvalidInstantiationType,
+                                                                         parameterInfo.ParameterType));
+                }
             }
         }
 
@@ -426,15 +452,13 @@ namespace Codefarts.IoC
                 {
                     return type.GetConstructors()[0];
                 }
-                else
-                {
-                    if (type.IsAssignableTo(typeof(IDictionary)))
-                    {
-                        return this.GetDictionaryConstructor(type);
-                    }
 
-                    return this.GetListConstructor(type.GetGenericArguments()[0]);
+                if (type.IsAssignableTo(typeof(IDictionary)))
+                {
+                    return this.GetDictionaryConstructor(type);
                 }
+
+                return this.GetListConstructor(type.GetGenericArguments()[0]);
             }
 
             // search for best constructor
@@ -536,6 +560,7 @@ namespace Codefarts.IoC
             public object ObjectReference;
             public bool IsParameter;
             public List<InfoContainer> Parameters;
+            public int Depth;
 
             public InfoContainer()
             {

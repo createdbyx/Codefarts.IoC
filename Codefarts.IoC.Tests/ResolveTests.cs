@@ -51,11 +51,65 @@ namespace Codefarts.IoC.Tests
         public void ResolveIEnumerableDependencyWithoutRegistration()
         {
             var container = new Container();
-            Assert.ThrowsException<ContainerResolutionException>(() =>
-            {
-                var value = container.Resolve<TestClassEnumerableDependency>();
-                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
-            });
+            //Assert.ThrowsException<ContainerResolutionException>(() =>
+            //{
+            var value = container.Resolve<TestClassEnumerableDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.EnumerableCount);
+            Assert.AreEqual(typeof(List<ITestInterface>), value.Enumerable.GetType());
+
+            //  Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            //});
+        }
+
+        // [TestMethod]
+        // public void ResolveIEnumerableDependencyWithRegistration()
+        // {
+        //     var container = new Container();
+        //     container.Register<IEnumerable<ITestInterface>, List<ITestInterface>>();
+        //
+        //     Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
+        //     {
+        //         var value = container.Resolve<TestClassEnumerableDependency>();
+        //         Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
+        //     });
+        // }
+        //
+        // [TestMethod]
+        // public void ResolveIEnumerableArrayDependencyWithRegistration()
+        // {
+        //     var container = new Container();
+        //     container.Register<IEnumerable<ITestInterface>, ITestInterface[]>();
+        //
+        //     Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
+        //     {
+        //         var value = container.Resolve<TestClassEnumerableDependency>();
+        //         Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
+        //     });
+        // }
+
+        [TestMethod]
+        public void ResolveICollectionDependencyWithRegistration()
+        {
+            var container = new Container();
+            container.Register<ICollection<ITestInterface>, List<ITestInterface>>();
+
+            var value = container.Resolve<TestClassEnumerableDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.EnumerableCount);
+            Assert.AreEqual(typeof(List<ITestInterface>), value.Enumerable.GetType());
+        }
+
+        [TestMethod]
+        public void ResolveICollectionArrayDependencyWithRegistration()
+        {
+            var container = new Container();
+            container.Register<ICollection<ITestInterface>, ITestInterface[]>();
+
+            var value = container.Resolve<TestClassEnumerableDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.EnumerableCount);
+            Assert.AreEqual(typeof(List<ITestInterface>), value.Enumerable.GetType());
         }
 
         [TestMethod]
@@ -64,11 +118,22 @@ namespace Codefarts.IoC.Tests
             var container = new Container();
             container.Register<IEnumerable<ITestInterface>, List<ITestInterface>>();
 
-            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
-            {
-                var value = container.Resolve<TestClassEnumerableDependency>();
-                Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
-            });
+            var value = container.Resolve<TestClassEnumerableDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.EnumerableCount);
+            Assert.AreEqual(typeof(List<ITestInterface>), value.Enumerable.GetType());
+        }
+
+        [TestMethod]
+        public void ResolveIEnumerableArrayDependencyWithRegistration()
+        {
+            var container = new Container();
+            container.Register<IEnumerable<ITestInterface>, ITestInterface[]>();
+
+            var value = container.Resolve<TestClassEnumerableDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.EnumerableCount);
+            Assert.AreEqual(typeof(ITestInterface[]), value.Enumerable.GetType());
         }
 
         [TestMethod]
@@ -79,11 +144,14 @@ namespace Codefarts.IoC.Tests
 
             var tasks = Enumerable.Range(0, 100).Select(x => new Task(() =>
             {
-                Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
-                {
+               // Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
+              //  {
                     var value = container.Resolve<TestClassEnumerableDependency>();
-                    Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
-                });
+                //    Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
+                    Assert.IsNotNull(value);
+                    Assert.AreEqual(0, value.EnumerableCount);
+                    Assert.AreEqual(typeof(List<ITestInterface>), value.Enumerable.GetType());
+              //  });
             })).ToArray();
 
             Array.ForEach(tasks, t => t.Start());
@@ -470,18 +538,18 @@ namespace Codefarts.IoC.Tests
             // Assert.IsTrue(false);
         }
 
-        [TestMethod]
-        public void TypeWithIEnumerableOfNonRegisteredTypeDependency()
-        {
-            var container = new Container();
-            //  container.Register<TestClassEnumerableDependency>();
-
-            Assert.ThrowsException<ContainerResolutionException>(() =>
-            {
-                var result = container.Resolve<TestClassEnumerableDependency>();
-                Assert.Fail("Should have thrown an ContainerResolutionException exception.");
-            });
-        }
+        // [TestMethod]
+        // public void TypeWithIEnumerableOfNonRegisteredTypeDependency()
+        // {
+        //     var container = new Container();
+        //     //  container.Register<TestClassEnumerableDependency>();
+        //
+        //     Assert.ThrowsException<ContainerResolutionException>(() =>
+        //     {
+        //         var result = container.Resolve<TestClassEnumerableDependency>();
+        //         Assert.Fail("Should have thrown an ContainerResolutionException exception.");
+        //     });
+        // }
 
         [TestMethod]
         public void UnregisteredType_ResolvesWithIEnumerableParamWithNoItems()
@@ -595,9 +663,9 @@ namespace Codefarts.IoC.Tests
             Assert.IsNull(someValue.TestClassProperty);
             Assert.IsNull(someValue.TestClassField);
         }
-        
+
         [TestMethod]
-        public void ResolveWithSpecifiedTypeAndDefaultFallback()
+        public void ResolveWithSpecifiedTypeAndDefaultFallbackSuccess()
         {
             var container = new Container();
 
@@ -623,6 +691,66 @@ namespace Codefarts.IoC.Tests
             defaultValue.TestClassProperty = new TestClassDefaultCtor();
             var someValue = container.Resolve<SimpleClassCtorThrowsExeption>(defaultValue);
 
+            Assert.AreSame(defaultValue, someValue);
+            Assert.IsNotNull(someValue);
+            Assert.IsNotNull(someValue.TestClassField);
+            Assert.IsNotNull(someValue.TestClassProperty);
+            Assert.AreEqual("Prop", someValue.TestClassField.Param2);
+            Assert.AreEqual(123, someValue.TestClassField.Param1);
+        }
+
+        [TestMethod]
+        public void ResolveWithSpecifiedTypeAndDefaultFallbackFailure()
+        {
+            var container = new Container();
+
+            var defaultValue = new SimpleClassCtorThrowsExeption(false);
+            defaultValue.TestClassField = new TestClassWithInterfaceDependency(new TestClassDefaultCtor(), 123, "Prop");
+            defaultValue.TestClassProperty = new TestClassDefaultCtor();
+            var someValue = (SimpleClassCtorThrowsExeption)container.Resolve(typeof(SimpleClassCtorThrowsExeption), defaultValue);
+
+            Assert.AreSame(defaultValue, someValue);
+            Assert.IsNotNull(someValue);
+            Assert.IsNotNull(someValue.TestClassField);
+            Assert.IsNotNull(someValue.TestClassProperty);
+            Assert.AreEqual("Prop", someValue.TestClassField.Param2);
+            Assert.AreEqual(123, someValue.TestClassField.Param1);
+        }
+
+        [TestMethod]
+        public void TryResolveWithSpecifiedTypeAndDefaultFallbackSuccess()
+        {
+            var container = new Container();
+
+            var defaultValue = new SimpleResolveMemberClass();
+            defaultValue.TestClassField = new TestClassDefaultCtor();
+            defaultValue.TestClassProperty = new TestClassDefaultCtor();
+            defaultValue.TestClassProperty.Prop1 = "Prop";
+            defaultValue.TestClassField.Prop1 = "Field";
+            SimpleResolveMemberClass someValue = null;
+            object value;
+            var result = container.TryResolve(typeof(SimpleResolveMemberClass), defaultValue, out value);
+            someValue = (SimpleResolveMemberClass?)value;
+
+            Assert.IsNotNull(someValue);
+            Assert.IsNull(someValue.TestClassProperty);
+            Assert.IsNull(someValue.TestClassField);
+        }
+
+        [TestMethod]
+        public void TryResolveWithSpecifiedTypeAndDefaultFallbackFailure()
+        {
+            var container = new Container();
+
+            var defaultValue = new SimpleClassCtorThrowsExeption(false);
+            defaultValue.TestClassField = new TestClassWithInterfaceDependency(new TestClassDefaultCtor(), 123, "Prop");
+            defaultValue.TestClassProperty = new TestClassDefaultCtor();
+            SimpleClassCtorThrowsExeption someValue = null;
+            object value;
+            var result = container.TryResolve(typeof(SimpleClassCtorThrowsExeption), defaultValue, out value);
+            someValue = (SimpleClassCtorThrowsExeption?)value;
+
+            Assert.IsFalse(result);
             Assert.AreSame(defaultValue, someValue);
             Assert.IsNotNull(someValue);
             Assert.IsNotNull(someValue.TestClassField);
