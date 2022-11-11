@@ -393,7 +393,7 @@ namespace Codefarts.IoC
                     }
                     else
                     {
-                        var pc = new InfoContainer() { ObjectReference = provider.Creator(), Depth = currentDepth + 1 };
+                        var pc = new InfoContainer(provider.Creator(), currentDepth + 1);
                         pList.Add(pc);
                     }
                 }
@@ -531,6 +531,20 @@ namespace Codefarts.IoC
             return (IEnumerable)this.GetListConstructor(type.GetGenericArguments()[0]).Invoke(null);
         }
 
+        /// <summary>
+        /// Checks for previously registered type and if found throws an exception.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <exception cref="Codefarts.IoC.RegistrationException">If type has been registered already.</exception>
+        private void PreviouslyRegisteredCheck(Type type)
+        {
+            CreatorData creator;
+            if (this.typeCreators.TryGetValue(type, out creator) || creator != null)
+            {
+                throw new RegistrationException(string.Format(Resources.ERR_AlreadyRegistered, type.FullName));
+            }
+        }
+
         private class InfoContainer
         {
             public ConstructorInfo Constructor;
@@ -551,22 +565,10 @@ namespace Codefarts.IoC
             public List<InfoContainer> Parameters;
             public int Depth;
 
-            public InfoContainer()
+            public InfoContainer(object objectReference, int depth)
             {
-            }
-        }
-
-        /// <summary>
-        /// Checks for previously registered type and if found throws an exception.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <exception cref="Codefarts.IoC.RegistrationException">If type has been registered already.</exception>
-        private void PreviouslyRegisteredCheck(Type type)
-        {
-            CreatorData creator;
-            if (this.typeCreators.TryGetValue(type, out creator) || creator != null)
-            {
-                throw new RegistrationException(string.Format(Resources.ERR_AlreadyRegistered, type.FullName));
+                this.ObjectReference = objectReference;
+                this.Depth = depth;
             }
         }
     }
