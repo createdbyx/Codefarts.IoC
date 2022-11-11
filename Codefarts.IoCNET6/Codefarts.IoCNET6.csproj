@@ -1,65 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Codefarts.IoC</RootNamespace>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Authors>Dean Lunz</Authors>
-        <Copyright>Codefarts</Copyright>
-        <RepositoryUrl>https://bitbucket.org/createdbyx/codefarts.ioc</RepositoryUrl>
-        <PackageTags>C#</PackageTags>
-        <PackageId>Codefarts.IoC</PackageId>
-        <PackageProjectUrl>https://bitbucket.org/createdbyx/codefarts.ioc</PackageProjectUrl>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs">
-        <Link>Container NET20.cs</Link>
-      </Compile>
-      <Compile Include="..\Codefarts.IoCStandard20\Container.cs">
-        <Link>Container.cs</Link>
-      </Compile>
-      <Compile Include="..\Codefarts.IoCStandard20\ContainerExtensionMethods.cs">
-        <Link>ContainerExtensionMethods.cs</Link>
-      </Compile>
-      <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs">
-        <Link>ContainerResolutionException.cs</Link>
-      </Compile>
-      <Compile Include="..\Codefarts.IoCStandard20\ExceededMaxInstantiationDepthException.cs">
-        <Link>ExceededMaxInstantiationDepthException.cs</Link>
-      </Compile>
-      <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
-        <Link>RegistrationException.cs</Link>
-      </Compile>
-      <Compile Include="..\Codefarts.IoCStandard20\Resources.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Resources.resx</DependentUpon>
-        <Link>Resources.Designer.cs</Link>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Include="..\Codefarts.IoCStandard20\Resources.resx">
-        <Link>Resources.resx</Link>
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-    </ItemGroup>
-
-    <ItemGroup>
-      <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
-        <Link>stylecop.json</Link>
-      </AdditionalFiles>
-    </ItemGroup>
-
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Codefarts.IoC</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Dean Lunz</Authors>
+    <Copyright>Codefarts</Copyright>
+    <RepositoryUrl>https://bitbucket.org/createdbyx/codefarts.ioc</RepositoryUrl>
+    <PackageTags>C#</PackageTags>
+    <PackageId>Codefarts.IoC</PackageId>
+    <PackageProjectUrl>https://bitbucket.org/createdbyx/codefarts.ioc</PackageProjectUrl>
+    <PackageVersion>2022.11.11.0</PackageVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs">
+      <Link>Container NET20.cs</Link>
+    </Compile>
+    <Compile Include="..\Codefarts.IoCStandard20\Container.cs">
+      <Link>Container.cs</Link>
+    </Compile>
+    <Compile Include="..\Codefarts.IoCStandard20\ContainerExtensionMethods.cs">
+      <Link>ContainerExtensionMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs">
+      <Link>ContainerResolutionException.cs</Link>
+    </Compile>
+    <Compile Include="..\Codefarts.IoCStandard20\ExceededMaxInstantiationDepthException.cs">
+      <Link>ExceededMaxInstantiationDepthException.cs</Link>
+    </Compile>
+    <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
+      <Link>RegistrationException.cs</Link>
+    </Compile>
+    <Compile Include="..\Codefarts.IoCStandard20\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <Link>Resources.Designer.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Codefarts.IoCStandard20\Resources.resx">
+      <Link>Resources.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -nologo -noninteractive -Command .'P:\PowerShell\post-build.ps1' -vs_BuildEvent:Post -vs_OutDir:'$(OutDir)' -vs_ConfigurationName:'$(ConfigurationName)' -vs_ProjectName:'$(ProjectName)' -vs_TargetName:'$(TargetName)' -vs_TargetPath:'$(TargetPath)' -vs_ProjectPath:'$(ProjectPath)' -vs_ProjectFileName:'$(ProjectFileName)' -vs_TargetExt:'$(TargetExt)' -vs_TargetFileName:'$(TargetFileName)' -vs_DevEnvDir:'$(DevEnvDir)' -vs_TargetDir:'$(TargetDir)' -vs_ProjectDir:'$(ProjectDir)' -vs_SolutionFileName:'$(SolutionFileName)' -vs_SolutionPath:'$(SolutionPath)' -vs_SolutionDir:'$(SolutionDir)' -vs_SolutionName:'$(SolutionName)' -vs_PlatformName:'$(PlatformName)' -vs_ProjectExt:'$(ProjectExt)' -vs_SolutionExt:'$(SolutionExt)'" />
+  </Target>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -nologo -noninteractive -Command .'P:\PowerShell\post-build.ps1' -vs_BuildEvent:Pre -vs_OutDir:'$(OutDir)' -vs_ConfigurationName:'$(ConfigurationName)' -vs_ProjectName:'$(ProjectName)' -vs_TargetName:'$(TargetName)' -vs_TargetPath:'$(TargetPath)' -vs_ProjectPath:'$(ProjectPath)' -vs_ProjectFileName:'$(ProjectFileName)' -vs_TargetExt:'$(TargetExt)' -vs_TargetFileName:'$(TargetFileName)' -vs_DevEnvDir:'$(DevEnvDir)' -vs_TargetDir:'$(TargetDir)' -vs_ProjectDir:'$(ProjectDir)' -vs_SolutionFileName:'$(SolutionFileName)' -vs_SolutionPath:'$(SolutionPath)' -vs_SolutionDir:'$(SolutionDir)' -vs_SolutionName:'$(SolutionName)' -vs_PlatformName:'$(PlatformName)' -vs_ProjectExt:'$(ProjectExt)' -vs_SolutionExt:'$(SolutionExt)'&#xD;&#xA;" />
+  </Target>
 </Project>
