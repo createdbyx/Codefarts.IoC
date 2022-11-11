@@ -180,6 +180,17 @@ namespace Codefarts.IoC.Tests
                 Assert.Fail("Should have thrown a ContainerResolutionException exception.");
             });
         }
+        
+        [TestMethod]
+        public void ResolveGenericICollection()
+        {
+            var container = new Container();
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<ICollection<ITestInterface>>();
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
 
         [TestMethod]
         public void ResolveIEnumerable()

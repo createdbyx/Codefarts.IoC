@@ -423,7 +423,7 @@
         }
     }
 
-    internal class TestClassEnumerableDependency
+    public class TestClassEnumerableDependency
     {
         public IEnumerable<ITestInterface> Enumerable { get; private set; }
 
