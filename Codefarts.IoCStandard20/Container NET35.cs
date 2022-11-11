@@ -1,14 +1,13 @@
-﻿// <copyright file="Container NET20.cs" company="Codefarts">
+﻿// <copyright file="Container NET35.cs" company="Codefarts">
 // Copyright (c) Codefarts
 // contact@codefarts.com
 // http://www.codefarts.com
 // </copyright>
 
-#if NETSTANDARD || NETCOREAPP1_0_OR_GREATER
+#if NET35
 namespace Codefarts.IoC
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
 
     /// <summary>
@@ -19,14 +18,15 @@ namespace Codefarts.IoC
         /// <summary>
         /// The dictionary containing the registered types and there creation delegate reference.
         /// </summary>
-        private readonly ConcurrentDictionary<Type, CreatorData> typeCreators;
+        private readonly Dictionary<Type, CreatorData> typeCreators;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Container"/> class.
         /// </summary>
+        // ReSharper disable once MemberCanBePrivate.Global
         public Container()
         {
-            this.typeCreators = new ConcurrentDictionary<Type, CreatorData>();
+            this.typeCreators = new Dictionary<Type, CreatorData>();
         }
 
         /// <summary>
@@ -36,8 +36,7 @@ namespace Codefarts.IoC
         /// <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
         public bool Unregister(Type type)
         {
-            CreatorData value;
-            return this.typeCreators.Remove(type, out value);
+            return this.typeCreators.Remove(type);
         }
     }
 }

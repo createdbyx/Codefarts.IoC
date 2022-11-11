@@ -4,21 +4,18 @@
 // http://www.codefarts.com
 // </copyright>
 
-using System.Collections;
-
 namespace Codefarts.IoC
 {
     using System;
-    using System.Collections.Concurrent;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Reflection;
-    using System.Threading;
 
     /// <summary>
     /// Provides a simple IoC container functions.
     /// </summary>
-    public class Container : INotifyPropertyChanged
+    public partial class Container : INotifyPropertyChanged
     {
         /// <summary>
         /// The default value for <see cref="MaxInstantiationDepth"/>.
@@ -29,11 +26,6 @@ namespace Codefarts.IoC
         /// The backing field for the <see cref="DefaultInstance"/> property.
         /// </summary>
         private static readonly Container DefaultInstance = new Container();
-
-        /// <summary>
-        /// The dictionary containing the registered types and there creation delegate reference.
-        /// </summary>
-        private readonly ConcurrentDictionary<Type, CreatorData> typeCreators;
 
         /// <summary>
         /// Backing field for the <see cref="MaxInstantiationDepth"/> property.
@@ -54,14 +46,6 @@ namespace Codefarts.IoC
         /// </summary>
         static Container()
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Container"/> class.
-        /// </summary>
-        public Container()
-        {
-            this.typeCreators = new ConcurrentDictionary<Type, CreatorData>();
         }
 
         /// <summary>
@@ -212,17 +196,6 @@ namespace Codefarts.IoC
         }
 
         /// <summary>
-        /// Unregister a type from the container.
-        /// </summary>
-        /// <param name="type">The type to be unregistered.</param>
-        /// <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
-        public bool Unregister(Type type)
-        {
-            CreatorData value;
-            return this.typeCreators.Remove(type, out value);
-        }
-
-        /// <summary>
         /// Determines whether the type can be resolved.
         /// </summary>
         /// <param name="type">The type to check if it can be resolved.</param>
@@ -248,6 +221,19 @@ namespace Codefarts.IoC
             }
 
             return type.IsPublic;
+        }
+
+        /// <summary>
+        /// Raises the property changed event.
+        /// </summary>
+        /// <param name="propertyName">The property name that changed.</param>
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            var handler = this.PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         /// <summary>
@@ -282,7 +268,8 @@ namespace Codefarts.IoC
             }
 
             // if the type implements IEnumerable 
-            if (type.IsAssignableTo(typeof(ICollection)))
+            //  if (type.IsAssignableTo(typeof(ICollection)))
+            if (typeof(ICollection).IsAssignableFrom(type))
             {
                 return CreateEmptyCollection(type);
             }
@@ -308,8 +295,7 @@ namespace Codefarts.IoC
 
                 return info.ObjectReference;
             }
-            catch
-                (ExceededMaxInstantiationDepthException mde)
+            catch (ExceededMaxInstantiationDepthException mde)
             {
                 throw mde;
             }
@@ -327,7 +313,7 @@ namespace Codefarts.IoC
         {
             while (list.Count > 0)
             {
-                var last = list[^1];
+                var last = list[list.Count - 1];
                 var argRefs = last.Parameters == null ? null : new object[last.Parameters.Count];
                 if (last.Parameters != null)
                 {
@@ -432,7 +418,8 @@ namespace Codefarts.IoC
             ConstructorInfo constructor = null;
             var lastParameterLength = 0;
 
-            if (type.IsAssignableTo(typeof(ICollection)) || type.IsAssignableTo(typeof(IEnumerable)))
+            // if (type.IsAssignableTo(typeof(ICollection)) || type.IsAssignableTo(typeof(IEnumerable)))
+            if (typeof(ICollection).IsAssignableFrom(type) || typeof(IEnumerable).IsAssignableFrom(type))
             {
                 CreatorData provider;
                 object value = null;
@@ -453,7 +440,7 @@ namespace Codefarts.IoC
                     return type.GetConstructors()[0];
                 }
 
-                if (type.IsAssignableTo(typeof(IDictionary)))
+                if (typeof(IDictionary).IsAssignableFrom(type))
                 {
                     return this.GetDictionaryConstructor(type);
                 }
@@ -499,6 +486,7 @@ namespace Codefarts.IoC
         {
             var t = typeof(List<>).MakeGenericType(type);
             var ctors = t.GetConstructors();
+
             // find default ctor
             foreach (var c in ctors)
             {
@@ -515,6 +503,7 @@ namespace Codefarts.IoC
         {
             var t = typeof(Dictionary<,>).MakeGenericType(type.GetGenericArguments());
             var ctors = t.GetConstructors();
+
             // find default ctor
             foreach (var c in ctors)
             {
@@ -534,7 +523,7 @@ namespace Codefarts.IoC
                 return (IEnumerable)type.GetConstructors()[0].Invoke(new object[] { 0 });
             }
 
-            if (type.IsAssignableTo(typeof(IDictionary)))
+            if (typeof(IDictionary).IsAssignableFrom(type))
             {
                 return (IEnumerable)this.GetDictionaryConstructor(type).Invoke(null);
             }
@@ -578,19 +567,6 @@ namespace Codefarts.IoC
             if (this.typeCreators.TryGetValue(type, out creator) || creator != null)
             {
                 throw new RegistrationException(string.Format(Resources.ERR_AlreadyRegistered, type.FullName));
-            }
-        }
-
-        /// <summary>
-        /// Raises the property changed event.
-        /// </summary>
-        /// <param name="propertyName">The property name that changed.</param>
-        protected virtual void OnPropertyChanged(string propertyName = null)
-        {
-            var handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
     }

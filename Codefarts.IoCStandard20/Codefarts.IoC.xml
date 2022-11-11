@@ -8,6 +8,26 @@
             <summary>
             Provides a simple IoC container functions.
             </summary>
+            <summary>
+            Provides a simple IoC container functions.
+            </summary>
+        </member>
+        <member name="F:Codefarts.IoC.Container.typeCreators">
+            <summary>
+            The dictionary containing the registered types and there creation delegate reference.
+            </summary>
+        </member>
+        <member name="M:Codefarts.IoC.Container.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Codefarts.IoC.Container"/> class.
+            </summary>
+        </member>
+        <member name="M:Codefarts.IoC.Container.Unregister(System.Type)">
+            <summary>
+            Unregister a type from the container.
+            </summary>
+            <param name="type">The type to be unregistered.</param>
+            <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
         </member>
         <member name="F:Codefarts.IoC.Container.DefaultMaxInstantiationDepth">
             <summary>
@@ -19,11 +39,6 @@
             The backing field for the <see cref="F:Codefarts.IoC.Container.DefaultInstance"/> property.
             </summary>
         </member>
-        <member name="F:Codefarts.IoC.Container.typeCreators">
-            <summary>
-            The dictionary containing the registered types and there creation delegate reference.
-            </summary>
-        </member>
         <member name="F:Codefarts.IoC.Container.maxInstantiationDepth">
             <summary>
             Backing field for the <see cref="P:Codefarts.IoC.Container.MaxInstantiationDepth"/> property.
@@ -32,11 +47,6 @@
         <member name="M:Codefarts.IoC.Container.#cctor">
             <summary>
             Initializes static members of the <see cref="T:Codefarts.IoC.Container"/> class.
-            </summary>
-        </member>
-        <member name="M:Codefarts.IoC.Container.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Codefarts.IoC.Container"/> class.
             </summary>
         </member>
         <member name="T:Codefarts.IoC.Container.Creator">
@@ -89,20 +99,14 @@
             <param name="key">The type of the key.</param>
             <param name="concrete">The type of the concrete class.</param>
         </member>
-        <member name="M:Codefarts.IoC.Container.Unregister(System.Type)">
-            <summary>
-            Unregister a type from the container.
-            </summary>
-            <param name="type">The type to be unregistered.</param>
-            <returns><c>true</c> if the type was successfully unregistered; otherwise <c>false</c>.</returns>
-        </member>
         <member name="M:Codefarts.IoC.Container.CanResolve(System.Type)">
             <summary>
             Determines whether the type can be resolved.
             </summary>
             <param name="type">The type to check if it can be resolved.</param>
             <returns><c>true</c> if the type can be resolved; otherwise, <c>false</c>.</returns>
-            <remarks><see cref="M:Codefarts.IoC.Container.CanResolve(System.Type)"/> checks <see cref="P:Codefarts.IoC.Container.RegisteredTypes"/> property to see if a type has previously been registered with a <see cref="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
+            <remarks><see cref="M:Codefarts.IoC.Container.CanResolve(System.Type)"/> checks <see cref="P:Codefarts.IoC.Container.RegisteredTypes"/> property to see if a type has previously been registered with a
+            <see cref="M:Codefarts.IoC.Container.Register(System.Type,Codefarts.IoC.Container.Creator)"/>.</remarks>
         </member>
         <member name="M:Codefarts.IoC.Container.ResolveByType(System.Int32,System.Type)">
             <summary>
@@ -116,8 +120,8 @@
             <remarks><p>Attempts to create the specified <param name="type"/> with the most number
             of constructor arguments that can be satisfied.</p>
             <p>Constructors with value types are ignored and only public constructors are considered.</p></remarks>
-            <exception cref="T:Codefarts.IoC.ContainerResolutionException"> Thrown if the type could not be constructed because none
-            of the available constructors could be satisfied.
+            <exception cref="T:Codefarts.IoC.ContainerResolutionException"> Thrown if the type could not be constructed because 
+            the chosen constructor could be satisfied.
             </exception>
         </member>
         <member name="M:Codefarts.IoC.Container.PreviouslyRegisteredCheck(System.Type)">
@@ -137,6 +141,15 @@
             <summary>
             Provides extension methods for the <see cref="T:Codefarts.IoC.Container"/> class.
             </summary>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.TryResolve(Codefarts.IoC.Container,System.Type,System.Object,System.Object@)">
+            <summary>
+            Tries the resolve the type.
+            </summary>
+            <param name="container">The container that will be used to resolve the type.</param>
+            <param name="defaultValue">The default value to return if the type can't be resolved.</param>
+            <param name="value">The value that will be returned.</param>
+            <returns>Returns true if the type was resolved; otherwise false;</returns>
         </member>
         <member name="M:Codefarts.IoC.ContainerExtensionMethods.TryResolve``1(Codefarts.IoC.Container,``0,``0@)">
             <summary>
@@ -195,7 +208,15 @@
             <typeparam name="T">The type to be resolved.</typeparam>
             <param name="container">The container that will be used to resolve the type.</param>
             <param name="defaultValue">The default value to return if the type can't be resolved.</param>
-            <returns>Returns true if the type was resolved; otherwise false;</returns>
+            <returns>Returns the resolved object if successful, otherwise returns provided default value.</returns>
+        </member>
+        <member name="M:Codefarts.IoC.ContainerExtensionMethods.Resolve(Codefarts.IoC.Container,System.Type,System.Object)">
+            <summary>
+            Tries the resolve the type.
+            </summary>
+            <param name="container">The container that will be used to resolve the type.</param>
+            <param name="defaultValue">The default value to return if the type can't be resolved.</param>
+            <returns>Returns the object if the type was resolved, otherwise returns the default value.</returns>
         </member>
         <member name="T:Codefarts.IoC.ContainerResolutionException">
             <summary>Provides an exception for type resolution failures.</summary>
