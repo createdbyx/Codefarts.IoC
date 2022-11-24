@@ -13,7 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Codefarts.IoC.TestsNET6\Codefarts.IoC.TestsNET6.csproj" />
-      <ProjectReference Include="..\Codefarts.IoCNET6\Codefarts.IoCNET6.csproj" />
+      <ProjectReference Include="..\Codefarts.IoC\Codefarts.IoC.csproj" />
     </ItemGroup>
 
 </Project>

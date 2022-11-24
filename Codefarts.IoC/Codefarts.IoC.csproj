@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Codefarts.IoC</RootNamespace>
@@ -13,6 +12,12 @@
     <PackageId>Codefarts.IoC</PackageId>
     <PackageProjectUrl>https://bitbucket.org/createdbyx/codefarts.ioc</PackageProjectUrl>
     <PackageVersion>2022.11.11.0</PackageVersion>
+    <TargetFrameworks>net48;net481;net6.0;net6.0-windows;net7.0;netstandard2.1</TargetFrameworks>
+    <Company>Codefarts</Company>
+    <Product>Codefarts.IoC</Product>
+    <AssemblyVersion>2022.11.11.0</AssemblyVersion>
+    <FileVersion>2022.11.11.0</FileVersion>
+    <AssemblyName>Codefarts.IoC</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
