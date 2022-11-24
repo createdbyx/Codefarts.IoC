@@ -2,16 +2,16 @@ Codefarts IoC is a Inversion of Control (IoC) library written C#
 
 It's purpose is to provide a extremely simplified alternative to the other popular IoC libraries like TinyIoC, or Caliburn.Micro etc.
 
-The core Container class that handles object instantiation is only 400 lines of code including xml documentation comments! Contrast that with TinyIoC that contains over 4400 lines of sparsely commented code.
+The core Container class that handles object instantiation is less then 600 lines of code including xml documentation comments! Contrast that with TinyIoC that contains over 4400 lines of sparsely commented code.
 
-If you are like me you hate code bloat and believe IoC containers that become monolithic are unnecessary and overkill.
+I hate code bloat and believe IoC containers that become monolithic are unnecessary and overkill.
 
 ### Features
 
 - Uses single mechanism for instantiation in the form of callbacks
 - Has MaxInstantiationDepth property you can set to prevent stack overflow exceptions then composing objects with deep nested dependencies.
 - Legitimately tiny and simplistic code base that you can read through and understand.
-- 116 unit tests and counting with almost full code coverage. 
+- 123 unit tests and counting with almost full code coverage. 
 - Can resolve object members like properties and fields.
 
 ### Known Issues
