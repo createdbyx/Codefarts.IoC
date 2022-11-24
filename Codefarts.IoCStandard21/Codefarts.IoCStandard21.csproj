@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Codefarts.IoCStandard20</AssemblyName>
+    <AssemblyName>Codefarts.IoCStandard21</AssemblyName>
     <RootNamespace>Codefarts.IoC</RootNamespace>
     <AssemblyVersion>2021.5.6.0</AssemblyVersion>
     <FileVersion>2021.5.6.0</FileVersion>

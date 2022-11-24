@@ -42,42 +42,30 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs">
-      <Link>Container NET20.cs</Link>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\Container NET35.cs">
+    <Compile Include="..\Codefarts.IoCStandard21\Container NET35.cs">
       <Link>Container NET35.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\Container.cs">
+    <Compile Include="..\Codefarts.IoCStandard21\Container.cs">
       <Link>Container.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\ContainerExtensionMethods.cs">
+    <Compile Include="..\Codefarts.IoCStandard21\ContainerExtensionMethods.cs">
       <Link>ContainerExtensionMethods.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs">
+    <Compile Include="..\Codefarts.IoCStandard21\ContainerResolutionException.cs">
       <Link>ContainerResolutionException.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\ExceededMaxInstantiationDepthException.cs">
+    <Compile Include="..\Codefarts.IoCStandard21\ExceededMaxInstantiationDepthException.cs">
       <Link>ExceededMaxInstantiationDepthException.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\Resources.Designer.cs">
-      <Link>Resources.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
+    <Compile Include="..\Codefarts.IoCStandard21\RegistrationException.cs">
       <Link>RegistrationException.cs</Link>
     </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\SafeDictionary.cs">
+    <Compile Include="..\Codefarts.IoCStandard21\SafeDictionary.cs">
       <Link>SafeDictionary.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
-      <Link>stylecop.json</Link>
-    </AdditionalFiles>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -85,7 +73,12 @@
     <Analyzer Include="..\..\CombinedProjectsSolution\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Codefarts.IoCStandard20\Resources.resx">
+    <AdditionalFiles Include="..\Codefarts.IoCStandard21\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Codefarts.IoCStandard21\Resources.resx">
       <Link>Resources.resx</Link>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

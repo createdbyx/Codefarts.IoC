@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Codefarts.IoCStandard20</name>
+        <name>Codefarts.IoCStandard21</name>
     </assembly>
     <members>
         <member name="T:Codefarts.IoC.Container">

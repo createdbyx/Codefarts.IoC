@@ -11,12 +11,12 @@
     <PackageTags>C#</PackageTags>
     <PackageId>Codefarts.IoC</PackageId>
     <PackageProjectUrl>https://bitbucket.org/createdbyx/codefarts.ioc</PackageProjectUrl>
-    <PackageVersion>2022.11.11.0</PackageVersion>
-    <TargetFrameworks>net48;net481;net6.0;net6.0-windows;net7.0;netstandard2.1</TargetFrameworks>
+    <PackageVersion>2022.11.24.0</PackageVersion>
+    <TargetFrameworks>net6.0;net6.0-windows;net7.0</TargetFrameworks>
     <Company>Codefarts</Company>
     <Product>Codefarts.IoC</Product>
-    <AssemblyVersion>2022.11.11.0</AssemblyVersion>
-    <FileVersion>2022.11.11.0</FileVersion>
+    <AssemblyVersion>2022.11.24.0</AssemblyVersion>
+    <FileVersion>2022.11.24.0</FileVersion>
     <AssemblyName>Codefarts.IoC</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
@@ -26,42 +26,20 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Codefarts.IoCStandard20\Container NET20.cs">
-      <Link>Container NET20.cs</Link>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\Container.cs">
-      <Link>Container.cs</Link>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\ContainerExtensionMethods.cs">
-      <Link>ContainerExtensionMethods.cs</Link>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\ContainerResolutionException.cs">
-      <Link>ContainerResolutionException.cs</Link>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\ExceededMaxInstantiationDepthException.cs">
-      <Link>ExceededMaxInstantiationDepthException.cs</Link>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\RegistrationException.cs">
-      <Link>RegistrationException.cs</Link>
-    </Compile>
-    <Compile Include="..\Codefarts.IoCStandard20\Resources.Designer.cs">
+    <Compile Update="Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
-      <Link>Resources.Designer.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Codefarts.IoCStandard20\Resources.resx">
-      <Link>Resources.resx</Link>
+    <EmbeddedResource Update="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
-      <Link>stylecop.json</Link>
-    </AdditionalFiles>
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -nologo -noninteractive -Command .'P:\PowerShell\post-build.ps1' -vs_BuildEvent:Post -vs_OutDir:'$(OutDir)' -vs_ConfigurationName:'$(ConfigurationName)' -vs_ProjectName:'$(ProjectName)' -vs_TargetName:'$(TargetName)' -vs_TargetPath:'$(TargetPath)' -vs_ProjectPath:'$(ProjectPath)' -vs_ProjectFileName:'$(ProjectFileName)' -vs_TargetExt:'$(TargetExt)' -vs_TargetFileName:'$(TargetFileName)' -vs_DevEnvDir:'$(DevEnvDir)' -vs_TargetDir:'$(TargetDir)' -vs_ProjectDir:'$(ProjectDir)' -vs_SolutionFileName:'$(SolutionFileName)' -vs_SolutionPath:'$(SolutionPath)' -vs_SolutionDir:'$(SolutionDir)' -vs_SolutionName:'$(SolutionName)' -vs_PlatformName:'$(PlatformName)' -vs_ProjectExt:'$(ProjectExt)' -vs_SolutionExt:'$(SolutionExt)'" />
