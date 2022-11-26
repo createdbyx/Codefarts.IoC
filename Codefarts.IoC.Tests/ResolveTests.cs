@@ -283,6 +283,18 @@ namespace Codefarts.IoC.Tests
                 Assert.Fail("Should have thrown a ContainerResolutionException exception.");
             });
         }
+        
+        [TestMethod]
+        public void CtorWithValueTypeParams()
+        {
+            var container = new Container();
+            Assert.ThrowsException<ContainerResolutionException>(() =>
+            {
+                var value = container.Resolve<TestClassWithStringAndIntParameters>();
+                Assert.IsNull(value);
+                Assert.Fail("Should have thrown a ContainerResolutionException exception.");
+            });
+        }
 
         [TestMethod]
         public void RegisteredTypesCount()

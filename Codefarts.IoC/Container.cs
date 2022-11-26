@@ -462,7 +462,7 @@ namespace Codefarts.IoC
                 {
                     invalidParameters = x.ParameterType.IsValueType ||
                                         typeof(Delegate).IsAssignableFrom(x.ParameterType) ||
-                                        type == typeof(string);
+                                        x.ParameterType == typeof(string);
                     if (invalidParameters)
                     {
                         break;
