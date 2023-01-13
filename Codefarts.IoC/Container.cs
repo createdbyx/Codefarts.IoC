@@ -342,7 +342,16 @@ public class Container : INotifyPropertyChanged
             if (last.ObjectReference == null && last.Constructor != null)
             {
                 var isArray = last.Constructor.DeclaringType.IsArray;
-                last.ObjectReference = last.Constructor.Invoke(isArray ? new object[] { 0 } : argRefs);
+                   last.ObjectReference = last.Constructor.Invoke(isArray ? new object[] { 0 } : argRefs);
+                   // if (last.Constructor.DeclaringType.IsArray)
+                   // {
+                   //     last.ObjectReference = last.Constructor.Invoke(new object[] { 0 });
+                   // }
+                   // else
+                   // {
+                   //     // TODO: I think this code is wrong
+                   //     last.ObjectReference = last.Constructor.Invoke(argRefs);
+                   // }
             }
 
             list.RemoveAt(list.Count - 1);
@@ -367,7 +376,7 @@ public class Container : INotifyPropertyChanged
             var pList = new List<InfoContainer>();
             if (current.Constructor != null && !current.Constructor.DeclaringType.IsArray)
             {
-                var parameters = current.Constructor.GetParameters();
+                var parameters = current.Constructor.GetParameters().Select(x => x.ParameterType).ToArray();
                 for (var pIndex = 0; pIndex < parameters.Length; pIndex++)
                 {
                     this.GetConstructorsForParameters(parameters, pIndex, pList, current.Depth);
@@ -376,35 +385,31 @@ public class Container : INotifyPropertyChanged
 
             current.Parameters = pList.Count == 0 ? null : pList;
             list.AddRange(pList);
-
             listIndex++;
         }
     }
 
-    private void GetConstructorsForParameters(ParameterInfo[] parameters, int pIndex, List<InfoContainer> pList, int currentDepth)
+    private void GetConstructorsForParameters(Type[] parameterTypes, int pIndex, List<InfoContainer> pList, int currentDepth)
     {
-        var parameterInfo = parameters[pIndex];
-        var pCon = this.GetBestConstructorInfo(parameterInfo.ParameterType);
-        if (pCon != null)
+        var parameterType = parameterTypes[pIndex];
+        var constructorInfo = this.GetBestConstructorInfo(parameterType);
+        if (constructorInfo != null)
         {
-            pList.Add(new InfoContainer(pCon, currentDepth + 1));
+            pList.Add(new InfoContainer(constructorInfo, currentDepth + 1));
             return;
         }
 
         CreatorData provider;
-        if (this.typeCreators.TryGetValue(parameterInfo.ParameterType, out provider))
+        if (this.typeCreators.TryGetValue(parameterType, out provider))
         {
             var cInfo = this.GetBestConstructorInfo(provider.ConcreteType);
-            var objRef = cInfo != null ? cInfo : provider.Creator();
-
-            var pc = new InfoContainer(objRef, currentDepth + 1);
-            pList.Add(pc);
+            pList.Add(cInfo != null ? new InfoContainer(cInfo, currentDepth + 1) : new InfoContainer(provider.Creator(), currentDepth + 1));
             return;
         }
 
-        throw new ContainerResolutionException(parameterInfo.ParameterType,
+        throw new ContainerResolutionException(parameterType,
                                                string.Format(Resources.ERR_IsInvalidInstantiationType,
-                                                             parameterInfo.ParameterType));
+                                                             parameterType));
     }
 
     private ConstructorInfo GetBestConstructorInfo(Type type)
@@ -556,6 +561,12 @@ public class Container : INotifyPropertyChanged
         public InfoContainer(ConstructorInfo constructor)
         {
             this.Constructor = constructor;
+        }
+
+        public InfoContainer(ConstructorInfo constructor, int depth)
+        {
+            this.Constructor = constructor;
+            this.Depth = depth;
         }
 
         public InfoContainer(object objectReference, int depth)
