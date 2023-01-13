@@ -411,7 +411,7 @@ public class Container : INotifyPropertyChanged
         }
 
         // get all valid public constructors
-        var constructors = type.GetConstructors();
+        var constructors = type.GetConstructors().Where(x => x.IsPublic);
         ConstructorInfo constructor = null;
         var lastParameterLength = 0;
 
@@ -437,9 +437,16 @@ public class Container : INotifyPropertyChanged
                 return type.GetConstructors()[0];
             }
 
-            if (typeof(IDictionary).IsAssignableFrom(type))
+            // check for generic IDictionary<,> because it does not inherit the IDictionary interface
+            if (type.IsGenericType && type.Name.Equals(typeof(IDictionary<,>).Name))
             {
                 return this.GetDictionaryConstructor(type);
+            }
+
+            // then fallback to checking if it implements IDictionary
+            if (typeof(IDictionary).IsAssignableFrom(type))
+            {
+                return typeof(Hashtable).GetConstructors().FirstOrDefault(x => x.GetParameters().Length == 0);
             }
 
             return this.GetListConstructor(type.GetGenericArguments()[0]);
@@ -448,11 +455,6 @@ public class Container : INotifyPropertyChanged
         // search for best constructor
         foreach (var c in constructors)
         {
-            if (!c.IsPublic)
-            {
-                continue;
-            }
-
             var parameters = c.GetParameters();
             var invalidParameters = false;
             foreach (var x in parameters)
@@ -481,36 +483,14 @@ public class Container : INotifyPropertyChanged
 
     private ConstructorInfo GetListConstructor(Type type)
     {
-        var t = typeof(List<>).MakeGenericType(type);
-        var ctors = t.GetConstructors();
-
-        // find default ctor
-        foreach (var c in ctors)
-        {
-            if (c.GetParameters().Length == 0)
-            {
-                return c;
-            }
-        }
-
-        return null;
+        var genericType = typeof(List<>).MakeGenericType(type);
+        return genericType.GetConstructors().FirstOrDefault(x => x.GetParameters().Length == 0);
     }
 
     private ConstructorInfo GetDictionaryConstructor(Type type)
     {
-        var t = typeof(Dictionary<,>).MakeGenericType(type.GetGenericArguments());
-        var ctors = t.GetConstructors();
-
-        // find default ctor
-        foreach (var c in ctors)
-        {
-            if (c.GetParameters().Length == 0)
-            {
-                return c;
-            }
-        }
-
-        return null;
+        var genericType = typeof(Dictionary<,>).MakeGenericType(type.GetGenericArguments());
+        return genericType.GetConstructors().FirstOrDefault(x => x.GetParameters().Length == 0);
     }
 
     private IEnumerable CreateEmptyCollection(Type type)
