@@ -342,16 +342,7 @@ public class Container : INotifyPropertyChanged
             if (last.ObjectReference == null && last.Constructor != null)
             {
                 var isArray = last.Constructor.DeclaringType.IsArray;
-                   last.ObjectReference = last.Constructor.Invoke(isArray ? new object[] { 0 } : argRefs);
-                   // if (last.Constructor.DeclaringType.IsArray)
-                   // {
-                   //     last.ObjectReference = last.Constructor.Invoke(new object[] { 0 });
-                   // }
-                   // else
-                   // {
-                   //     // TODO: I think this code is wrong
-                   //     last.ObjectReference = last.Constructor.Invoke(argRefs);
-                   // }
+                last.ObjectReference = last.Constructor.Invoke(isArray ? new object[] { 0 } : argRefs);
             }
 
             list.RemoveAt(list.Count - 1);
