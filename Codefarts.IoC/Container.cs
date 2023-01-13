@@ -139,7 +139,7 @@ public class Container : INotifyPropertyChanged
             }
         }
 
-        return this.ResolveByType(0, type);
+        return this.ResolveByType(type);
     }
 
     /// <summary>
@@ -206,7 +206,7 @@ public class Container : INotifyPropertyChanged
         //   var callCount = new Dictionary<int, int>();
         this.typeCreators[key] = new CreatorData()
         {
-            InternalCreator = true, ConcreteType = concrete, Creator = () => this.ResolveByType(0, concrete),
+            InternalCreator = true, ConcreteType = concrete, Creator = () => this.ResolveByType(concrete),
         };
     }
 
@@ -267,8 +267,6 @@ public class Container : INotifyPropertyChanged
     /// </summary>
     /// <param name="depth">Specified the instantiation depth.</param>
     /// <param name="type">The type that is to be instantiated.</param>
-    /// <exception cref="ExceededMaxInstantiationDepthException">Raised if the depth argument is greater then
-    /// the <see cref="MaxInstantiationDepth"/> property.</exception>
     /// <returns>The reference to the created instance.</returns>
     /// <remarks><p>Attempts to create the specified <param name="type"/> with the most number
     /// of constructor arguments that can be satisfied.</p>
@@ -276,13 +274,8 @@ public class Container : INotifyPropertyChanged
     /// <exception cref="ContainerResolutionException"> Thrown if the type could not be constructed because 
     /// the chosen constructor could be satisfied.
     /// </exception>
-    private object ResolveByType(int depth, Type type)
+    private object ResolveByType(Type type)
     {
-        // if (depth > this.MaxInstantiationDepth)
-        // {
-        //     throw new ExceededMaxInstantiationDepthException(Resources.ERR_ExceededMaxInstantiationDepth);
-        // }
-
         // can't resolve abstract classes, interfaces, value types, delegates, or strings
         if (type.IsAbstract ||
             type.IsInterface ||
@@ -320,10 +313,6 @@ public class Container : INotifyPropertyChanged
             this.BuildConstructorHierarchy(list);
 
             return info.ObjectReference;
-        }
-        catch (ExceededMaxInstantiationDepthException mde)
-        {
-            throw mde;
         }
         catch (ContainerResolutionException cre)
         {
@@ -560,22 +549,14 @@ public class Container : INotifyPropertyChanged
     private class InfoContainer
     {
         public ConstructorInfo Constructor;
+        public object ObjectReference;
+        public List<InfoContainer> Parameters;
+        public int Depth;
 
         public InfoContainer(ConstructorInfo constructor)
         {
             this.Constructor = constructor;
         }
-
-        public InfoContainer(ConstructorInfo constructor, bool isParameter)
-        {
-            this.Constructor = constructor;
-            this.IsParameter = isParameter;
-        }
-
-        public object ObjectReference;
-        public bool IsParameter;
-        public List<InfoContainer> Parameters;
-        public int Depth;
 
         public InfoContainer(object objectReference, int depth)
         {
