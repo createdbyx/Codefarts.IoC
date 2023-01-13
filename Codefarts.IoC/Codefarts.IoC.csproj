@@ -6,18 +6,20 @@
     <RootNamespace>Codefarts.IoC</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Dean Lunz</Authors>
+    <LangVersion>default</LangVersion>
     <Copyright>Codefarts</Copyright>
-    <RepositoryUrl>https://bitbucket.org/createdbyx/codefarts.ioc</RepositoryUrl>
-    <PackageTags>C#</PackageTags>
+    <RepositoryUrl>https://github.com/createdbyx/Codefarts.IoC</RepositoryUrl>
+    <PackageTags></PackageTags>
     <PackageId>Codefarts.IoC</PackageId>
-    <PackageProjectUrl>https://bitbucket.org/createdbyx/codefarts.ioc</PackageProjectUrl>
-    <PackageVersion>2022.11.26.0</PackageVersion>
-    <TargetFrameworks>net6.0;net6.0-windows;net7.0</TargetFrameworks>
+    <PackageProjectUrl>https://github.com/createdbyx/Codefarts.IoC</PackageProjectUrl>
+    <PackageVersion>2023.1.12.38</PackageVersion>
+    <TargetFrameworks>net6.0;net6.0-windows;net7.0;netstandard2.1</TargetFrameworks>
     <Company>Codefarts</Company>
     <Product>Codefarts.IoC</Product>
-    <AssemblyVersion>2022.11.26.0</AssemblyVersion>
-    <FileVersion>2022.11.26.0</FileVersion>
+    <AssemblyVersion>2023.1.12.38</AssemblyVersion>
+    <FileVersion>2023.1.12.38</FileVersion>
     <AssemblyName>Codefarts.IoC</AssemblyName>
+    <RepositoryType>C#</RepositoryType>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
@@ -39,7 +41,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
+    <AdditionalFiles Include="..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="SafeDictionary.cs" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="powershell.exe -ExecutionPolicy Unrestricted -noprofile -nologo -noninteractive -Command .'P:\PowerShell\post-build.ps1' -vs_BuildEvent:Post -vs_OutDir:'$(OutDir)' -vs_ConfigurationName:'$(ConfigurationName)' -vs_ProjectName:'$(ProjectName)' -vs_TargetName:'$(TargetName)' -vs_TargetPath:'$(TargetPath)' -vs_ProjectPath:'$(ProjectPath)' -vs_ProjectFileName:'$(ProjectFileName)' -vs_TargetExt:'$(TargetExt)' -vs_TargetFileName:'$(TargetFileName)' -vs_DevEnvDir:'$(DevEnvDir)' -vs_TargetDir:'$(TargetDir)' -vs_ProjectDir:'$(ProjectDir)' -vs_SolutionFileName:'$(SolutionFileName)' -vs_SolutionPath:'$(SolutionPath)' -vs_SolutionDir:'$(SolutionDir)' -vs_SolutionName:'$(SolutionName)' -vs_PlatformName:'$(PlatformName)' -vs_ProjectExt:'$(ProjectExt)' -vs_SolutionExt:'$(SolutionExt)'" />
