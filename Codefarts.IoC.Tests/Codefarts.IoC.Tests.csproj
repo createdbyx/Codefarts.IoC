@@ -8,9 +8,9 @@
         <RootNamespace>Codefarts.IoC.Tests</RootNamespace>
         <LangVersion>default</LangVersion>
 
-        <TargetFrameworks>net6.0;net7.0;netstandard2.1</TargetFrameworks>
-
         <OutputType>Library</OutputType>
+
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
