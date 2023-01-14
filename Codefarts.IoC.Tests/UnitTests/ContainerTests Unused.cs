@@ -1999,7 +1999,7 @@ namespace Codefarts.IoC.Tests
 
         // var result = container.Resolve<TestClassEnumerableDependency>();
 
-        // Assert.AreEqual(2, result.EnumerableCount);
+        // Assert.AreEqual(2, result.ItemCount);
         // }
         
         // [TestMethod]
@@ -2658,7 +2658,7 @@ namespace Codefarts.IoC.Tests
 
         // var result = childContainer.Resolve<TestClassEnumerableDependency>();
 
-        // Assert.AreEqual(3, result.EnumerableCount);
+        // Assert.AreEqual(3, result.ItemCount);
         // }
 
         // [TestMethod]
@@ -2676,7 +2676,7 @@ namespace Codefarts.IoC.Tests
 
         // var result = childContainer.Resolve<TestClassEnumerableDependency>();
 
-        // Assert.AreEqual(6, result.EnumerableCount);
+        // Assert.AreEqual(6, result.ItemCount);
         // }
 
         // [TestMethod]
@@ -2691,7 +2691,7 @@ namespace Codefarts.IoC.Tests
 
         // var result = childContainer.Resolve<TestClassEnumerableDependency>();
 
-        // Assert.AreEqual(3, result.EnumerableCount);
+        // Assert.AreEqual(3, result.ItemCount);
         // }
 
         // [TestMethod]

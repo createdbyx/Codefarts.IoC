@@ -107,14 +107,16 @@ namespace Codefarts.IoC.Tests
         public void SelfReferentialConstructor()
         {
             var container = new Container();
-            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() => { container.Resolve<TestClassConstructorSelfReferential>(); });
+            var ex = Assert.ThrowsException<ContainerResolutionException>(() => { container.Resolve<TestClassConstructorSelfReferential>(); });
+            Assert.IsInstanceOfType(ex.InnerException, typeof(ExceededMaxInstantiationDepthException));
         }
 
         [TestMethod]
         public void CircularReferenceConstructor()
         {
             var container = new Container();
-            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() => { container.Resolve<TestClassCircularReferenceA>(); });
+            var ex = Assert.ThrowsException<ContainerResolutionException>(() => { container.Resolve<TestClassCircularReferenceA>(); });
+            Assert.IsInstanceOfType(ex.InnerException, typeof(ExceededMaxInstantiationDepthException));
         }
     }
 }

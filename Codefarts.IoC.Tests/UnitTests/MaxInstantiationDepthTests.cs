@@ -45,11 +45,12 @@ namespace Codefarts.IoC.Tests
         {
             var container = new Container();
             container.MaxInstantiationDepth = 0;
-            Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
+            var ex = Assert.ThrowsException<ContainerResolutionException>(() =>
             {
                 var value = container.Resolve<TestClassWithDependency>();
                 Assert.IsNull(value);
             });
+            Assert.IsInstanceOfType(ex.InnerException, typeof(ExceededMaxInstantiationDepthException));
         }
 
         [TestMethod]

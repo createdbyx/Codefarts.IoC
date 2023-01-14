@@ -423,6 +423,24 @@
         }
     }
 
+    public class TestClassArrayDependency
+    {
+        public ITestInterface[] Items { get; private set; }
+
+        public int EnumerableCount
+        {
+            get
+            {
+                return this.Items == null ? 0 : this.Items.Length;
+            }
+        }
+
+        public TestClassArrayDependency(ITestInterface[] array)
+        {
+            this.Items = array;
+        }
+    }
+    
     public class TestClassEnumerableDependency
     {
         public IEnumerable<ITestInterface> Enumerable { get; private set; }

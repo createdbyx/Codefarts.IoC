@@ -51,15 +51,80 @@ namespace Codefarts.IoC.Tests
         public void ResolveIEnumerableDependencyWithoutRegistration()
         {
             var container = new Container();
-            //Assert.ThrowsException<ContainerResolutionException>(() =>
-            //{
             var value = container.Resolve<TestClassEnumerableDependency>();
             Assert.IsNotNull(value);
             Assert.AreEqual(0, value.EnumerableCount);
             Assert.AreEqual(typeof(List<ITestInterface>), value.Enumerable.GetType());
+        }
 
-            //  Assert.Fail("Should have thrown a ContainerResolutionException exception.");
-            //});
+        [TestMethod]
+        public void ResolveIDictionaryDependencyWithoutRegistration()
+        {
+            var container = new Container();
+            var value = container.Resolve<TestClassIDictionaryDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.ItemCount);
+        }
+
+        [TestMethod]
+        public void ResolveGenericIDictionaryDependencyWithoutRegistration()
+        {
+            var container = new Container();
+            var value = container.Resolve<TestClassGenericIDictionaryDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.ItemCount);
+        }
+
+        [TestMethod]
+        public void ResolveGenericIDictionaryDependencyWithoutRegistrationSpecifyingTypes()
+        {
+            var container = new Container();
+            var value = container.Resolve<TestClassGenericIDictionaryDependency2<string, int>>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.ItemCount);
+            var genericArguments = value.Items.GetType().GetGenericArguments();
+            Assert.AreEqual(2, genericArguments.Length);
+            Assert.AreEqual(typeof(string), genericArguments[0]);
+            Assert.AreEqual(typeof(int), genericArguments[1]);
+        }
+
+        [TestMethod]
+        public void ResolveGenericIDictionaryDependencyWithoutRegistrationSpecifyingUnregisterdInterfaceTypes()
+        {
+            var container = new Container();
+            var value = container.Resolve<TestClassGenericIDictionaryDependency2<ITestInterface, ITestInterface2>>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.ItemCount);
+            var genericArguments = value.Items.GetType().GetGenericArguments();
+            Assert.AreEqual(2, genericArguments.Length);
+            Assert.AreEqual(typeof(ITestInterface), genericArguments[0]);
+            Assert.AreEqual(typeof(ITestInterface2), genericArguments[1]);
+        }
+
+        [TestMethod]
+        public void ResolveIDictionaryDependencyWithRegistration()
+        {
+            var container = new Container();
+            var dictionary = new Hashtable();
+            dictionary["test"] = 123;
+            container.Register<IDictionary>(() => dictionary);
+            var value = container.Resolve<TestClassIDictionaryDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(1, value.ItemCount);
+            Assert.AreEqual(123, value.Items["test"]);
+        }
+
+        [TestMethod]
+        public void ResolveGenericIDictionaryDependencyWithRegistration()
+        {
+            var container = new Container();
+            var dictionary = new Dictionary<string, int>();
+            dictionary["test"] = 123;
+            container.Register<IDictionary>(() => dictionary);
+            var value = container.Resolve<TestClassIDictionaryDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(1, value.ItemCount);
+            Assert.AreEqual(123, value.Items["test"]);
         }
 
         // [TestMethod]
@@ -144,14 +209,14 @@ namespace Codefarts.IoC.Tests
 
             var tasks = Enumerable.Range(0, 100).Select(x => new Task(() =>
             {
-               // Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
-              //  {
-                    var value = container.Resolve<TestClassEnumerableDependency>();
+                // Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
+                //  {
+                var value = container.Resolve<TestClassEnumerableDependency>();
                 //    Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
-                    Assert.IsNotNull(value);
-                    Assert.AreEqual(0, value.EnumerableCount);
-                    Assert.AreEqual(typeof(List<ITestInterface>), value.Enumerable.GetType());
-              //  });
+                Assert.IsNotNull(value);
+                Assert.AreEqual(0, value.EnumerableCount);
+                Assert.AreEqual(typeof(List<ITestInterface>), value.Enumerable.GetType());
+                //  });
             })).ToArray();
 
             Array.ForEach(tasks, t => t.Start());
@@ -180,7 +245,7 @@ namespace Codefarts.IoC.Tests
                 Assert.Fail("Should have thrown a ContainerResolutionException exception.");
             });
         }
-        
+
         [TestMethod]
         public void ResolveGenericICollection()
         {
@@ -283,7 +348,7 @@ namespace Codefarts.IoC.Tests
                 Assert.Fail("Should have thrown a ContainerResolutionException exception.");
             });
         }
-        
+
         [TestMethod]
         public void CtorWithValueTypeParams()
         {
@@ -527,11 +592,7 @@ namespace Codefarts.IoC.Tests
         public void MultiInstanceFactoryNoConstructorSpecified_UsesCorrectCtor()
         {
             var container = new Container();
-            // container.Register<TestClassDefaultCtor, TestClassDefaultCtor>();
-            // container.Register<TestClassMultiDepsMultiCtors, TestClassMultiDepsMultiCtors>();
-
             var result = container.Resolve<TestClassMultiDepsMultiCtors>();
-
             Assert.AreEqual(2, result.NumberOfDepsResolved);
         }
 
@@ -540,39 +601,15 @@ namespace Codefarts.IoC.Tests
         {
             var container = new Container();
             container.Register<TestClassConstructorFailure>(() => { throw new NotImplementedException(); });
-
-            AssertHelper.ThrowsException<ContainerResolutionException>(
-                () => container.Resolve<TestClassConstructorFailure>());
-
-            // Should have thrown by now
-            // Assert.IsTrue(false);
+            AssertHelper.ThrowsException<ContainerResolutionException>(() => container.Resolve<TestClassConstructorFailure>());
         }
 
         [TestMethod]
         public void ConstructorThrowsException()
         {
             var container = new Container();
-            //  container.Register<TestClassConstructorFailure>();
-
-            AssertHelper.ThrowsException<ContainerResolutionException>(
-                () => container.Resolve<TestClassConstructorFailure>());
-
-            // Should have thrown by now
-            // Assert.IsTrue(false);
+            AssertHelper.ThrowsException<ContainerResolutionException>(() => container.Resolve<TestClassConstructorFailure>());
         }
-
-        // [TestMethod]
-        // public void TypeWithIEnumerableOfNonRegisteredTypeDependency()
-        // {
-        //     var container = new Container();
-        //     //  container.Register<TestClassEnumerableDependency>();
-        //
-        //     Assert.ThrowsException<ContainerResolutionException>(() =>
-        //     {
-        //         var result = container.Resolve<TestClassEnumerableDependency>();
-        //         Assert.Fail("Should have thrown an ContainerResolutionException exception.");
-        //     });
-        // }
 
         [TestMethod]
         public void UnregisteredType_ResolvesWithIEnumerableParamWithNoItems()

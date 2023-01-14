@@ -1,110 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.props" Condition="Exists('..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.props')" />
-  <Import Project="..\..\CombinedProjectsSolution\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.props" Condition="Exists('..\..\CombinedProjectsSolution\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9E82C75E-BCAF-4630-90F9-EE0145572EF8}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Codefarts.IoC.Tests</RootNamespace>
-    <AssemblyName>Codefarts.IoC.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="dotMemory.Unit, Version=111.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.dotMemoryUnit.3.1.20200127.214830\lib\net35\dotMemory.Unit.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSTest.TestFramework.2.2.3\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSTest.TestFramework.2.2.3\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Mockups\SimpleResolveMemberClass.cs" />
-    <Compile Include="UnitTests\BuildUpTests.cs" />
-    <Compile Include="UnitTests\CanResolveTests.cs" />
-    <Compile Include="UnitTests\ContainerTests Unused.cs" />
-    <Compile Include="UnitTests\ContainerRegistrationTests.cs" />
-    <Compile Include="UnitTests\GeneralTests.cs" />
-    <None Include="Unused\CustomArgumentTests.cs" />
-    <Compile Include="Helpers\AssertHelper.cs" />
-    <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="UnitTests\MaxInstantiationDepthTests.cs" />
-    <Compile Include="Mockups\BasicClasses.cs" />
-    <Compile Include="Mockups\MockApplication.cs" />
-    <Compile Include="Mockups\MockDisposableRepository.cs" />
-    <Compile Include="Mockups\MockNonResolveableObject.cs" />
-    <Compile Include="Mockups\MockRepository.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResolveTests.cs" />
-    <Compile Include="TinyIoC.cs" />
-    <Compile Include="TinyIoCComparisonTests.cs" />
-    <Compile Include="UnitTests\UnregisterTests.cs" />
-    <None Include="UnitTests\SafeDictionaryTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\Codefarts.IoCStandard20\stylecop.json">
-      <Link>stylecop.json</Link>
-    </AdditionalFiles>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Codefarts.IoCStandard20\Codefarts.IoCStandard20.csproj">
-      <Project>{609a842a-7a18-428f-8716-17770f63ffbc}</Project>
-      <Name>Codefarts.IoCStandard20</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PerformanceTests\" />
-  </ItemGroup>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+        <Nullable>enable</Nullable>
+
+        <IsPackable>false</IsPackable>
+
+        <RootNamespace>Codefarts.IoC.Tests</RootNamespace>
+        <LangVersion>default</LangVersion>
+
+        <TargetFrameworks>net6.0;net7.0;netstandard2.1</TargetFrameworks>
+
+        <OutputType>Library</OutputType>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\CombinedProjectsSolution\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\CombinedProjectsSolution\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.props'))" />
-    <Error Condition="!Exists('..\..\CombinedProjectsSolution\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\CombinedProjectsSolution\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets'))" />
-    <Error Condition="!Exists('..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.props'))" />
-    <Error Condition="!Exists('..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.targets'))" />
-  </Target>
-  <Import Project="..\..\CombinedProjectsSolution\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\..\CombinedProjectsSolution\packages\MSTest.TestAdapter.1.1.11\build\net45\MSTest.TestAdapter.targets')" />
-  <Import Project="..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.2.2.3\build\net45\MSTest.TestAdapter.targets')" />
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
+        <PackageReference Include="coverlet.collector" Version="3.1.0" />
+        <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Codefarts.IoC\Codefarts.IoC.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Unused\CustomArgumentTests.cs" />
+      <Compile Remove="UnitTests\SafeDictionaryTests.cs" />
+      <None Include="Unused\SafeDictionaryTests.cs" />
+      <Compile Remove="Unused\SafeDictionaryTests.cs" />
+      <None Include="Unused\SafeDictionaryTests.cs" />
+    </ItemGroup>
+
 </Project>
