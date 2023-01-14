@@ -427,7 +427,7 @@
     {
         public ITestInterface[] Items { get; private set; }
 
-        public int EnumerableCount
+        public int ItemCount
         {
             get
             {

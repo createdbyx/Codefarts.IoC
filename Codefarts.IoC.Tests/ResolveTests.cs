@@ -67,6 +67,31 @@ namespace Codefarts.IoC.Tests
         }
 
         [TestMethod]
+        public void ResolveArrayDependencyWithoutRegistration()
+        {
+            var container = new Container();
+            var value = container.Resolve<TestClassArrayDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(0, value.ItemCount);
+        }
+
+        [TestMethod]
+        public void ResolveArrayDependencyWithRegistration()
+        {
+            var container = new Container();
+            var array = new ITestInterface[1];
+            var item = new TestClassDefaultCtor();
+            array[0] = item;
+
+            container.Register<ITestInterface[]>(() => array);
+            var value = container.Resolve<TestClassArrayDependency>();
+            Assert.IsNotNull(value);
+            Assert.AreEqual(1, value.ItemCount);
+            Assert.AreSame(item,value.Items[0]);
+            Assert.IsInstanceOfType(value.Items[0], typeof(ITestInterface));
+        }
+
+        [TestMethod]
         public void ResolveGenericIDictionaryDependencyWithoutRegistration()
         {
             var container = new Container();
@@ -127,31 +152,6 @@ namespace Codefarts.IoC.Tests
             Assert.AreEqual(123, value.Items["test"]);
         }
 
-        // [TestMethod]
-        // public void ResolveIEnumerableDependencyWithRegistration()
-        // {
-        //     var container = new Container();
-        //     container.Register<IEnumerable<ITestInterface>, List<ITestInterface>>();
-        //
-        //     Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
-        //     {
-        //         var value = container.Resolve<TestClassEnumerableDependency>();
-        //         Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
-        //     });
-        // }
-        //
-        // [TestMethod]
-        // public void ResolveIEnumerableArrayDependencyWithRegistration()
-        // {
-        //     var container = new Container();
-        //     container.Register<IEnumerable<ITestInterface>, ITestInterface[]>();
-        //
-        //     Assert.ThrowsException<ExceededMaxInstantiationDepthException>(() =>
-        //     {
-        //         var value = container.Resolve<TestClassEnumerableDependency>();
-        //         Assert.Fail($"Should have thrown {nameof(ExceededMaxInstantiationDepthException)} or stack overflowed.");
-        //     });
-        // }
 
         [TestMethod]
         public void ResolveICollectionDependencyWithRegistration()
