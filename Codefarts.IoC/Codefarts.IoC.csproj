@@ -13,7 +13,7 @@
     <PackageId>Codefarts.IoC</PackageId>
     <PackageProjectUrl>https://github.com/createdbyx/Codefarts.IoC</PackageProjectUrl>
     <PackageVersion>2023.1.12.38</PackageVersion>
-    <TargetFrameworks>net6.0;net6.0-windows;net7.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>net46;net461;net462;net47;net471;net472;net48;net481;net6.0;net6.0-windows;net7.0;net7.0-windows;netstandard2.0;netstandard2.1</TargetFrameworks>
     <Company>Codefarts</Company>
     <Product>Codefarts.IoC</Product>
     <AssemblyVersion>2023.1.12.38</AssemblyVersion>
@@ -21,6 +21,9 @@
     <AssemblyName>Codefarts.IoC</AssemblyName>
     <RepositoryType>C#</RepositoryType>
   </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Net.Http" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>

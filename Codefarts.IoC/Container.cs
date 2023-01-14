@@ -4,6 +4,8 @@
 // http://www.codefarts.com
 // </copyright>
 
+using System.Linq;
+
 namespace Codefarts.IoC;
 
 using System;
