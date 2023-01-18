@@ -1,8 +1,10 @@
 Codefarts IoC is a Inversion of Control (IoC) library written C#
 
-It's purpose is to provide a extremely simplified alternative to the other popular IoC libraries like TinyIoC, or Caliburn.Micro etc.
+It's purpose is to provide a extremely simplified alternative to the other popular IoC libraries like TinyIoC, or
+Caliburn.Micro etc.
 
-The core Container class that handles object instantiation is less then 600 lines of code including xml documentation comments! 
+The core Container class that handles object instantiation is less then 600 lines of code including xml documentation
+comments!
 Contrast that with TinyIoC that contains over 4400 lines of sparsely commented code.
 
 I hate code bloat and believe IoC containers that become monolithic are unnecessary and overkill.
@@ -12,15 +14,16 @@ I hate code bloat and believe IoC containers that become monolithic are unnecess
 - Uses single mechanism for instantiation in the form of callbacks
 - Has MaxInstantiationDepth property you can set to prevent invoking object hiararchies beyond a certian nesting depth.
 - Legitimately tiny and simplistic code base that you can read through and understand.
-- 123 unit tests and counting with almost full code coverage. 
+- 123 unit tests and counting with almost full code coverage.
 - Can resolve object members like properties and fields. But requires a separate call to an extension method~~~~.
 
 ### Known Issues
 
 - May or may not handle multithreading properly. Needs a thorough code audit and stress test.
-- Will only try to create object with a constructor that has the most arguments that it can satisfy and does not try to invoke the next best constructor.
-- Come up with a system for assigning a resolved objects properties and fields automatically. 
-Currently have to do it by calling a separate method ResolveMembers on the object.
+- Will only try to create object with a constructor that has the most arguments that it can satisfy and does not try to
+  invoke the next best constructor.
+- Come up with a system for assigning a resolved objects properties and fields automatically.
+  Currently have to do it by calling a separate method ResolveMembers on the object.
 
 ### Examples
 
