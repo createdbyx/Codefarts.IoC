@@ -4,8 +4,6 @@
 // http://www.codefarts.com
 // </copyright>
 
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Codefarts.IoC.Tests
