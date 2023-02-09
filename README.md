@@ -14,8 +14,8 @@ I hate code bloat and believe IoC containers that become monolithic are unnecess
 - Uses single mechanism for instantiation in the form of callbacks
 - Has MaxInstantiationDepth property you can set to prevent invoking object hiararchies beyond a certian nesting depth.
 - Legitimately tiny and simplistic code base that you can read through and understand.
-- 123 unit tests and counting with almost full code coverage.
-- Can resolve object members like properties and fields. But requires a separate call to an extension method~~~~.
+- 130 unit tests and counting with almost full code coverage.
+- Can resolve object members like properties and fields. But requires a separate call to an extension method.
 
 ### Known Issues
 
