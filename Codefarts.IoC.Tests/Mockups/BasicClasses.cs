@@ -391,12 +391,22 @@
         }
     }
 
-    internal abstract class TestClassBase
+    public abstract class TestClassBase
     {
     }
 
-    internal class TestClassWithBaseClass : TestClassBase
+    public class TestClassWithBaseClass : TestClassBase
     {
+    }
+    
+    public class TestClassWithBaseClassB : TestClassBase
+    {
+        public TestClassBase ParameterValue { get; set; }
+
+        public TestClassWithBaseClassB(TestClassBase value)
+        {
+            this.ParameterValue = value;
+        }
     }
 
     internal class TestClassPropertyDependencies

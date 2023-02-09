@@ -118,5 +118,20 @@ namespace Codefarts.IoC.Tests
             var ex = Assert.ThrowsException<ContainerResolutionException>(() => { container.Resolve<TestClassCircularReferenceA>(); });
             Assert.IsInstanceOfType(ex.InnerException, typeof(ExceededMaxInstantiationDepthException));
         }
+
+        [TestMethod]
+        public void Inherited()
+        {
+            var container = new Container();
+
+            var o = container.Resolve<TestClassWithBaseClass>();
+
+            container.Register<TestClassBase>(() => o);
+
+            var result = container.Resolve<TestClassWithBaseClassB>();
+
+            Assert.IsInstanceOfType<TestClassWithBaseClass>(result.ParameterValue);
+            Assert.IsInstanceOfType<TestClassBase>(result.ParameterValue);
+        }
     }
 }
