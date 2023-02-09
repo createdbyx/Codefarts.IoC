@@ -385,18 +385,18 @@ public class Container : INotifyPropertyChanged
     private void GetConstructorsForParameters(Type[] parameterTypes, int pIndex, List<InfoContainer> pList, int currentDepth)
     {
         var parameterType = parameterTypes[pIndex];
-        var constructorInfo = this.GetBestConstructorInfo(parameterType);
-        if (constructorInfo != null)
-        {
-            pList.Add(new InfoContainer(constructorInfo, currentDepth + 1));
-            return;
-        }
 
         CreatorData provider;
         if (this.typeCreators.TryGetValue(parameterType, out provider))
         {
-            var cInfo = this.GetBestConstructorInfo(provider.ConcreteType);
-            pList.Add(cInfo != null ? new InfoContainer(cInfo, currentDepth + 1) : new InfoContainer(provider.Creator(), currentDepth + 1));
+            pList.Add(new InfoContainer(provider.Creator(), currentDepth + 1));
+            return;
+        }
+
+        var constructorInfo = this.GetBestConstructorInfo(parameterType);
+        if (constructorInfo != null)
+        {
+            pList.Add(new InfoContainer(constructorInfo, currentDepth + 1));
             return;
         }
 
@@ -417,7 +417,6 @@ public class Container : INotifyPropertyChanged
         ConstructorInfo constructor = null;
         var lastParameterLength = 0;
 
-        // if (type.IsAssignableTo(typeof(ICollection)) || type.IsAssignableTo(typeof(IEnumerable)))
         if (typeof(ICollection).IsAssignableFrom(type) || typeof(IEnumerable).IsAssignableFrom(type))
         {
             CreatorData provider;
