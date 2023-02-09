@@ -12,17 +12,17 @@
     <PackageTags></PackageTags>
     <PackageId>Codefarts.IoC</PackageId>
     <PackageProjectUrl>https://github.com/createdbyx/Codefarts.IoC</PackageProjectUrl>
-    <PackageVersion>2023.1.12.38</PackageVersion>
+    <PackageVersion>2023.2.9.163</PackageVersion>
     <TargetFrameworks>net46;net461;net462;net47;net471;net472;net48;net481;net6.0;net6.0-windows;net7.0;net7.0-windows;netstandard2.0;netstandard2.1</TargetFrameworks>
     <Company>Codefarts</Company>
     <Product>Codefarts.IoC</Product>
-    <AssemblyVersion>2023.1.12.38</AssemblyVersion>
-    <FileVersion>2023.1.12.38</FileVersion>
+    <AssemblyVersion>2023.2.9.163</AssemblyVersion>
+    <FileVersion>2023.2.9.163</FileVersion>
     <AssemblyName>Codefarts.IoC</AssemblyName>
     <RepositoryType>C#</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <DebugSymbols>true</DebugSymbols>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
   <ItemGroup>
@@ -59,9 +59,9 @@
     <Compile Remove="SafeDictionary.cs" />
   </ItemGroup>
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="buildhelper &amp;quot;-b:$(ProjectDir)$(ConfigurationName)-PostBuild.xml&amp;quot; &amp;quot;-p:$(ProjectPath)&amp;quot; &amp;quot;-tf:$(TargetFramework)&amp;quot;" />
+    <Exec Command="buildhelper &quot;-b:$(ProjectDir)$(ConfigurationName)-PostBuild.xml&quot; &quot;-p:$(ProjectPath)&quot; &quot;-tf:$(TargetFramework)&quot;" />
   </Target>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="buildhelper &amp;quot;-b:$(ProjectDir)$(ConfigurationName)-PreBuild.xml&amp;quot; &amp;quot;-p:$(ProjectPath)&amp;quot; &amp;quot;-tf:$(TargetFramework)&amp;quot;" />
+    <Exec Command="buildhelper &quot;-b:$(ProjectDir)$(ConfigurationName)-PreBuild.xml&quot; &quot;-p:$(ProjectPath)&quot; &quot;-tf:$(TargetFramework)&quot;" />
   </Target>
 </Project>
